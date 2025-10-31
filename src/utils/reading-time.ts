@@ -34,7 +34,7 @@ export function calculateReadingTime(text: string, wpm: number): {
 	} else {
 		const minutesStr = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
 		const secondsStr = `${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
-		formatted = `${minutesStr} and ${secondsStr}`;
+		formatted = `${minutesStr} & ${secondsStr}`;
 	}
 
 	return { totalSeconds, formatted, wordCount };

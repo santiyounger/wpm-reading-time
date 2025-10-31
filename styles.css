@@ -8,17 +8,23 @@
 	align-items: center;
 	justify-content: center;
 	min-height: 100%;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
 }
 
 .reading-time-heading {
 	text-align: center;
-	font-size: 0.9rem;
+	font-size: 1rem;
 	font-weight: 400;
-	color: var(--text-muted);
-	letter-spacing: 0.025em;
-	margin-bottom: 2rem;
+	color: var(--text-normal);
+	letter-spacing: 0;
+	margin-bottom: 0.5rem;
 	padding: 0;
-	opacity: 0.7;
+	opacity: 1;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
 }
 
 .reading-time-display {
@@ -32,6 +38,9 @@
 	gap: 0.5rem;
 	align-items: center;
 	width: 100%;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
 }
 
 .reading-time-formatted {
@@ -42,24 +51,68 @@
 	line-height: 1.1;
 	margin: 0;
 	padding: 0;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	cursor: text;
+}
+
+.reading-time-to-read {
+	font-size: 1rem;
+	font-weight: 400;
+	color: var(--text-normal);
+	letter-spacing: 0;
+	opacity: 1;
+	margin: 0;
+	padding: 0;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	cursor: text;
 }
 
 .reading-time-wpm {
-	font-size: 0.9rem;
+	font-size: 1rem;
 	font-weight: 400;
 	color: var(--text-normal);
-	letter-spacing: 0.015em;
-	opacity: 0.75;
+	letter-spacing: 0;
+	opacity: 1;
 	margin: 0;
 	padding: 0;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	cursor: text;
+}
+
+.reading-time-because {
+	font-size: 1rem;
+	font-weight: 400;
+	color: var(--text-normal);
+	letter-spacing: 0;
+	opacity: 1;
+	margin: 0;
+	padding: 0;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	cursor: text;
 }
 
 .reading-time-words {
-	font-size: 0.85rem;
+	font-size: 1rem;
 	font-weight: 400;
-	color: var(--text-muted);
-	letter-spacing: 0.015em;
+	color: var(--text-normal);
+	letter-spacing: 0;
 	margin: 0;
 	padding: 0;
-	opacity: 0.65;
+	opacity: 1;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	cursor: text;
+}
+
+.reading-time-accent {
+	color: var(--text-accent);
 }

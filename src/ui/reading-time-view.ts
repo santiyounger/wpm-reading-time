@@ -51,10 +51,27 @@ export class ReadingTimeView extends ItemView {
 			cls: 'reading-time-formatted' 
 		});
 
-		// WPM info
+		// "to read" text
 		timeDisplay.createEl('div', { 
-			text: `at ${this.wpm} WPM`, 
-			cls: 'reading-time-wpm' 
+			text: 'to read', 
+			cls: 'reading-time-to-read' 
+		});
+
+		// WPM info
+		const wpmDiv = timeDisplay.createDiv('reading-time-wpm');
+		wpmDiv.createSpan({ text: 'at your reading speed of: ' });
+		wpmDiv.createSpan({ text: `${this.wpm} ` });
+		wpmDiv.createSpan({ text: 'W', cls: 'reading-time-accent' });
+		wpmDiv.createSpan({ text: 'ord ' });
+		wpmDiv.createSpan({ text: 'P', cls: 'reading-time-accent' });
+		wpmDiv.createSpan({ text: 'er ' });
+		wpmDiv.createSpan({ text: 'M', cls: 'reading-time-accent' });
+		wpmDiv.createSpan({ text: 'inute' });
+
+		// "because it's:" text
+		timeDisplay.createEl('div', { 
+			text: 'because it\'s:', 
+			cls: 'reading-time-because' 
 		});
 
 		// Word count
