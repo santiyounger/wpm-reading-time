@@ -115,4 +115,18 @@
 
 .reading-time-accent {
 	color: var(--text-accent);
+	font-weight: 700;
+}
+
+.reading-time-wpm-phrase {
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.reading-time-bracket {
+	color: var(--text-accent);
+}
+
+.reading-time-number {
+	color: var(--text-accent);
 }

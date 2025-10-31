@@ -15,6 +15,10 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				return;
 			}
 
+			// Save selection range to restore it later - do this immediately
+			const selectionStart = editor.getCursor('from');
+			const selectionEnd = editor.getCursor('to');
+
 			const wpm = plugin.settings.wpm;
 			const { formatted, totalSeconds, wordCount } = calculateReadingTime(selectedText, wpm);
 			
@@ -43,6 +47,14 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			
 			readingTimeView.updateContent(formatted, totalSeconds, wpm, wordCount);
 			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
+			
+			// Restore the selection after all async operations complete
+			// Use setTimeout to ensure it happens after the view operations
+			setTimeout(() => {
+				editor.setSelection(selectionStart, selectionEnd);
+				// Also ensure the editor view is focused
+				view.editor.focus();
+			}, 0);
 		}
 	});
 }

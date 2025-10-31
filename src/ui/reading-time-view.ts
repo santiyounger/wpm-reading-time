@@ -51,34 +51,24 @@ export class ReadingTimeView extends ItemView {
 			cls: 'reading-time-formatted' 
 		});
 
-		// "to read" text
-		timeDisplay.createEl('div', { 
-			text: 'to read', 
-			cls: 'reading-time-to-read' 
-		});
-
-		// WPM info
+		// "to read at your reading speed of:" combined
 		const wpmDiv = timeDisplay.createDiv('reading-time-wpm');
-		wpmDiv.createSpan({ text: 'at your reading speed of: ' });
-		wpmDiv.createSpan({ text: `${this.wpm} ` });
-		wpmDiv.createSpan({ text: 'W', cls: 'reading-time-accent' });
-		wpmDiv.createSpan({ text: 'ord ' });
-		wpmDiv.createSpan({ text: 'P', cls: 'reading-time-accent' });
-		wpmDiv.createSpan({ text: 'er ' });
-		wpmDiv.createSpan({ text: 'M', cls: 'reading-time-accent' });
-		wpmDiv.createSpan({ text: 'inute' });
+		wpmDiv.createSpan({ text: 'to read at your reading speed of: ' });
+		wpmDiv.createSpan({ text: `${this.wpm}`, cls: 'reading-time-number' });
+		wpmDiv.createSpan({ text: ' ' });
+		const wpmPhrase = wpmDiv.createSpan({ cls: 'reading-time-wpm-phrase' });
+		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'ord ' });
+		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'er ' });
+		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'inute' });
 
-		// "because it's:" text
-		timeDisplay.createEl('div', { 
-			text: 'because it\'s:', 
-			cls: 'reading-time-because' 
-		});
-
-		// Word count
-		timeDisplay.createEl('div', { 
-			text: `${this.wordCount} words`, 
-			cls: 'reading-time-words' 
-		});
+		// "because it's:" and word count combined
+		const becauseDiv = timeDisplay.createDiv('reading-time-because');
+		becauseDiv.createSpan({ text: 'because it\'s: ' });
+		becauseDiv.createSpan({ text: `${this.wordCount}`, cls: 'reading-time-number' });
+		becauseDiv.createSpan({ text: ' words long' });
 	}
 
 	async onOpen(): Promise<void> {
