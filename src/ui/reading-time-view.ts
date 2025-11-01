@@ -86,6 +86,7 @@ export class ReadingTimeView extends ItemView {
 
 		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
+		speedDiv.createSpan({ text: 'at: ' });
 		
 		// Custom dropdown container
 		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
@@ -94,9 +95,9 @@ export class ReadingTimeView extends ItemView {
 		// Display selected preset with styled WPM phrase - two line layout
 		const displayContent = dropdownButton.createDiv('reading-time-dropdown-content');
 		
-		// First line: "at: [speed] Word Per Minute"
+		// First line: "[speed] Word Per Minute"
 		const firstLine = displayContent.createDiv('reading-time-dropdown-line');
-		firstLine.createSpan({ text: `at: ${currentPreset.speed} ` });
+		firstLine.createSpan({ text: `${currentPreset.speed} ` });
 		const wpmPhrase = firstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ord ' });
@@ -122,9 +123,9 @@ export class ReadingTimeView extends ItemView {
 			const menuItem = dropdownMenu.createDiv('reading-time-dropdown-item');
 			const itemContent = menuItem.createDiv('reading-time-dropdown-content');
 			
-			// First line: "at: [speed] Word Per Minute"
+			// First line: "[speed] Word Per Minute"
 			const itemFirstLine = itemContent.createDiv('reading-time-dropdown-line');
-			itemFirstLine.createSpan({ text: `at: ${preset.speed} ` });
+			itemFirstLine.createSpan({ text: `${preset.speed} ` });
 			const itemWpmPhrase = itemFirstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 			itemWpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'ord ' });
