@@ -15,32 +15,17 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Settings' });
-
-		// Description
-		containerEl.createEl('p', { 
-			text: 'Configure your reading speed presets. You can add multiple presets and switch between them using the dropdown in the reading time view.',
-			cls: 'setting-item-description'
-		});
-
-		// Default preset selector
-		new Setting(containerEl)
-			.setName('Default preset')
-			.setDesc('Which preset should be selected by default when calculating reading time?')
-			.addDropdown(dropdown => {
-				this.plugin.settings.presets.forEach(preset => {
-					dropdown.addOption(preset.id, preset.name);
-				});
-				dropdown.setValue(this.plugin.settings.selectedPresetId);
-				dropdown.onChange(async (value) => {
-					this.plugin.settings.selectedPresetId = value;
-					await this.plugin.saveSettings();
-				});
-			});
+		containerEl.createEl('h2', { text: 'How Long to Read (Reading Time WPM)' });
 
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
-		presetsContainer.createEl('h3', { text: 'Reading Speed Presets' });
+
+		// Header row
+		const headerRow = presetsContainer.createDiv('reading-time-preset-header-row');
+		headerRow.createEl('div', { text: 'Default', cls: 'reading-time-header-default' });
+		headerRow.createEl('div', { text: 'Speed', cls: 'reading-time-header-speed' });
+		headerRow.createEl('div', { text: 'Name', cls: 'reading-time-header-name' });
+		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
 
 		// Display all presets
 		this.plugin.settings.presets.forEach((preset, index) => {
@@ -49,15 +34,14 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		// Add new preset button
 		new Setting(presetsContainer)
-			.setName('Add new preset')
-			.setDesc('Create a new reading speed preset')
 			.addButton(button => button
-				.setButtonText('Add Preset')
+				.setIcon('plus')
+				.setTooltip('Add preset')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
 						id: `preset-${Date.now()}`,
-						name: 'New Preset',
+						name: '',
 						speed: 200
 					};
 					this.plugin.settings.presets.push(newPreset);
@@ -65,23 +49,104 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 						this.display(); // Refresh the settings view
 					});
 				}));
+
+		// WPM description below presets
+		const wpmDesc = presetsContainer.createDiv('reading-time-wpm-description');
+		wpmDesc.textContent = 'WPM = Words Per Minute';
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
-		// Preset container with border
+		// Preset container with horizontal layout
 		const presetContainer = containerEl.createDiv('reading-time-preset-container');
-		
-		// Preset header with name and delete button
-		const presetHeader = presetContainer.createDiv('reading-time-preset-header');
-		const presetTitle = presetHeader.createDiv('reading-time-preset-title');
-		const presetTitleStrong = presetTitle.createEl('strong', { text: preset.name || `Preset ${index + 1}` });
-		
-		// Delete button in header (only if more than one preset)
+
+		// Default checkbox (first column)
+		const defaultCheckbox = presetContainer.createEl('input', {
+			type: 'checkbox',
+			cls: 'reading-time-default-checkbox',
+			attr: { 'aria-label': 'Set as default preset' }
+		});
+		defaultCheckbox.checked = this.plugin.settings.selectedPresetId === preset.id;
+		defaultCheckbox.addEventListener('change', async (e) => {
+			const target = e.target as HTMLInputElement;
+			if (target.checked) {
+				// Uncheck all other checkboxes and set this as default
+				this.containerEl.querySelectorAll('.reading-time-default-checkbox').forEach((cb: HTMLInputElement) => {
+					if (cb !== target) {
+						cb.checked = false;
+					}
+				});
+				this.plugin.settings.selectedPresetId = preset.id;
+				await this.plugin.saveSettings();
+			} else {
+				// If trying to uncheck the default, switch to first other preset if available
+				if (this.plugin.settings.selectedPresetId === preset.id) {
+					const firstOtherPreset = this.plugin.settings.presets.find(p => p.id !== preset.id);
+					if (firstOtherPreset) {
+						const firstCheckbox = this.containerEl.querySelector(`input[data-preset-id="${firstOtherPreset.id}"]`) as HTMLInputElement;
+						if (firstCheckbox) {
+							target.checked = false;
+							firstCheckbox.checked = true;
+							this.plugin.settings.selectedPresetId = firstOtherPreset.id;
+							await this.plugin.saveSettings();
+						} else {
+							target.checked = true; // Can't uncheck if no other preset found
+						}
+					} else {
+						target.checked = true; // Only one preset, must stay checked
+					}
+				}
+			}
+		});
+		defaultCheckbox.setAttribute('data-preset-id', preset.id);
+
+		// Speed input with WPM label
+		const speedWrapper = presetContainer.createDiv('reading-time-speed-wrapper');
+		const speedInput = speedWrapper.createEl('input', {
+			type: 'text',
+			attr: { spellcheck: 'false', placeholder: '200' },
+			cls: 'reading-time-speed-input'
+		});
+		speedInput.value = preset.speed.toString();
+		const speedLabel = speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
+		speedInput.addEventListener('input', async (e) => {
+			const target = e.target as HTMLInputElement;
+			const speed = parseInt(target.value, 10);
+			if (!target.value) return; // Allow empty during typing
+			if (isNaN(speed) || speed <= 0) {
+				return; // Don't show notice while typing
+			}
+			preset.speed = speed;
+			await this.plugin.saveSettings();
+		});
+		speedInput.addEventListener('blur', async (e) => {
+			const target = e.target as HTMLInputElement;
+			const speed = parseInt(target.value, 10);
+			if (isNaN(speed) || speed <= 0) {
+				new Notice('Speed must be a positive number.');
+				target.value = preset.speed.toString(); // Reset to valid value
+			}
+		});
+
+		// Name input
+		const nameInput = presetContainer.createEl('input', {
+			type: 'text',
+			attr: { spellcheck: 'false', placeholder: 'Optional name' },
+			cls: 'reading-time-name-input'
+		});
+		nameInput.value = preset.name;
+		nameInput.addEventListener('input', async (e) => {
+			const target = e.target as HTMLInputElement;
+			preset.name = target.value.trim();
+			await this.plugin.saveSettings();
+		});
+
+		// Delete button (only if more than one preset)
 		if (this.plugin.settings.presets.length > 1) {
-			const deleteBtn = presetHeader.createEl('button', {
-				text: 'Delete',
+			const deleteBtn = presetContainer.createEl('button', {
+				attr: { 'aria-label': 'Delete preset' },
 				cls: 'reading-time-delete-btn'
 			});
+			deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="m19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
 			deleteBtn.addEventListener('click', async () => {
 				// Remove preset
 				this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
@@ -95,55 +160,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				this.display(); // Refresh the settings view
 			});
 		}
-
-		// Preset settings
-		const presetSettings = presetContainer.createDiv('reading-time-preset-settings');
-
-		// Preset name
-		new Setting(presetSettings)
-			.setName('Preset name')
-			.setDesc('A descriptive name for this preset (e.g., "My Reading Time", "My Speaking Time")')
-			.addText(text => text
-				.setPlaceholder('Preset name')
-				.setValue(preset.name)
-				.onChange(async (value) => {
-					if (!value || value.trim().length === 0) {
-						new Notice('Preset name cannot be empty.');
-						return;
-					}
-					const trimmedValue = value.trim();
-					preset.name = trimmedValue;
-					// Update the header text directly without re-rendering
-					presetTitleStrong.textContent = trimmedValue;
-					await this.plugin.saveSettings();
-					// Only refresh if we need to update the default preset dropdown
-					// We'll do a partial refresh by finding and updating just that dropdown
-					const defaultPresetDropdown = containerEl.closest('.vertical-tab-content')?.querySelector('select') as HTMLSelectElement;
-					if (defaultPresetDropdown) {
-						// Update the option text in the default preset dropdown
-						const option = Array.from(defaultPresetDropdown.options).find(opt => opt.value === preset.id);
-						if (option) {
-							option.textContent = trimmedValue;
-						}
-					}
-				}));
-
-		// Preset speed
-		new Setting(presetSettings)
-			.setName('Reading speed')
-			.setDesc('Words per minute for this preset. Average reading speed is 250-300 WPM; average speaking speed is 150-200 WPM.')
-			.addText(text => text
-				.setPlaceholder('200')
-				.setValue(preset.speed.toString())
-				.onChange(async (value) => {
-					const speed = parseInt(value, 10);
-					if (isNaN(speed) || speed <= 0) {
-						new Notice('Speed must be a positive number.');
-						return;
-					}
-					preset.speed = speed;
-					await this.plugin.saveSettings();
-				}));
 	}
+
 }
 

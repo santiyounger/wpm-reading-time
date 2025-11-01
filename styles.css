@@ -270,6 +270,65 @@
 	margin-top: 1.5rem;
 }
 
+.reading-time-preset-header-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 8px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--text-muted);
+}
+
+.reading-time-header-speed,
+.reading-time-header-name {
+	flex: 1;
+}
+
+.reading-time-wpm-description {
+	margin-top: 1rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--background-modifier-border);
+	font-size: 0.75rem;
+	color: var(--text-muted);
+	opacity: 0.7;
+	text-align: center;
+}
+
+.reading-time-header-default,
+.reading-time-header-delete {
+	flex-shrink: 0;
+	width: auto;
+}
+
+.reading-time-header-default {
+	text-align: center;
+}
+
+.reading-time-header-delete {
+	width: 40px; /* Match delete button width */
+}
+
+.reading-time-speed-wrapper {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.reading-time-speed-input {
+	flex: 1;
+}
+
+.reading-time-speed-label {
+	color: var(--text-muted);
+	font-size: 0.875rem;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
 .reading-time-presets-container h3 {
 	margin-top: 0;
 	margin-bottom: 1rem;
@@ -279,11 +338,13 @@
 }
 
 .reading-time-preset-container {
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 6px;
-	padding: 1rem;
-	margin-bottom: 1rem;
-	background: var(--background-secondary);
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 8px;
+	border: none;
+	padding: 0;
+	background: transparent;
 }
 
 .reading-time-preset-header {
@@ -323,4 +384,51 @@
 
 .reading-time-preset-settings {
 	margin-top: 0.5rem;
+}
+
+.reading-time-speed-input,
+.reading-time-name-input {
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	color: var(--text-normal);
+	font-size: 0.875rem;
+	padding: 0.5rem 0.75rem;
+	width: 100%;
+	font-family: inherit;
+}
+
+.reading-time-name-input {
+	flex: 1;
+}
+
+.reading-time-speed-input:focus,
+.reading-time-name-input:focus {
+	outline: none;
+	border-color: var(--background-modifier-border-hover);
+	background: var(--background-modifier-form-field-highlighted);
+}
+
+.reading-time-delete-btn {
+	cursor: pointer;
+	padding: 4px 8px;
+	border: none;
+	background: transparent;
+	color: var(--text-muted);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.6;
+	transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.reading-time-delete-btn:hover {
+	opacity: 1;
+	color: var(--text-error);
+}
+
+.reading-time-default-checkbox {
+	cursor: pointer;
+	margin: 0;
+	flex-shrink: 0;
 }
