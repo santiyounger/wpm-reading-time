@@ -63,9 +63,9 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			
 			// Handler for opening settings
 			const onOpenSettings = () => {
-				if (plugin.settingTab) {
-					plugin.settingTab.display();
-				}
+				// Open settings and navigate to this plugin's tab
+				(plugin.app as any).setting.open();
+				(plugin.app as any).setting.openTabById(plugin.manifest.id);
 			};
 			
 			readingTimeView.updateContent(
