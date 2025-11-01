@@ -236,18 +236,64 @@ export class ReadingTimeView extends ItemView {
 		
 		// Plugin title at the top
 		const pluginTitle = mainContent.createDiv('reading-time-plugin-title');
+		
+		// Clock icon
+		const clockIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		clockIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		clockIcon.setAttribute('width', '20');
+		clockIcon.setAttribute('height', '20');
+		clockIcon.setAttribute('viewBox', '0 0 24 24');
+		clockIcon.setAttribute('fill', 'none');
+		clockIcon.setAttribute('stroke', 'currentColor');
+		clockIcon.setAttribute('stroke-width', '1.5');
+		clockIcon.setAttribute('stroke-linecap', 'round');
+		clockIcon.setAttribute('stroke-linejoin', 'round');
+		clockIcon.classList.add('svg-icon');
+		clockIcon.classList.add('lucide-clock');
+		clockIcon.style.display = 'inline-block';
+		clockIcon.style.verticalAlign = 'middle';
+		clockIcon.style.marginRight = '4px';
+		
+		const clockCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+		clockCircle.setAttribute('cx', '12');
+		clockCircle.setAttribute('cy', '12');
+		clockCircle.setAttribute('r', '10');
+		clockIcon.appendChild(clockCircle);
+		
+		const clockPolyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+		clockPolyline.setAttribute('points', '12 6 12 12 16 14');
+		clockIcon.appendChild(clockPolyline);
+		
+		pluginTitle.appendChild(clockIcon);
 		pluginTitle.createSpan({ text: 'How Long to Read This Text' });
 		pluginTitle.createEl('br');
 		pluginTitle.createSpan({ text: '(WPM Reading Time)' });
 		
+		// Centered content wrapper for everything below the title
+		const centeredContent = mainContent.createDiv('reading-time-centered-content');
+		
 		// Note title header (only shown when analyzing whole note)
 		if (this.isWholeNote && this.noteTitle) {
-			const noteTitleDiv = mainContent.createDiv('reading-time-note-title');
+			const noteTitleDiv = centeredContent.createDiv('reading-time-note-title');
 			noteTitleDiv.createSpan({ text: 'You can select text and then run this plugin' });
+			noteTitleDiv.createEl('br');
 			noteTitleDiv.createEl('br');
 			noteTitleDiv.createSpan({ text: 'Right now we are using this whole note: ' });
 			const noteLink = noteTitleDiv.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
+			
+			// Check if note link would overflow and force it to its own line
+			setTimeout(() => {
+				const container = noteTitleDiv.getBoundingClientRect();
+				const linkRect = noteLink.getBoundingClientRect();
+				const linkTextWidth = noteLink.scrollWidth;
+				
+				// If link text is wider than available space, put it on its own line
+				if (linkTextWidth > container.width * 0.85) {
+					noteLink.style.display = 'block';
+					noteLink.style.marginTop = '0';
+				}
+			}, 0);
 			noteLink.style.cursor = 'pointer';
 			noteLink.addEventListener('click', async (e) => {
 				e.preventDefault();
@@ -269,13 +315,13 @@ export class ReadingTimeView extends ItemView {
 		}
 		
 		// Heading
-		mainContent.createEl('div', { 
+		centeredContent.createEl('div', { 
 			text: 'You\'d read this in:', 
 			cls: 'reading-time-heading' 
 		});
 		
 		// Main time display
-		const timeDisplay = mainContent.createDiv('reading-time-display');
+		const timeDisplay = centeredContent.createDiv('reading-time-display');
 		const formattedDiv = timeDisplay.createDiv('reading-time-formatted');
 		
 		// Parse and render time with proper line-break handling
@@ -303,15 +349,16 @@ export class ReadingTimeView extends ItemView {
 			unitSpan.textContent = formatted;
 		}
 
-		// "because it's:" and word count combined
+		// "because it's:" and word count combined with speed label
 		const becauseDiv = timeDisplay.createDiv('reading-time-because');
 		becauseDiv.createSpan({ text: 'because it\'s: ' });
 		becauseDiv.createSpan({ text: `${this.wordCount}`, cls: 'reading-time-number' });
 		becauseDiv.createSpan({ text: ' words long' });
+		becauseDiv.createEl('br');
+		becauseDiv.createSpan({ text: 'at a speed of: ' });
 
 		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
-		speedDiv.createEl('div', { text: 'at a speed of:', cls: 'reading-time-speed-label' });
 		
 		// Custom dropdown container
 		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
@@ -391,7 +438,42 @@ export class ReadingTimeView extends ItemView {
 		const toggleDropdown = (e: MouseEvent) => {
 			e.stopPropagation();
 			isOpen = !isOpen;
-			dropdownMenu.style.display = isOpen ? 'block' : 'none';
+			
+			if (isOpen) {
+				// First show it to measure its height
+				dropdownMenu.style.display = 'block';
+				dropdownMenu.style.visibility = 'hidden';
+				
+				// Calculate available space below and above the dropdown button
+				const buttonRect = dropdownButton.getBoundingClientRect();
+				const menuRect = dropdownMenu.getBoundingClientRect();
+				const viewportHeight = window.innerHeight;
+				
+				const spaceBelow = viewportHeight - buttonRect.bottom;
+				const spaceAbove = buttonRect.top;
+				const menuHeight = menuRect.height;
+				
+				// If not enough space below but enough space above, open upwards
+				if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
+					dropdownMenu.classList.add('reading-time-dropdown-menu-up');
+					dropdownMenu.style.top = 'auto';
+					dropdownMenu.style.bottom = '100%';
+					dropdownMenu.style.marginTop = '0';
+					dropdownMenu.style.marginBottom = '0.25rem';
+				} else {
+					dropdownMenu.classList.remove('reading-time-dropdown-menu-up');
+					dropdownMenu.style.top = '100%';
+					dropdownMenu.style.bottom = 'auto';
+					dropdownMenu.style.marginTop = '0.25rem';
+					dropdownMenu.style.marginBottom = '0';
+				}
+				
+				// Make it visible now
+				dropdownMenu.style.visibility = 'visible';
+			} else {
+				dropdownMenu.style.display = 'none';
+				dropdownMenu.style.visibility = '';
+			}
 		};
 		
 		dropdownButton.addEventListener('click', toggleDropdown);
@@ -413,6 +495,97 @@ export class ReadingTimeView extends ItemView {
 		this.dropdownCleanup = () => {
 			document.removeEventListener('click', closeDropdown);
 		};
+		
+		// Settings link below dropdown
+		if (this.onOpenSettings) {
+			const settingsLink = speedDiv.createDiv('reading-time-settings-link');
+			settingsLink.style.cursor = 'pointer';
+			settingsLink.style.display = 'flex';
+			settingsLink.style.alignItems = 'center';
+			settingsLink.style.justifyContent = 'center';
+			settingsLink.style.gap = '0.375rem';
+			settingsLink.style.marginTop = '0.5rem';
+			settingsLink.style.fontSize = '0.875rem';
+			settingsLink.style.color = 'var(--text-muted)';
+			settingsLink.style.transition = 'color 0.15s ease';
+			settingsLink.style.textDecoration = 'underline';
+			
+			// Create gear icon SVG
+			const gearIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			gearIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+			gearIcon.setAttribute('width', '14');
+			gearIcon.setAttribute('height', '14');
+			gearIcon.setAttribute('viewBox', '0 0 24 24');
+			gearIcon.setAttribute('fill', 'none');
+			gearIcon.setAttribute('stroke', 'currentColor');
+			gearIcon.setAttribute('stroke-width', '1.5');
+			gearIcon.setAttribute('stroke-linecap', 'round');
+			gearIcon.setAttribute('stroke-linejoin', 'round');
+			gearIcon.classList.add('svg-icon');
+			gearIcon.classList.add('lucide-settings');
+			
+			// Gear icon paths (lucide-settings icon)
+			const gearPath1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			gearPath1.setAttribute('d', 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z');
+			gearIcon.appendChild(gearPath1);
+			
+			const gearCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+			gearCircle.setAttribute('cx', '12');
+			gearCircle.setAttribute('cy', '12');
+			gearCircle.setAttribute('r', '3');
+			gearIcon.appendChild(gearCircle);
+			
+			settingsLink.appendChild(gearIcon);
+			settingsLink.createSpan({ text: 'You can change this ' });
+			
+			// Arrow up icon after "this"
+			const arrowUpIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			arrowUpIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+			arrowUpIcon.setAttribute('width', '12');
+			arrowUpIcon.setAttribute('height', '12');
+			arrowUpIcon.setAttribute('viewBox', '0 0 24 24');
+			arrowUpIcon.setAttribute('fill', 'none');
+			arrowUpIcon.setAttribute('stroke', 'currentColor');
+			arrowUpIcon.setAttribute('stroke-width', '1.5');
+			arrowUpIcon.setAttribute('stroke-linecap', 'round');
+			arrowUpIcon.setAttribute('stroke-linejoin', 'round');
+			arrowUpIcon.classList.add('svg-icon');
+			arrowUpIcon.classList.add('lucide-arrow-up');
+			arrowUpIcon.style.display = 'inline-block';
+			arrowUpIcon.style.verticalAlign = 'middle';
+			arrowUpIcon.style.marginLeft = '0.125rem';
+			arrowUpIcon.style.marginRight = '0.125rem';
+			
+			const arrowUpPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			arrowUpPath.setAttribute('d', 'm5 12 7-7 7 7');
+			arrowUpIcon.appendChild(arrowUpPath);
+			
+			const arrowUpLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+			arrowUpLine.setAttribute('x1', '12');
+			arrowUpLine.setAttribute('x2', '12');
+			arrowUpLine.setAttribute('y1', '19');
+			arrowUpLine.setAttribute('y2', '5');
+			arrowUpIcon.appendChild(arrowUpLine);
+			
+			settingsLink.appendChild(arrowUpIcon);
+			settingsLink.createSpan({ text: ' in the settings' });
+			
+			settingsLink.addEventListener('click', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				if (this.onOpenSettings) {
+					this.onOpenSettings();
+				}
+			});
+			
+			settingsLink.addEventListener('mouseenter', () => {
+				settingsLink.style.color = 'var(--text-normal)';
+			});
+			
+			settingsLink.addEventListener('mouseleave', () => {
+				settingsLink.style.color = 'var(--text-muted)';
+			});
+		}
 	}
 
 	async onOpen(): Promise<void> {

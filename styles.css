@@ -59,6 +59,13 @@
 	overflow-x: hidden;
 }
 
+.reading-time-dropdown-menu.reading-time-dropdown-menu-up {
+	top: auto;
+	bottom: 100%;
+	margin-top: 0;
+	margin-bottom: 0.25rem;
+}
+
 .reading-time-dropdown-item {
 	padding: 0.5rem 0.75rem;
 	color: var(--text-normal);
@@ -114,9 +121,21 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	align-items: center;
+	align-items: stretch;
 	justify-content: flex-start;
 	min-height: 100%;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+}
+
+.reading-time-centered-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	align-items: center;
+	justify-content: center;
 	user-select: text;
 	-webkit-user-select: text;
 	-moz-user-select: text;
@@ -141,6 +160,25 @@
 	margin-bottom: 0.5rem;
 	opacity: 0.8;
 	text-align: center;
+	line-height: 1.5;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+.reading-time-note-title .reading-time-note-link {
+	display: inline-block;
+	vertical-align: top;
+	max-width: calc(100% - 0.5rem);
+	word-break: break-word;
+	margin-top: 0;
+}
+
+/* Force note link to its own line if it would overflow */
+@media (max-width: 600px) {
+	.reading-time-note-title .reading-time-note-link {
+		display: block;
+		margin-top: 0;
+	}
 }
 
 .reading-time-heading {
@@ -276,7 +314,13 @@
 .reading-time-note-link {
 	cursor: pointer;
 	text-decoration: underline;
+	opacity: 1 !important;
 	transition: opacity 0.15s ease;
+	color: var(--text-accent) !important;
+}
+
+.reading-time-note-title .reading-time-note-link {
+	opacity: 1 !important;
 }
 
 .reading-time-note-link:hover {
