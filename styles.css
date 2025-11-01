@@ -302,6 +302,25 @@
 	text-align: center;
 }
 
+.reading-time-wpm-calculator {
+	margin-top: 0.5rem;
+	font-size: 0.75rem;
+	color: var(--text-muted);
+	opacity: 0.8;
+	text-align: center;
+}
+
+.reading-time-wpm-calculator a {
+	color: var(--text-accent);
+	text-decoration: none;
+	transition: opacity 0.15s ease;
+}
+
+.reading-time-wpm-calculator a:hover {
+	opacity: 0.8;
+	text-decoration: underline;
+}
+
 .reading-time-header-default {
 	flex-shrink: 0;
 	width: 80px;

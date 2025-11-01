@@ -53,6 +53,10 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// WPM description below presets
 		const wpmDesc = presetsContainer.createDiv('reading-time-wpm-description');
 		wpmDesc.textContent = 'WPM = Words Per Minute';
+
+		// WPM calculator link
+		const wpmCalculatorLink = presetsContainer.createDiv('reading-time-wpm-calculator');
+		wpmCalculatorLink.innerHTML = 'Don\'t know your reading speed? Use the <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">WPM Calculator</a> tool.';
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
