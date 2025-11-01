@@ -15,33 +15,12 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'WPM Reading Time Settings' });
+		containerEl.createEl('h2', { text: 'Settings' });
 
+		// Description
 		containerEl.createEl('p', { 
 			text: 'Configure your reading speed presets. You can add multiple presets and switch between them using the dropdown in the reading time view.',
 			cls: 'setting-item-description'
-		});
-
-		// Display all presets
-		this.plugin.settings.presets.forEach((preset, index) => {
-			this.renderPresetSetting(containerEl, preset, index);
-		});
-
-		// Add new preset button
-		const addPresetContainer = containerEl.createDiv('setting-item');
-		addPresetContainer.createEl('button', {
-			text: '+ Add New Preset',
-			cls: 'mod-cta'
-		}).addEventListener('click', () => {
-			const newPreset: WPMTimePreset = {
-				id: `preset-${Date.now()}`,
-				name: 'New Preset',
-				speed: 200
-			};
-			this.plugin.settings.presets.push(newPreset);
-			this.plugin.saveSettings().then(() => {
-				this.display(); // Refresh the settings view
-			});
 		});
 
 		// Default preset selector
@@ -58,21 +37,72 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
+
+		// Presets section
+		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
+		presetsContainer.createEl('h3', { text: 'Reading Speed Presets' });
+
+		// Display all presets
+		this.plugin.settings.presets.forEach((preset, index) => {
+			this.renderPresetSetting(presetsContainer, preset, index);
+		});
+
+		// Add new preset button
+		new Setting(presetsContainer)
+			.setName('Add new preset')
+			.setDesc('Create a new reading speed preset')
+			.addButton(button => button
+				.setButtonText('Add Preset')
+				.setCta()
+				.onClick(() => {
+					const newPreset: WPMTimePreset = {
+						id: `preset-${Date.now()}`,
+						name: 'New Preset',
+						speed: 200
+					};
+					this.plugin.settings.presets.push(newPreset);
+					this.plugin.saveSettings().then(() => {
+						this.display(); // Refresh the settings view
+					});
+				}));
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
-		const presetContainer = containerEl.createDiv('reading-time-preset-setting');
+		// Preset container with border
+		const presetContainer = containerEl.createDiv('reading-time-preset-container');
 		
-		const settingContainer = presetContainer.createDiv('setting-item');
-		settingContainer.createEl('div', { 
-			text: `Preset ${index + 1}`,
-			cls: 'setting-item-name'
-		});
+		// Preset header with name and delete button
+		const presetHeader = presetContainer.createDiv('reading-time-preset-header');
+		const presetTitle = presetHeader.createDiv('reading-time-preset-title');
+		presetTitle.createEl('strong', { text: preset.name || `Preset ${index + 1}` });
+		
+		// Delete button in header (only if more than one preset)
+		if (this.plugin.settings.presets.length > 1) {
+			const deleteBtn = presetHeader.createEl('button', {
+				text: 'Delete',
+				cls: 'reading-time-delete-btn'
+			});
+			deleteBtn.addEventListener('click', async () => {
+				// Remove preset
+				this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
+				
+				// If this was the selected preset, switch to first available
+				if (this.plugin.settings.selectedPresetId === preset.id) {
+					this.plugin.settings.selectedPresetId = this.plugin.settings.presets[0]?.id || '';
+				}
+				
+				await this.plugin.saveSettings();
+				this.display(); // Refresh the settings view
+			});
+		}
+
+		// Preset settings
+		const presetSettings = presetContainer.createDiv('reading-time-preset-settings');
 
 		// Preset name
-		new Setting(settingContainer)
+		new Setting(presetSettings)
 			.setName('Preset name')
-			.setDesc('A descriptive name for this preset (e.g., "My Reading Time")')
+			.setDesc('A descriptive name for this preset (e.g., "My Reading Time", "My Speaking Time")')
 			.addText(text => text
 				.setPlaceholder('Preset name')
 				.setValue(preset.name)
@@ -83,13 +113,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 					}
 					preset.name = value.trim();
 					await this.plugin.saveSettings();
-					this.display(); // Refresh to update dropdown
+					this.display(); // Refresh to update dropdown and header
 				}));
 
 		// Preset speed
-		new Setting(settingContainer)
-			.setName('Speed (WPM)')
-			.setDesc('Words per minute for this preset')
+		new Setting(presetSettings)
+			.setName('Reading speed')
+			.setDesc('Words per minute for this preset. Average reading speed is 250-300 WPM; average speaking speed is 150-200 WPM.')
 			.addText(text => text
 				.setPlaceholder('200')
 				.setValue(preset.speed.toString())
@@ -102,29 +132,6 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 					preset.speed = speed;
 					await this.plugin.saveSettings();
 				}));
-
-		// Delete button
-		if (this.plugin.settings.presets.length > 1) {
-			new Setting(settingContainer)
-				.setName('')
-				.addButton(button => button
-					.setButtonText('Delete')
-					.setWarning()
-					.onClick(async () => {
-						// Remove preset
-						this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
-						
-						// If this was the selected preset, switch to first available
-						if (this.plugin.settings.selectedPresetId === preset.id) {
-							this.plugin.settings.selectedPresetId = this.plugin.settings.presets[0]?.id || '';
-						}
-						
-						await this.plugin.saveSettings();
-						this.display(); // Refresh the settings view
-					}));
-		}
-
-		containerEl.createEl('hr');
 	}
 }
 

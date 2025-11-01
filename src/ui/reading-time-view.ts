@@ -67,7 +67,7 @@ export class ReadingTimeView extends ItemView {
 		
 		// Heading
 		mainContent.createEl('div', { 
-			text: 'You read this in:', 
+			text: 'You\'d read this in:', 
 			cls: 'reading-time-heading' 
 		});
 		
@@ -86,33 +86,21 @@ export class ReadingTimeView extends ItemView {
 
 		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
-		speedDiv.createSpan({ text: 'and your: ' });
 		
 		// Custom dropdown container
 		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
 		const dropdownButton = dropdownContainer.createDiv('reading-time-preset-select');
 		
-		// Extract a readable label from preset name (e.g., "My Reading Time" -> "reading time", "My Speaking Time" -> "speaking time")
-		const getTimeLabel = (presetName: string): string => {
-			const lowerName = presetName.toLowerCase();
-			if (lowerName.includes('speaking')) return 'speaking time';
-			if (lowerName.includes('reading')) return 'reading time';
-			// Default to "reading time" if no match
-			return 'reading time';
-		};
-		
-		const timeLabel = getTimeLabel(currentPreset.name);
-		
 		// Display selected preset with styled WPM phrase
 		const displayText = dropdownButton.createSpan();
-		displayText.createSpan({ text: `${timeLabel} is: ${currentPreset.speed} ` });
+		displayText.createSpan({ text: `at: ${currentPreset.speed} ` });
 		const wpmPhrase = displayText.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ord ' });
 		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'inute' });
+		wpmPhrase.createSpan({ text: 'inute (`${currentPreset.name}`)` });
 		
 		// Dropdown arrow
 		const arrow = dropdownButton.createSpan('reading-time-dropdown-arrow');
@@ -126,15 +114,14 @@ export class ReadingTimeView extends ItemView {
 		for (const preset of this.presets) {
 			const menuItem = dropdownMenu.createDiv('reading-time-dropdown-item');
 			const itemText = menuItem.createSpan();
-			const presetTimeLabel = getTimeLabel(preset.name);
-			itemText.createSpan({ text: `${presetTimeLabel} is: ${preset.speed} ` });
+			itemText.createSpan({ text: `at: ${preset.speed} ` });
 			const itemWpmPhrase = itemText.createSpan({ cls: 'reading-time-wpm-phrase' });
 			itemWpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'ord ' });
 			itemWpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'er ' });
 			itemWpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-			itemWpmPhrase.createSpan({ text: 'inute' });
+			itemWpmPhrase.createSpan({ text: 'inute (`${preset.name}`)` });
 			
 			if (preset.id === this.selectedPresetId) {
 				menuItem.classList.add('selected');
