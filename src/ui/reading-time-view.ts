@@ -77,7 +77,11 @@ export class ReadingTimeView extends ItemView {
 		// Note title header (only shown when analyzing whole note)
 		if (this.isWholeNote && this.noteTitle) {
 			const noteTitleDiv = mainContent.createDiv('reading-time-note-title');
-			noteTitleDiv.textContent = `for this whole note ${this.noteTitle}`;
+			noteTitleDiv.createSpan({ text: 'You can select text and then run this plugin' });
+			noteTitleDiv.createEl('br');
+			noteTitleDiv.createSpan({ text: 'Right now we are using this whole note: ' });
+			const noteLink = noteTitleDiv.createSpan({ cls: 'reading-time-accent' });
+			noteLink.textContent = `[[${this.noteTitle}]]`;
 		}
 		
 		// Heading

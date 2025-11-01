@@ -47,13 +47,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const githubLink = linksContainer.createEl('a', {
 			href: 'https://github.com/santiyounger/wpm-reading-time',
 			attr: { 
-				'aria-label': 'View Code on GitHub',
+				'aria-label': 'Code on GitHub',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
 			cls: 'reading-time-link'
 		});
-		githubLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-github"><path d="M15 22v-4a4.8-4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>View Code on GitHub</a>';
+		githubLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-github"><path d="M15 22v-4a4.8-4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>Code on GitHub</a>';
 
 		// Write a request link (GitHub issues)
 		const requestLink = linksContainer.createEl('a', {
@@ -104,7 +104,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		
 		// WPM calculator link (on the left side of the add button)
 		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (Words Per Minute), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
+		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (<span class="reading-time-wpm-phrase"><span class="reading-time-accent">W</span><span>ords </span><span class="reading-time-accent">P</span><span>er </span><span class="reading-time-accent">M</span><span>inute</span></span>), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')

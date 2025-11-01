@@ -127,6 +127,7 @@
 	color: var(--text-muted);
 	margin-bottom: 0.5rem;
 	opacity: 0.8;
+	text-align: center;
 }
 
 .reading-time-heading {
@@ -353,7 +354,7 @@
 .reading-time-wpm-calculator a {
 	color: var(--text-accent);
 	font-weight: 500;
-	text-decoration: none;
+	text-decoration: underline;
 	transition: opacity 0.15s ease;
 }
 
@@ -482,7 +483,7 @@
 
 .reading-time-speed-input {
 	flex: 1;
-	min-width: 160px;
+	min-width: 120px;
 	text-align: right;
 }
 
@@ -561,7 +562,7 @@
 
 .reading-time-wpm-tooltip a {
 	color: var(--text-accent);
-	text-decoration: none;
+	text-decoration: underline;
 }
 
 .reading-time-wpm-tooltip a:hover {
