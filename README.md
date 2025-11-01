@@ -39,8 +39,8 @@ Matches Obsidian's design language. Feels like a built-in feature.
 
 1. Open **Settings → Community plugins**
 2. Turn off **Safe mode**
-3. Click **Browse** and search for "How Long to Read (Reading Time WPM)"
-4. Click **Install**, then **Enable**
+3. Select **Browse** and search for "How Long to Read (Reading Time WPM)"
+4. Select **Install**, then **Enable**
 
 ## How it works
 
@@ -64,7 +64,7 @@ To get the most accurate reading time estimates, you'll want to know your person
 
 ## Settings
 
-Access settings via **Settings → Community plugins → How Long to Read (Reading Time WPM)**, or click the gear icon in the dropdown menu.
+Access settings via **Settings → Community plugins → How Long to Read (Reading Time WPM)**, or select the gear icon in the dropdown menu.
 
 ### Default Preset
 
@@ -85,20 +85,20 @@ The plugin comes with two default presets:
 
 #### Adding a New Preset
 
-1. Click **"Add Preset"** button in the settings
+1. Select **"Add Preset"** button in the settings
 2. Enter a name for your preset
 3. Set the WPM (words per minute) value
 4. Your new preset will appear in the dropdown menu
 
 #### Editing a Preset
 
-- Click on the preset name or speed field
+- Select the preset name or speed field
 - Type your changes
 - Changes are saved automatically
 
 #### Deleting a Preset
 
-- Click the **"Delete"** button next to the preset
+- Select the **"Delete"** button next to the preset
 - You must have at least one preset (cannot delete if only one remains)
 
 ### Recommended WPM Values

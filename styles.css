@@ -449,6 +449,7 @@
 .reading-time-speed-input {
 	flex: 1;
 	min-width: 0;
+	text-align: right;
 }
 
 .reading-time-name-input {
@@ -480,8 +481,8 @@
 }
 
 .reading-time-wpm-calculator-btn svg {
-	width: 20px;
-	height: 20px;
+	width: 18px;
+	height: 18px;
 }
 
 .reading-time-wpm-tooltip {
@@ -674,34 +675,4 @@
 	cursor: pointer;
 	margin: 0;
 	flex-shrink: 0;
-	width: 18px;
-	height: 18px;
-	border-radius: 50%;
-	appearance: none;
-	-webkit-appearance: none;
-	border: 2px solid var(--background-modifier-border);
-	background: var(--background-primary);
-	position: relative;
-	transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.reading-time-default-checkbox:hover {
-	border-color: var(--text-accent);
-}
-
-.reading-time-default-checkbox:checked {
-	background: var(--text-accent);
-	border-color: var(--text-accent);
-}
-
-.reading-time-default-checkbox:checked::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: var(--background-primary);
 }

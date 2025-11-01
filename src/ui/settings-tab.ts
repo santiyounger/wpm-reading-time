@@ -19,7 +19,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const heading = containerEl.createEl('h2', { cls: 'reading-time-settings-heading' });
-		heading.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clock" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>How Long to Read (Reading Time WPM)</span>';
+		heading.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clock" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>How Long to Read (Reading Time WPM)</span>';
 
 		// Links container at top
 		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container');
@@ -41,7 +41,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			},
 			cls: 'reading-time-link'
 		});
-		supportLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>Get Help</a>';
+		supportLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>Get Help</a>';
 
 		// Website link
 		const websiteLink = linksContainer.createEl('a', {
@@ -53,14 +53,14 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			},
 			cls: 'reading-time-link'
 		});
-		websiteLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Website</a>';
+		websiteLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Website</a>';
 
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
 
 		// WPM calculator link (above the table)
 		const wpmCalculatorLink = presetsContainer.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed, I put together a calculator for you in my <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">website</a>.';
+		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed, I put together a calculator for you in my <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">website</a>.';
 
 		// Header row
 		const headerRow = presetsContainer.createDiv('reading-time-preset-header-row');
@@ -68,20 +68,20 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Default header with icon and empty subtitle for alignment
 		const defaultHeader = headerRow.createDiv('reading-time-header-default');
 		const defaultHeaderTitle = defaultHeader.createDiv('reading-time-header-default-title reading-time-header-with-icon');
-		defaultHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Default</span>';
+		defaultHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Default</span>';
 		defaultHeader.createEl('div', { text: '', cls: 'reading-time-header-default-subtitle' }); // Empty subtitle for alignment
 		
 		// Speed header with subheading and icon
 		const speedHeader = headerRow.createDiv('reading-time-header-speed');
 		const speedHeaderTitle = speedHeader.createDiv('reading-time-header-speed-title reading-time-header-with-icon');
-		speedHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-gauge"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Speed</span>';
+		speedHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-gauge"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Speed</span>';
 		speedHeader.createEl('div', { text: 'WPM = Words Per Minute', cls: 'reading-time-header-speed-subtitle' });
 		
-		// Name header with icon and empty subtitle for alignment
+		// Name header with icon and subtitle
 		const nameHeader = headerRow.createDiv('reading-time-header-name');
 		const nameHeaderTitle = nameHeader.createDiv('reading-time-header-name-title reading-time-header-with-icon');
-		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Name</span>';
-		nameHeader.createEl('div', { text: '', cls: 'reading-time-header-name-subtitle' }); // Empty subtitle for alignment
+		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Name</span>';
+		nameHeader.createEl('div', { text: 'Name is optional but helpful', cls: 'reading-time-header-name-subtitle' });
 		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
 
 		// Display all presets
@@ -93,7 +93,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		new Setting(presetsContainer)
 			.addButton(button => button
 				.setIcon('plus')
-				.setTooltip('To find out your reading speed, I put together a calculator for you in my website. Click to add a new preset.')
+				.setTooltip('To find out your reading speed, I put together a calculator for you in my website. Select to add a new preset.')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -117,7 +117,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		learnMoreInner.style.paddingLeft = '10px';
 		
 		const learnMoreText = learnMoreInner.createDiv('reading-time-learn-more-text');
-		learnMoreText.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-external-link" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg><span>Check out my work at:</span>';
+		learnMoreText.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-external-link" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg><span>Check out my work at:</span>';
 		
 		const learnMoreLink = learnMoreInner.createEl('a', {
 			href: 'https://santiyounger.com/',
@@ -173,15 +173,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		// Speed input with WPM label
 		const speedWrapper = presetContainer.createDiv('reading-time-speed-wrapper');
-		const speedInput = speedWrapper.createEl('input', {
-			type: 'text',
-			attr: { spellcheck: 'false' },
-			cls: 'reading-time-speed-input'
-		});
-		// Only show speed if it's a valid positive number
-		speedInput.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
 		
-		// WPM calculator button using Obsidian's native button (before WPM label)
+		// WPM calculator button (first, on the left)
 		const calculatorBtnContainer = speedWrapper.createDiv('reading-time-wpm-calculator-btn-container');
 		const calculatorBtn = calculatorBtnContainer.createEl('button', {
 			cls: 'clickable-icon reading-time-wpm-calculator-btn',
@@ -190,9 +183,45 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				'title': 'Find your reading speed'
 			}
 		});
-		// Create icon using Obsidian's Lucide icon system - use innerHTML for proper SVG rendering
-		// innerHTML is allowed and commonly used in Obsidian plugins for custom SVG icons
-		calculatorBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>';
+		// Create icon using Obsidian's Lucide icon system
+		// Create SVG element and set classes properly to avoid enhance.js token issues
+		const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		iconSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		iconSvg.setAttribute('width', '18');
+		iconSvg.setAttribute('height', '18');
+		iconSvg.setAttribute('viewBox', '0 0 24 24');
+		iconSvg.setAttribute('fill', 'none');
+		iconSvg.setAttribute('stroke', 'currentColor');
+		iconSvg.setAttribute('stroke-width', '1.5');
+		iconSvg.setAttribute('stroke-linecap', 'round');
+		iconSvg.setAttribute('stroke-linejoin', 'round');
+		iconSvg.classList.add('svg-icon');
+		iconSvg.classList.add('lucide-help-circle');
+		
+		const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+		circle.setAttribute('cx', '12');
+		circle.setAttribute('cy', '12');
+		circle.setAttribute('r', '10');
+		iconSvg.appendChild(circle);
+		
+		const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path1.setAttribute('d', 'M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3');
+		iconSvg.appendChild(path1);
+		
+		const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path2.setAttribute('d', 'M12 17h.01');
+		iconSvg.appendChild(path2);
+		
+		calculatorBtn.appendChild(iconSvg);
+		
+		// Speed input (only numbers, right-aligned)
+		const speedInput = speedWrapper.createEl('input', {
+			type: 'text',
+			attr: { spellcheck: 'false' },
+			cls: 'reading-time-speed-input'
+		});
+		// Only show speed if it's a valid positive number
+		speedInput.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
 		
 		const speedLabel = speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
 		
@@ -245,10 +274,21 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		};
 		// Store cleanup reference on the container so it can be called if needed
 		(presetContainer as any)._tooltipCleanup = cleanup;
+		// Only allow numbers in speed input
 		speedInput.addEventListener('input', async (e) => {
 			const target = e.target as HTMLInputElement;
-			const speed = parseInt(target.value, 10);
-			if (!target.value) return; // Allow empty during typing
+			// Remove any non-numeric characters
+			const numericValue = target.value.replace(/[^0-9]/g, '');
+			if (target.value !== numericValue) {
+				target.value = numericValue;
+			}
+			
+			const speed = parseInt(numericValue, 10);
+			if (!numericValue) {
+				preset.speed = 0;
+				await this.plugin.saveSettings();
+				return; // Allow empty during typing
+			}
 			if (isNaN(speed) || speed <= 0) {
 				return; // Don't show notice while typing
 			}
@@ -292,7 +332,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				attr: { 'aria-label': 'Delete preset' },
 				cls: 'reading-time-delete-btn'
 			});
-			deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="m19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+			deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="m19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
 			deleteBtn.addEventListener('click', async () => {
 				// Remove preset
 				this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
