@@ -77,11 +77,11 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		speedHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-gauge"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Speed</span>';
 		speedHeader.createEl('div', { text: 'WPM = Words Per Minute', cls: 'reading-time-header-speed-subtitle' });
 		
-		// Name header with icon and subtitle
+		// Title header with icon and subtitle
 		const nameHeader = headerRow.createDiv('reading-time-header-name');
 		const nameHeaderTitle = nameHeader.createDiv('reading-time-header-name-title reading-time-header-with-icon');
-		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Name</span>';
-		nameHeader.createEl('div', { text: 'Name is optional but helpful', cls: 'reading-time-header-name-subtitle' });
+		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Title</span>';
+		nameHeader.createEl('div', { text: 'You can add a title to this speed for example : My Speaking Speed', cls: 'reading-time-header-name-subtitle' });
 		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
 
 		// Display all presets
@@ -313,10 +313,10 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			}
 		});
 
-		// Name input
+		// Title input
 		const nameInput = presetContainer.createEl('input', {
 			type: 'text',
-			attr: { spellcheck: 'false', placeholder: 'Optional name' },
+			attr: { spellcheck: 'false', placeholder: 'Optional title' },
 			cls: 'reading-time-name-input'
 		});
 		nameInput.value = preset.name;
