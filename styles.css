@@ -1,5 +1,11 @@
 /* Reading Time View Styles - Modern & Minimal (Sidebar) */
 
+.reading-time-dropdown-container {
+	position: relative;
+	display: inline-block;
+	margin: 0 0.25rem;
+}
+
 .reading-time-preset-select {
 	background: var(--background-modifier-form-field);
 	border: 1px solid var(--text-accent);
@@ -9,13 +15,11 @@
 	padding: 0.5rem 0.75rem;
 	line-height: 1.5;
 	cursor: pointer;
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
 	min-width: 200px;
-	margin: 0 0.25rem;
-	height: auto;
-	vertical-align: middle;
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
 }
 
 .reading-time-preset-select:hover {
@@ -23,15 +27,40 @@
 	background: var(--background-modifier-form-field-highlighted);
 }
 
-.reading-time-preset-select:focus {
-	outline: 2px solid var(--text-accent);
-	outline-offset: 2px;
-	border-color: var(--text-accent);
+.reading-time-dropdown-arrow {
+	font-size: 0.75rem;
+	color: var(--text-accent);
+	user-select: none;
 }
 
-.reading-time-preset-select option {
-	color: var(--text-normal);
+.reading-time-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 0.25rem;
 	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	min-width: 100%;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.reading-time-dropdown-item {
+	padding: 0.5rem 0.75rem;
+	color: var(--text-normal);
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+}
+
+.reading-time-dropdown-item:hover {
+	background: var(--background-modifier-hover);
+}
+
+.reading-time-dropdown-item.selected {
+	background: var(--background-modifier-active);
 }
 
 .reading-time-tab-content {

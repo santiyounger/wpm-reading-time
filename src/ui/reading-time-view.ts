@@ -9,6 +9,7 @@ export class ReadingTimeView extends ItemView {
 	presetTimes: Map<string, { formatted: string; seconds: number }> = new Map();
 	wordCount: number = 0;
 	onPresetChange?: (presetId: string) => void;
+	dropdownCleanup?: () => void;
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -43,6 +44,11 @@ export class ReadingTimeView extends ItemView {
 
 	private render(): void {
 		const { contentEl } = this;
+		// Clean up any existing dropdown listeners
+		if (this.dropdownCleanup) {
+			this.dropdownCleanup();
+			this.dropdownCleanup = undefined;
+		}
 		contentEl.empty();
 
 		if (this.presets.length === 0 || !this.selectedPresetId) {
@@ -61,7 +67,7 @@ export class ReadingTimeView extends ItemView {
 		
 		// Heading
 		mainContent.createEl('div', { 
-			text: 'You would read this in:', 
+			text: 'You read this in:', 
 			cls: 'reading-time-heading' 
 		});
 		
@@ -80,41 +86,101 @@ export class ReadingTimeView extends ItemView {
 
 		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
-		speedDiv.createSpan({ text: 'and you read at a speed of: ' });
+		speedDiv.createSpan({ text: 'and your: ' });
 		
-		// Dropdown select element
-		const select = speedDiv.createEl('select', { cls: 'reading-time-preset-select' });
-		for (const preset of this.presets) {
-			const option = select.createEl('option', { 
-				text: `${preset.name}: ${preset.speed}`,
-				value: preset.id 
-			});
-			if (preset.id === this.selectedPresetId) {
-				option.selected = true;
-			}
-		}
+		// Custom dropdown container
+		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
+		const dropdownButton = dropdownContainer.createDiv('reading-time-preset-select');
 		
-		// Add WPM phrase after dropdown
-		speedDiv.createSpan({ text: ' ' });
-		const wpmPhrase = speedDiv.createSpan({ cls: 'reading-time-wpm-phrase' });
+		// Extract a readable label from preset name (e.g., "My Reading Time" -> "reading time", "My Speaking Time" -> "speaking time")
+		const getTimeLabel = (presetName: string): string => {
+			const lowerName = presetName.toLowerCase();
+			if (lowerName.includes('speaking')) return 'speaking time';
+			if (lowerName.includes('reading')) return 'reading time';
+			// Default to "reading time" if no match
+			return 'reading time';
+		};
+		
+		const timeLabel = getTimeLabel(currentPreset.name);
+		
+		// Display selected preset with styled WPM phrase
+		const displayText = dropdownButton.createSpan();
+		displayText.createSpan({ text: `${timeLabel} is: ${currentPreset.speed} ` });
+		const wpmPhrase = displayText.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ord ' });
 		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'inute' });
-
-		// Dropdown change handler
-		select.addEventListener('change', (e) => {
-			const target = e.target as HTMLSelectElement;
-			const newPresetId = target.value;
-			if (this.onPresetChange && newPresetId !== this.selectedPresetId) {
-				this.selectedPresetId = newPresetId;
-				this.onPresetChange(newPresetId);
-				// Re-render to show new preset's time
-				this.render();
+		
+		// Dropdown arrow
+		const arrow = dropdownButton.createSpan('reading-time-dropdown-arrow');
+		arrow.textContent = '▼';
+		
+		// Dropdown menu (hidden by default)
+		const dropdownMenu = dropdownContainer.createDiv('reading-time-dropdown-menu');
+		dropdownMenu.style.display = 'none';
+		
+		// Create menu items for each preset
+		for (const preset of this.presets) {
+			const menuItem = dropdownMenu.createDiv('reading-time-dropdown-item');
+			const itemText = menuItem.createSpan();
+			const presetTimeLabel = getTimeLabel(preset.name);
+			itemText.createSpan({ text: `${presetTimeLabel} is: ${preset.speed} ` });
+			const itemWpmPhrase = itemText.createSpan({ cls: 'reading-time-wpm-phrase' });
+			itemWpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
+			itemWpmPhrase.createSpan({ text: 'ord ' });
+			itemWpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
+			itemWpmPhrase.createSpan({ text: 'er ' });
+			itemWpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
+			itemWpmPhrase.createSpan({ text: 'inute' });
+			
+			if (preset.id === this.selectedPresetId) {
+				menuItem.classList.add('selected');
 			}
-		});
+			
+			menuItem.addEventListener('click', (e) => {
+				e.stopPropagation();
+				if (this.onPresetChange && preset.id !== this.selectedPresetId) {
+					this.selectedPresetId = preset.id;
+					this.onPresetChange(preset.id);
+					dropdownMenu.style.display = 'none';
+					// Re-render to show new preset's time
+					this.render();
+				} else {
+					dropdownMenu.style.display = 'none';
+				}
+			});
+		}
+		
+		// Toggle dropdown menu
+		let isOpen = false;
+		const toggleDropdown = (e: MouseEvent) => {
+			e.stopPropagation();
+			isOpen = !isOpen;
+			dropdownMenu.style.display = isOpen ? 'block' : 'none';
+		};
+		
+		dropdownButton.addEventListener('click', toggleDropdown);
+		
+		// Close dropdown when clicking outside
+		const closeDropdown = (e: MouseEvent) => {
+			if (!dropdownContainer.contains(e.target as Node)) {
+				isOpen = false;
+				dropdownMenu.style.display = 'none';
+			}
+		};
+		
+		// Use a timeout to add the listener after current execution
+		setTimeout(() => {
+			document.addEventListener('click', closeDropdown);
+		}, 0);
+		
+		// Store cleanup function
+		this.dropdownCleanup = () => {
+			document.removeEventListener('click', closeDropdown);
+		};
 	}
 
 	async onOpen(): Promise<void> {
@@ -123,6 +189,10 @@ export class ReadingTimeView extends ItemView {
 
 	async onClose(): Promise<void> {
 		const { contentEl } = this;
+		if (this.dropdownCleanup) {
+			this.dropdownCleanup();
+			this.dropdownCleanup = undefined;
+		}
 		contentEl.empty();
 	}
 }
