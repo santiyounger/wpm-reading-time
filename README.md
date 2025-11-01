@@ -1,49 +1,66 @@
 # How Long to Read (Reading Time WPM)
 
-A powerful Obsidian plugin that calculates reading time for selected text based on customizable words per minute (WPM) presets. Perfect for writers, editors, and anyone who wants to know how long it takes to read their content.
+**Know exactly how long your notes take to read.**
+
+Stop guessing reading times. How Long to Read calculates estimates for any selected text using your personalized reading speed presets. Useful for writers, content strategists, and knowledge workers who need timing information.
+
+## Who is this for?
+
+### Bloggers & Writers
+Know how long your articles will take to read. Useful for optimizing content length and setting reader expectations.
+
+### Content Strategists
+Plan your presentations and speeches with confidence. Calculate reading time for speaking presets to nail your timing.
+
+### Knowledge Workers
+Estimate how long it takes to review documents, research notes, or any text in your vault.
 
 ## Features
 
-- 📊 **Calculate reading time** - Instantly see how long it takes to read selected text
-- 🎯 **Multiple presets** - Create custom reading speed presets (e.g., "My Reading Time", "My Speaking Time", "Slow Reader")
-- 🔄 **Easy switching** - Switch between presets with an intuitive dropdown menu
-- 📝 **Detailed information** - View reading time, word count, and reading speed all in one place
-- ⚙️ **Quick settings access** - Open settings directly from the dropdown menu via gear icon
-- 📱 **Mobile compatible** - Works on both desktop and mobile Obsidian apps
-- 🎨 **Beautiful UI** - Clean, modern interface that matches Obsidian's design
+### Smart Calculations
+Instantly calculates reading time based on word count and your personalized WPM settings. No manual counting needed.
+
+### Multiple Presets
+Create multiple presets for different scenarios: silent reading, speaking, slow reading, fast reading, and more. Each preset can have its own custom name and WPM value.
+
+### Easy Preset Switching
+Switch between presets via dropdown menu. Useful when you need different speeds for different content types.
+
+### Detailed Analytics
+See reading time, word count, and your current reading speed all displayed clearly in one place.
+
+### Cross-Platform
+Works on desktop, mobile, and tablet. Your presets will sync if you use Obsidian Sync.
+
+### Native Design
+Matches Obsidian's design language. Feels like a built-in feature.
 
 ## Installation
 
-### From Community Plugins (Recommended)
+1. Open **Settings → Community plugins**
+2. Turn off **Safe mode**
+3. Click **Browse** and search for "How Long to Read (Reading Time WPM)"
+4. Click **Install**, then **Enable**
 
-1. Open Obsidian
-2. Go to **Settings → Community plugins**
-3. Make sure "Safe mode" is **off**
-4. Click **Browse** and search for "How Long to Read (Reading Time WPM)"
-5. Click **Install**, then **Enable**
+## How it works
 
-## Usage
+### 1. Select your text
+Highlight any text in your Obsidian note that you want to analyze.
 
-### Basic Usage
+### 2. Run the command
+Open **Command Palette** (Ctrl/Cmd + P) and run **"Calculate reading time"**.
 
-1. **Select text** in any note that you want to analyze
-2. Open the **Command Palette** (Ctrl/Cmd + P)
-3. Type and select **"Calculate reading time"**
-4. A sidebar panel will appear showing:
-   - Reading time (formatted as "X minutes & Y seconds" or "X seconds")
-   - Word count
-   - Current preset speed and name
+### 3. Choose your preset
+Select from your custom presets using the dropdown menu. Switch anytime to see different estimates.
 
-### Switching Presets
+### 4. Get instant results
+View reading time, word count, and speed information displayed clearly in the sidebar.
 
-- Click the dropdown button showing your current preset
-- Select a different preset from the list
-- The reading time will automatically update based on the new preset's speed
+## Finding your reading speed
 
-### Quick Settings Access
+To get the most accurate reading time estimates, you'll want to know your personal reading speed (WPM).
 
-- Click the **⚙️ Settings** option at the bottom of the preset dropdown
-- This will open the plugin settings tab where you can manage your presets
+**Need help calculating your WPM?** Use our [companion web app](https://www.santiyounger.com/) to determine your words per minute reading speed. Once you know your WPM number, enter it in the Obsidian plugin settings for accurate, personalized reading time estimates.
 
 ## Settings
 
@@ -115,6 +132,7 @@ at a speed of:
 - **Use descriptive names**: Name your presets clearly so you know when to use each one
 - **Adjust speeds based on material**: Technical content may require slower speeds than casual reading
 - **Quick calculations**: Select any text and run the command - no need to manually count words
+- **Personalize your WPM**: Use the companion web app to find your actual reading speed for more accurate estimates
 
 ## Troubleshooting
 
@@ -126,9 +144,10 @@ at a speed of:
 
 ### Reading time seems inaccurate
 
-- Adjust your WPM settings in the plugin settings
+- Adjust your WPM settings in the plugin settings to match your actual reading speed
 - Remember that reading speed varies by material (technical vs. casual content)
 - Consider creating different presets for different types of content
+- Use the companion web app to determine your personal WPM for more accuracy
 
 ### Dropdown not working
 
@@ -144,7 +163,7 @@ at a speed of:
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to this plugin, please feel free to submit a Pull Request or open an issue with your suggestions.
+Contributions are welcome! If you'd like to contribute to this plugin, please feel free to submit a Pull Request or open an issue on the [GitHub repository](https://github.com/santiyounger/wpm-reading-time).
 
 ## License
 
@@ -152,8 +171,8 @@ MIT
 
 ## Support
 
-If you encounter any issues or have feature requests, please open an issue on the [GitHub repository](https://github.com/santiyounger/obsidian-plugin-wpm-time).
+If you encounter any issues or have feature requests, please open an issue on the [GitHub repository](https://github.com/santiyounger/wpm-reading-time).
 
 ## Credits
 
-Created by [Santi Younger](https://www.santiyounger.com/)
+Created by [Santi Younger](https://www.santiyounger.com/) to help writers and knowledge workers better understand their content's reading time.
