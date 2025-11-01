@@ -234,6 +234,12 @@ export class ReadingTimeView extends ItemView {
 		// Main content container
 		const mainContent = contentEl.createDiv('reading-time-content');
 		
+		// Plugin title at the top
+		const pluginTitle = mainContent.createDiv('reading-time-plugin-title');
+		pluginTitle.createSpan({ text: 'How Long to Read This Text' });
+		pluginTitle.createEl('br');
+		pluginTitle.createSpan({ text: '(WPM Reading Time)' });
+		
 		// Note title header (only shown when analyzing whole note)
 		if (this.isWholeNote && this.noteTitle) {
 			const noteTitleDiv = mainContent.createDiv('reading-time-note-title');

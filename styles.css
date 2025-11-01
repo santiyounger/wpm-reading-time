@@ -115,11 +115,24 @@
 	flex-direction: column;
 	gap: 0;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	min-height: 100%;
 	user-select: text;
 	-webkit-user-select: text;
 	-moz-user-select: text;
+}
+
+.reading-time-plugin-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: var(--text-normal);
+	margin-top: 0;
+	margin-bottom: 1rem;
+	padding-top: 0;
+	padding-bottom: 0.75rem;
+	text-align: center;
+	border-bottom: 1px solid var(--background-modifier-border);
+	align-self: stretch;
 }
 
 .reading-time-note-title {
