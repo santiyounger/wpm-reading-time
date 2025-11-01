@@ -56,7 +56,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		// WPM calculator link
 		const wpmCalculatorLink = presetsContainer.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = 'Don\'t know your reading speed? Use the <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">WPM Calculator</a> tool.';
+		wpmCalculatorLink.innerHTML = 'To find out your reading speed, I put together a calculator for you in my <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">website</a>.';
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
@@ -113,6 +113,20 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		speedInput.value = preset.speed.toString();
 		const speedLabel = speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
+		
+		// WPM calculator button
+		const wpmCalculatorBtn = speedWrapper.createEl('button', {
+			cls: 'reading-time-wpm-calculator-btn',
+			attr: { 
+				'aria-label': 'Find your reading speed',
+				'title': 'Find your reading speed with WPM Calculator'
+			}
+		});
+		wpmCalculatorBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>';
+		wpmCalculatorBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			window.open('http://localhost:6074/wpm-calculator', '_blank', 'noopener,noreferrer');
+		});
 		speedInput.addEventListener('input', async (e) => {
 			const target = e.target as HTMLInputElement;
 			const speed = parseInt(target.value, 10);

@@ -365,6 +365,29 @@
 	white-space: nowrap;
 }
 
+.reading-time-wpm-calculator-btn {
+	cursor: pointer;
+	padding: 4px;
+	border: none;
+	background: transparent;
+	color: var(--text-muted);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.6;
+	transition: opacity 0.15s ease, color 0.15s ease;
+	border-radius: 4px;
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+.reading-time-wpm-calculator-btn:hover {
+	opacity: 1;
+	color: var(--text-accent);
+	background: var(--background-modifier-hover);
+}
+
 .reading-time-presets-container h3 {
 	margin-top: 0;
 	margin-bottom: 1rem;
