@@ -100,7 +100,8 @@ export class ReadingTimeView extends ItemView {
 		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'inute (`${currentPreset.name}`)` });
+		wpmPhrase.createSpan({ text: 'inute' });
+		displayText.createSpan({ text: ` (${currentPreset.name})` });
 		
 		// Dropdown arrow
 		const arrow = dropdownButton.createSpan('reading-time-dropdown-arrow');
@@ -121,7 +122,8 @@ export class ReadingTimeView extends ItemView {
 			itemWpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'er ' });
 			itemWpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-			itemWpmPhrase.createSpan({ text: 'inute (`${preset.name}`)` });
+			itemWpmPhrase.createSpan({ text: 'inute' });
+			itemText.createSpan({ text: ` (${preset.name})` });
 			
 			if (preset.id === this.selectedPresetId) {
 				menuItem.classList.add('selected');

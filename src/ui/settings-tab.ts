@@ -74,7 +74,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Preset header with name and delete button
 		const presetHeader = presetContainer.createDiv('reading-time-preset-header');
 		const presetTitle = presetHeader.createDiv('reading-time-preset-title');
-		presetTitle.createEl('strong', { text: preset.name || `Preset ${index + 1}` });
+		const presetTitleStrong = presetTitle.createEl('strong', { text: preset.name || `Preset ${index + 1}` });
 		
 		// Delete button in header (only if more than one preset)
 		if (this.plugin.settings.presets.length > 1) {
@@ -111,9 +111,21 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 						new Notice('Preset name cannot be empty.');
 						return;
 					}
-					preset.name = value.trim();
+					const trimmedValue = value.trim();
+					preset.name = trimmedValue;
+					// Update the header text directly without re-rendering
+					presetTitleStrong.textContent = trimmedValue;
 					await this.plugin.saveSettings();
-					this.display(); // Refresh to update dropdown and header
+					// Only refresh if we need to update the default preset dropdown
+					// We'll do a partial refresh by finding and updating just that dropdown
+					const defaultPresetDropdown = containerEl.closest('.vertical-tab-content')?.querySelector('select') as HTMLSelectElement;
+					if (defaultPresetDropdown) {
+						// Update the option text in the default preset dropdown
+						const option = Array.from(defaultPresetDropdown.options).find(opt => opt.value === preset.id);
+						if (option) {
+							option.textContent = trimmedValue;
+						}
+					}
 				}));
 
 		// Preset speed
