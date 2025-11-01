@@ -173,6 +173,7 @@
 	-webkit-user-select: text;
 	-moz-user-select: text;
 	cursor: text;
+	font-family: var(--font-monospace, 'Courier New', Consolas, monospace);
 }
 
 .reading-time-unit-group {
