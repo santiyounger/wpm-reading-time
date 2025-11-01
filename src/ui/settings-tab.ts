@@ -19,7 +19,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const heading = containerEl.createEl('h2', { cls: 'reading-time-settings-heading' });
-		heading.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clock" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>How Long to Read (Reading Time WPM)</span>';
+		heading.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clock" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>How Long to Read This Text (WPM Reading Time)</span>';
 
 		// Links container at top
 		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container');
@@ -70,10 +70,6 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
 
-		// WPM calculator link (above the table)
-		const wpmCalculatorLink = presetsContainer.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (Words Per Minute), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
-
 		// Header row
 		const headerRow = presetsContainer.createDiv('reading-time-preset-header-row');
 		
@@ -120,6 +116,10 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 						this.display(); // Refresh the settings view
 					});
 				}));
+
+		// WPM calculator link (above the learn more section)
+		const wpmCalculatorLink = containerEl.createDiv('reading-time-wpm-calculator');
+		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (Words Per Minute), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
 
 		// Learn more about my work section
 		const learnMoreContainer = containerEl.createDiv('reading-time-learn-more');
@@ -278,7 +278,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			type: 'text',
 			attr: { 
 				spellcheck: 'false',
-				placeholder: 'Use calculator in: ?'
+				placeholder: 'Use calculator below'
 			},
 			cls: 'reading-time-speed-input'
 		});

@@ -1,4 +1,4 @@
-# How Long to Read (Reading Time WPM)
+# How Long to Read This Text (WPM Reading Time)
 
 **Know exactly how long your notes take to read.**
 
@@ -39,7 +39,7 @@ Matches Obsidian's design language. Feels like a built-in feature.
 
 1. Open **Settings → Community plugins**
 2. Turn off **Safe mode**
-3. Select **Browse** and search for "How Long to Read (Reading Time WPM)"
+3. Select **Browse** and search for "How Long to Read This Text (WPM Reading Time)"
 4. Select **Install**, then **Enable**
 
 ## How it works
@@ -64,7 +64,7 @@ To get the most accurate reading time estimates, you'll want to know your person
 
 ## Settings
 
-Access settings via **Settings → Community plugins → How Long to Read (Reading Time WPM)**, or select the gear icon in the dropdown menu.
+Access settings via **Settings → Community plugins → How Long to Read This Text (WPM Reading Time)**, or select the gear icon in the dropdown menu.
 
 ### Default Preset
 
