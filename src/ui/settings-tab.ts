@@ -60,7 +60,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const presetContainer = containerEl.createDiv('reading-time-preset-container');
 
 		// Default checkbox (first column)
-		const defaultCheckbox = presetContainer.createEl('input', {
+		const defaultCheckboxWrapper = presetContainer.createDiv('reading-time-default-wrapper');
+		const defaultCheckbox = defaultCheckboxWrapper.createEl('input', {
 			type: 'checkbox',
 			cls: 'reading-time-default-checkbox',
 			attr: { 'aria-label': 'Set as default preset' }

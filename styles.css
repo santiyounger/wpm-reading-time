@@ -282,9 +282,14 @@
 	color: var(--text-muted);
 }
 
-.reading-time-header-speed,
+.reading-time-header-speed {
+	width: 150px;
+	flex-shrink: 0;
+}
+
 .reading-time-header-name {
 	flex: 1;
+	min-width: 0;
 }
 
 .reading-time-wpm-description {
@@ -297,22 +302,28 @@
 	text-align: center;
 }
 
-.reading-time-header-default,
-.reading-time-header-delete {
-	flex-shrink: 0;
-	width: auto;
-}
-
 .reading-time-header-default {
+	flex-shrink: 0;
+	width: 80px;
 	text-align: center;
 }
 
 .reading-time-header-delete {
+	flex-shrink: 0;
 	width: 40px; /* Match delete button width */
 }
 
+.reading-time-default-wrapper {
+	flex-shrink: 0;
+	width: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .reading-time-speed-wrapper {
-	flex: 1;
+	width: 150px;
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -320,6 +331,12 @@
 
 .reading-time-speed-input {
 	flex: 1;
+	min-width: 0;
+}
+
+.reading-time-name-input {
+	flex: 1;
+	min-width: 0;
 }
 
 .reading-time-speed-label {
@@ -394,12 +411,7 @@
 	color: var(--text-normal);
 	font-size: 0.875rem;
 	padding: 0.5rem 0.75rem;
-	width: 100%;
 	font-family: inherit;
-}
-
-.reading-time-name-input {
-	flex: 1;
 }
 
 .reading-time-speed-input:focus,
