@@ -30,7 +30,7 @@ Switch between presets via dropdown menu. Useful when you need different speeds 
 See reading time, word count, and your current reading speed all displayed clearly in one place.
 
 ### Cross-Platform
-Works on desktop, mobile, and tablet. Your presets will sync if you use Obsidian Sync.
+Designed to work on desktop and mobile. Your presets will sync if you use Obsidian Sync.
 
 ### Native Design
 Matches Obsidian's design language. Feels like a built-in feature.
@@ -133,33 +133,6 @@ at a speed of:
 - **Adjust speeds based on material**: Technical content may require slower speeds than casual reading
 - **Quick calculations**: Select any text and run the command - no need to manually count words
 - **Personalize your WPM**: Use the companion web app to find your actual reading speed for more accurate estimates
-
-## Troubleshooting
-
-### Plugin doesn't appear in Community plugins
-
-- Make sure you've reloaded Obsidian after installing
-- Check that all files (`main.js`, `manifest.json`, `styles.css`) are in the correct folder
-- Verify "Safe mode" is turned off in Community plugins settings
-
-### Reading time seems inaccurate
-
-- Adjust your WPM settings in the plugin settings to match your actual reading speed
-- Remember that reading speed varies by material (technical vs. casual content)
-- Consider creating different presets for different types of content
-- Use the companion web app to determine your personal WPM for more accuracy
-
-### Dropdown not working
-
-- Try reloading Obsidian
-- Check that you have at least one preset configured
-- Verify the plugin is enabled in Settings → Community plugins
-
-### Settings not saving
-
-- Make sure you're not editing preset names to empty values
-- Check that WPM values are positive numbers
-- Reload the plugin if settings seem stuck
 
 ## Contributing
 
