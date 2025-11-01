@@ -91,17 +91,23 @@ export class ReadingTimeView extends ItemView {
 		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
 		const dropdownButton = dropdownContainer.createDiv('reading-time-preset-select');
 		
-		// Display selected preset with styled WPM phrase
-		const displayText = dropdownButton.createSpan();
-		displayText.createSpan({ text: `at: ${currentPreset.speed} ` });
-		const wpmPhrase = displayText.createSpan({ cls: 'reading-time-wpm-phrase' });
+		// Display selected preset with styled WPM phrase - two line layout
+		const displayContent = dropdownButton.createDiv('reading-time-dropdown-content');
+		
+		// First line: "at: [speed] Word Per Minute"
+		const firstLine = displayContent.createDiv('reading-time-dropdown-line');
+		firstLine.createSpan({ text: `at: ${currentPreset.speed} ` });
+		const wpmPhrase = firstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ord ' });
 		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'inute' });
-		displayText.createSpan({ text: ` (${currentPreset.name})` });
+		
+		// Second line: "(preset name)"
+		const secondLine = displayContent.createDiv('reading-time-dropdown-line');
+		secondLine.createSpan({ text: `(${currentPreset.name})` });
 		
 		// Dropdown arrow
 		const arrow = dropdownButton.createSpan('reading-time-dropdown-arrow');
@@ -114,16 +120,22 @@ export class ReadingTimeView extends ItemView {
 		// Create menu items for each preset
 		for (const preset of this.presets) {
 			const menuItem = dropdownMenu.createDiv('reading-time-dropdown-item');
-			const itemText = menuItem.createSpan();
-			itemText.createSpan({ text: `at: ${preset.speed} ` });
-			const itemWpmPhrase = itemText.createSpan({ cls: 'reading-time-wpm-phrase' });
+			const itemContent = menuItem.createDiv('reading-time-dropdown-content');
+			
+			// First line: "at: [speed] Word Per Minute"
+			const itemFirstLine = itemContent.createDiv('reading-time-dropdown-line');
+			itemFirstLine.createSpan({ text: `at: ${preset.speed} ` });
+			const itemWpmPhrase = itemFirstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 			itemWpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'ord ' });
 			itemWpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'er ' });
 			itemWpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 			itemWpmPhrase.createSpan({ text: 'inute' });
-			itemText.createSpan({ text: ` (${preset.name})` });
+			
+			// Second line: "(preset name)"
+			const itemSecondLine = itemContent.createDiv('reading-time-dropdown-line');
+			itemSecondLine.createSpan({ text: `(${preset.name})` });
 			
 			if (preset.id === this.selectedPresetId) {
 				menuItem.classList.add('selected');

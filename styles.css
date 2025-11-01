@@ -13,13 +13,23 @@
 	color: var(--text-accent);
 	font-size: 1rem;
 	padding: 0.5rem 0.75rem;
-	line-height: 1.5;
 	cursor: pointer;
 	min-width: 200px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 0.5rem;
+}
+
+.reading-time-dropdown-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	flex: 1;
+}
+
+.reading-time-dropdown-line {
+	line-height: 1.4;
 }
 
 .reading-time-preset-select:hover {
