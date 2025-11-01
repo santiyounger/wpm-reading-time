@@ -2,9 +2,9 @@
 
 .reading-time-preset-select {
 	background: var(--background-modifier-form-field);
-	border: 1px solid var(--background-modifier-border);
+	border: 1px solid var(--text-accent);
 	border-radius: 4px;
-	color: var(--text-normal);
+	color: var(--text-accent);
 	font-size: 1rem;
 	padding: 0.5rem 0.75rem;
 	line-height: 1.5;
@@ -19,13 +19,19 @@
 }
 
 .reading-time-preset-select:hover {
-	border-color: var(--background-modifier-border-hover);
+	border-color: var(--text-accent);
+	background: var(--background-modifier-form-field-highlighted);
 }
 
 .reading-time-preset-select:focus {
-	outline: 2px solid var(--background-modifier-border-focus);
+	outline: 2px solid var(--text-accent);
 	outline-offset: 2px;
-	border-color: var(--background-modifier-border-focus);
+	border-color: var(--text-accent);
+}
+
+.reading-time-preset-select option {
+	color: var(--text-normal);
+	background: var(--background-primary);
 }
 
 .reading-time-tab-content {

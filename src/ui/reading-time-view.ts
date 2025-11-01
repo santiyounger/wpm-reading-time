@@ -86,7 +86,7 @@ export class ReadingTimeView extends ItemView {
 		const select = speedDiv.createEl('select', { cls: 'reading-time-preset-select' });
 		for (const preset of this.presets) {
 			const option = select.createEl('option', { 
-				text: `${preset.name} (${preset.speed} WPM)`,
+				text: `${preset.name}: ${preset.speed}`,
 				value: preset.id 
 			});
 			if (preset.id === this.selectedPresetId) {
