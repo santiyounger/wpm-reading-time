@@ -275,7 +275,7 @@ export class ReadingTimeView extends ItemView {
 			const noteTitleContainer = centeredContent.createDiv('reading-time-note-title');
 			
 			// Single line with text and note link
-			noteTitleContainer.createSpan({ text: 'You can also select specific text next time. Currently, you are calculating the full note. ' });
+			noteTitleContainer.createSpan({ text: 'You can also select specific text next time. Currently, calculating this full note: ' });
 			const noteLink = noteTitleContainer.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
@@ -363,9 +363,10 @@ export class ReadingTimeView extends ItemView {
 		// Display selected preset with styled WPM phrase - two line layout
 		const displayContent = dropdownButton.createDiv('reading-time-dropdown-content');
 		
-		// First line: "[speed] Words Per Minute"
+		// First line: "[speed] (Words Per Minute)"
 		const firstLine = displayContent.createDiv('reading-time-dropdown-line');
 		firstLine.createSpan({ text: `${currentPreset.speed} `, cls: 'reading-time-accent' });
+		firstLine.createSpan({ text: '(' });
 		const wpmPhrase = firstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -373,6 +374,7 @@ export class ReadingTimeView extends ItemView {
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'inute' });
+		firstLine.createSpan({ text: ')' });
 		
 		// Second line: "(preset name)"
 		const secondLine = displayContent.createDiv('reading-time-dropdown-line');
