@@ -237,10 +237,6 @@ export class ReadingTimeView extends ItemView {
 		// Plugin title at the top
 		const pluginTitle = mainContent.createDiv('reading-time-plugin-title');
 		
-		// Small text above title
-		const pluginLabel = pluginTitle.createDiv('reading-time-plugin-label');
-		pluginLabel.textContent = 'This is a Santi Younger plugin called:';
-		
 		// Clock icon
 		const clockIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 		clockIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -270,8 +266,6 @@ export class ReadingTimeView extends ItemView {
 		
 		pluginTitle.appendChild(clockIcon);
 		pluginTitle.createSpan({ text: 'How Long to Read This Text' });
-		pluginTitle.createEl('br');
-		pluginTitle.createSpan({ text: '(WPM Reading Time)' });
 		
 		// Centered content wrapper for everything below the title
 		const centeredContent = mainContent.createDiv('reading-time-centered-content');
@@ -280,26 +274,20 @@ export class ReadingTimeView extends ItemView {
 		if (this.isWholeNote && this.noteTitle) {
 			const noteTitleContainer = centeredContent.createDiv('reading-time-note-title');
 			
-			// First line
-			const firstLine = noteTitleContainer.createDiv('reading-time-note-title-line');
-			firstLine.createSpan({ text: 'Select text to analyze' });
-			
-			// Second line
-			const secondLine = noteTitleContainer.createDiv('reading-time-note-title-line');
-			secondLine.createSpan({ text: 'Analyzing this note: ' });
-			const noteLink = secondLine.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
+			// Single line with text and note link
+			noteTitleContainer.createSpan({ text: 'Next time you can select some text, right now we are using this full note: ' });
+			const noteLink = noteTitleContainer.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
 			// Check if note link would overflow and force it to its own line
 			setTimeout(() => {
 				const container = noteTitleContainer.getBoundingClientRect();
-				const linkRect = noteLink.getBoundingClientRect();
 				const linkTextWidth = noteLink.scrollWidth;
 				
 				// If link text is wider than available space, put it on its own line
 				if (linkTextWidth > container.width * 0.85) {
 					noteLink.style.display = 'block';
-					noteLink.style.marginTop = '0';
+					noteLink.style.marginTop = '0.25rem';
 				}
 			}, 0);
 			noteLink.style.cursor = 'pointer';
@@ -377,7 +365,7 @@ export class ReadingTimeView extends ItemView {
 		
 		// First line: "[speed] Words Per Minute"
 		const firstLine = displayContent.createDiv('reading-time-dropdown-line');
-		firstLine.createSpan({ text: `${currentPreset.speed} ` });
+		firstLine.createSpan({ text: `${currentPreset.speed} `, cls: 'reading-time-accent' });
 		const wpmPhrase = firstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -388,7 +376,7 @@ export class ReadingTimeView extends ItemView {
 		
 		// Second line: "(preset name)"
 		const secondLine = displayContent.createDiv('reading-time-dropdown-line');
-		secondLine.createSpan({ text: `(${currentPreset.name})` });
+		secondLine.createSpan({ text: `(${currentPreset.name})`, cls: 'reading-time-accent' });
 		
 		// Dropdown arrow
 		const arrow = dropdownButton.createSpan('reading-time-dropdown-arrow');

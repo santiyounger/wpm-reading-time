@@ -1,8 +1,5 @@
 /* Reading Time View Styles - Modern & Minimal (Sidebar) */
 
-/* JetBrains Mono font for reading time display - using Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
-
 .reading-time-dropdown-container {
 	position: relative;
 	display: inline-block;
@@ -13,7 +10,7 @@
 	background: var(--background-modifier-form-field);
 	border: 1px solid var(--text-accent);
 	border-radius: 4px;
-	color: var(--text-accent);
+	color: var(--text-normal);
 	font-size: 1rem;
 	padding: 0.5rem 0.75rem;
 	cursor: pointer;
@@ -42,7 +39,7 @@
 
 .reading-time-dropdown-arrow {
 	font-size: 0.75rem;
-	color: var(--text-accent);
+	color: var(--text-normal);
 	user-select: none;
 }
 
@@ -145,7 +142,7 @@
 }
 
 .reading-time-plugin-title {
-	font-size: 18px;
+	font-size: 1.125rem;
 	font-weight: 600;
 	color: var(--text-normal);
 	margin-top: 0;
@@ -157,16 +154,6 @@
 	align-self: stretch;
 }
 
-.reading-time-plugin-label {
-	font-size: 0.75rem;
-	font-weight: 400;
-	color: var(--text-muted);
-	margin: 0;
-	padding: 0;
-	margin-bottom: 0.25rem;
-	opacity: 0.8;
-}
-
 .reading-time-note-title {
 	font-size: 0.875rem;
 	color: var(--text-muted);
@@ -176,14 +163,7 @@
 	line-height: 1.5;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
-}
-
-.reading-time-note-title-line {
-	margin: 0;
-	padding: 0;
+	display: block;
 }
 
 .reading-time-note-title .reading-time-note-link {
@@ -245,7 +225,7 @@
 	-webkit-user-select: text;
 	-moz-user-select: text;
 	cursor: text;
-	font-family: 'JetBrains Mono', var(--font-monospace, 'Courier New', Consolas, monospace);
+	font-family: var(--font-monospace, 'Courier New', Consolas, monospace);
 }
 
 .reading-time-unit-group {
@@ -253,7 +233,6 @@
 	display: inline-block;
 	margin: 0;
 	padding: 0;
-	font-family: 'JetBrains Mono', var(--font-monospace, 'Courier New', Consolas, monospace);
 }
 
 .reading-time-seconds {
