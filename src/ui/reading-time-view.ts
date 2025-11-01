@@ -94,11 +94,15 @@ export class ReadingTimeView extends ItemView {
 		const tabContainer = contentEl.createDiv('reading-time-tabs');
 		const readingTab = tabContainer.createDiv('reading-time-tab');
 		readingTab.textContent = 'Reading Time';
-		readingTab.classList.add(this.activeTab === 'reading' ? 'active' : '');
+		if (this.activeTab === 'reading') {
+			readingTab.classList.add('active');
+		}
 		
 		const speakingTab = tabContainer.createDiv('reading-time-tab');
 		speakingTab.textContent = 'Speaking Time';
-		speakingTab.classList.add(this.activeTab === 'speaking' ? 'active' : '');
+		if (this.activeTab === 'speaking') {
+			speakingTab.classList.add('active');
+		}
 
 		// Tab content container
 		const mainContent = contentEl.createDiv('reading-time-content');
@@ -112,22 +116,26 @@ export class ReadingTimeView extends ItemView {
 		this.renderTabContent(readingContent, true);
 		this.renderTabContent(speakingContent, false);
 
-		// Tab click handlers
-		readingTab.onclick = () => {
+		// Tab click handlers - use addEventListener for better reliability
+		readingTab.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
 			this.activeTab = 'reading';
 			readingTab.classList.add('active');
 			speakingTab.classList.remove('active');
 			readingContent.style.display = 'flex';
 			speakingContent.style.display = 'none';
-		};
+		});
 
-		speakingTab.onclick = () => {
+		speakingTab.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
 			this.activeTab = 'speaking';
 			speakingTab.classList.add('active');
 			readingTab.classList.remove('active');
 			speakingContent.style.display = 'flex';
 			readingContent.style.display = 'none';
-		};
+		});
 	}
 
 	async onOpen(): Promise<void> {
