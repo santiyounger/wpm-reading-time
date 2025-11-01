@@ -30,7 +30,7 @@ A powerful Obsidian plugin that calculates reading time for selected text based 
    - `main.js`
    - `manifest.json`
    - `styles.css` (if included)
-4. Navigate to: `.obsidian/plugins/wpm-time/`
+4. Navigate to: `.obsidian/plugins/wpm-reading-time/`
 5. Paste the files into this folder
 6. Reload Obsidian (Ctrl/Cmd + R or restart the app)
 7. Go to **Settings → Community plugins** and enable "How Long to Read (Reading Time WPM)"
