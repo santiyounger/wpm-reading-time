@@ -144,6 +144,20 @@
 	cursor: text;
 }
 
+.reading-time-unit-group {
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.reading-time-seconds {
+	white-space: nowrap;
+}
+
+.reading-time-separator {
+	white-space: normal;
+	margin: 0 0.25em;
+}
+
 .reading-time-to-read {
 	font-size: 1rem;
 	font-weight: 400;
@@ -170,6 +184,15 @@
 	-webkit-user-select: text;
 	-moz-user-select: text;
 	cursor: text;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.reading-time-speed-label {
+	margin: 0;
+	padding: 0;
 }
 
 .reading-time-because {

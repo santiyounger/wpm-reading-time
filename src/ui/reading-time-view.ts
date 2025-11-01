@@ -73,10 +73,32 @@ export class ReadingTimeView extends ItemView {
 		
 		// Main time display
 		const timeDisplay = mainContent.createDiv('reading-time-display');
-		timeDisplay.createEl('div', { 
-			text: currentTime.formatted, 
-			cls: 'reading-time-formatted' 
-		});
+		const formattedDiv = timeDisplay.createDiv('reading-time-formatted');
+		
+		// Parse and render time with proper line-break handling
+		// Format can be: "4 seconds", "1 minute", or "1 minute & 4 seconds"
+		const formatted = currentTime.formatted;
+		if (formatted.includes(' & ')) {
+			// Has both minutes and seconds: "1 minute & 4 seconds"
+			const parts = formatted.split(' & ');
+			const minutesPart = parts[0]; // "1 minute" or "1 minutes"
+			const secondsPart = parts[1]; // "4 seconds"
+			
+			// Minutes part - can break, but keep number+unit together
+			const minutesSpan = formattedDiv.createSpan('reading-time-unit-group');
+			minutesSpan.textContent = minutesPart;
+			
+			// Ampersand with space - can break here
+			formattedDiv.createSpan({ text: ' & ', cls: 'reading-time-separator' });
+			
+			// Seconds part - keep number+unit together, don't break
+			const secondsSpan = formattedDiv.createSpan('reading-time-unit-group reading-time-seconds');
+			secondsSpan.textContent = secondsPart;
+		} else {
+			// Only one unit: "4 seconds" or "1 minute" - keep together
+			const unitSpan = formattedDiv.createSpan('reading-time-unit-group');
+			unitSpan.textContent = formatted;
+		}
 
 		// "because it's:" and word count combined
 		const becauseDiv = timeDisplay.createDiv('reading-time-because');
@@ -86,7 +108,7 @@ export class ReadingTimeView extends ItemView {
 
 		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
-		speedDiv.createSpan({ text: 'at: ' });
+		speedDiv.createEl('div', { text: 'at a speed of:', cls: 'reading-time-speed-label' });
 		
 		// Custom dropdown container
 		const dropdownContainer = speedDiv.createDiv('reading-time-dropdown-container');
