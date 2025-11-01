@@ -155,62 +155,9 @@ at a speed of:
 - Check that WPM values are positive numbers
 - Reload the plugin if settings seem stuck
 
-## Development
-
-### Prerequisites
-
-- Node.js v16 or higher
-- npm
-
-### Setup
-
-```bash
-npm install
-```
-
-### Development Mode
-
-```bash
-npm run dev
-```
-
-This watches for file changes and automatically recompiles the plugin.
-
-### Build
-
-```bash
-npm run build
-```
-
-Compiles TypeScript to JavaScript and bundles everything into `main.js`.
-
-### Project Structure
-
-```
-.
-├── main.ts              # Plugin entry point
-├── manifest.json        # Plugin manifest
-├── styles.css          # Plugin styles
-├── src/
-│   ├── commands/       # Command implementations
-│   ├── ui/             # UI components (views, settings)
-│   ├── utils/          # Utility functions
-│   ├── settings.ts     # Settings interface
-│   └── types.ts        # TypeScript type definitions
-```
-
-## Releasing
-
-1. Update the `version` in `manifest.json` (follow Semantic Versioning)
-2. Update `versions.json` with the new version mapping to `minAppVersion`
-3. Run `npm run build` to create the latest `main.js`
-4. Create a GitHub release:
-   - Tag name: exactly match the version (e.g., `1.0.0`, no "v" prefix)
-   - Upload `main.js`, `manifest.json`, and `styles.css` as release assets
-
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! If you'd like to contribute to this plugin, please feel free to submit a Pull Request or open an issue with your suggestions.
 
 ## License
 
