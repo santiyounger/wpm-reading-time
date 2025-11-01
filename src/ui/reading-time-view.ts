@@ -237,6 +237,10 @@ export class ReadingTimeView extends ItemView {
 		// Plugin title at the top
 		const pluginTitle = mainContent.createDiv('reading-time-plugin-title');
 		
+		// Small text above title
+		const pluginLabel = pluginTitle.createDiv('reading-time-plugin-label');
+		pluginLabel.textContent = 'This is a Santi Younger plugin called:';
+		
 		// Clock icon
 		const clockIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 		clockIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -274,17 +278,21 @@ export class ReadingTimeView extends ItemView {
 		
 		// Note title header (only shown when analyzing whole note)
 		if (this.isWholeNote && this.noteTitle) {
-			const noteTitleDiv = centeredContent.createDiv('reading-time-note-title');
-			noteTitleDiv.createSpan({ text: 'You can select text and then run this plugin' });
-			noteTitleDiv.createEl('br');
-			noteTitleDiv.createEl('br');
-			noteTitleDiv.createSpan({ text: 'Right now we are using this whole note: ' });
-			const noteLink = noteTitleDiv.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
+			const noteTitleContainer = centeredContent.createDiv('reading-time-note-title');
+			
+			// First line
+			const firstLine = noteTitleContainer.createDiv('reading-time-note-title-line');
+			firstLine.createSpan({ text: 'Select text to analyze' });
+			
+			// Second line
+			const secondLine = noteTitleContainer.createDiv('reading-time-note-title-line');
+			secondLine.createSpan({ text: 'Analyzing this note: ' });
+			const noteLink = secondLine.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
 			// Check if note link would overflow and force it to its own line
 			setTimeout(() => {
-				const container = noteTitleDiv.getBoundingClientRect();
+				const container = noteTitleContainer.getBoundingClientRect();
 				const linkRect = noteLink.getBoundingClientRect();
 				const linkTextWidth = noteLink.scrollWidth;
 				
@@ -508,7 +516,14 @@ export class ReadingTimeView extends ItemView {
 			settingsLink.style.fontSize = '0.875rem';
 			settingsLink.style.color = 'var(--text-muted)';
 			settingsLink.style.transition = 'color 0.15s ease';
-			settingsLink.style.textDecoration = 'underline';
+			
+			// Wrapper span for underline effect that covers everything
+			const underlineWrapper = settingsLink.createSpan();
+			underlineWrapper.style.display = 'inline-flex';
+			underlineWrapper.style.alignItems = 'baseline';
+			underlineWrapper.style.gap = '0.375rem';
+			underlineWrapper.style.borderBottom = '1px solid currentColor';
+			underlineWrapper.style.paddingBottom = '0.05em';
 			
 			// Create gear icon SVG
 			const gearIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -535,8 +550,8 @@ export class ReadingTimeView extends ItemView {
 			gearCircle.setAttribute('r', '3');
 			gearIcon.appendChild(gearCircle);
 			
-			settingsLink.appendChild(gearIcon);
-			settingsLink.createSpan({ text: 'You can change this ' });
+			underlineWrapper.appendChild(gearIcon);
+			underlineWrapper.createSpan({ text: 'You can change this ' });
 			
 			// Arrow up icon after "this"
 			const arrowUpIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -567,8 +582,8 @@ export class ReadingTimeView extends ItemView {
 			arrowUpLine.setAttribute('y2', '5');
 			arrowUpIcon.appendChild(arrowUpLine);
 			
-			settingsLink.appendChild(arrowUpIcon);
-			settingsLink.createSpan({ text: ' in the settings' });
+			underlineWrapper.appendChild(arrowUpIcon);
+			underlineWrapper.createSpan({ text: ' in the settings' });
 			
 			settingsLink.addEventListener('click', (e) => {
 				e.preventDefault();
