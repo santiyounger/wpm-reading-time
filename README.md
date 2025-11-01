@@ -152,7 +152,7 @@ MIT
 
 ## Support
 
-If you encounter any issues or have feature requests, please open an issue on the GitHub repository.
+If you encounter any issues or have feature requests, please open an issue on the [GitHub repository](https://github.com/santiyounger/obsidian-plugin-wpm-time).
 
 ## Credits
 
