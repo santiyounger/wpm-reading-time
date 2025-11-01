@@ -30,7 +30,21 @@ export default class WPMTimePlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const loadedData = await this.loadData();
+		
+		// Migrate old settings format (wpm) to new format (speakingSpeed, readingSpeed)
+		if (loadedData && 'wpm' in loadedData && !('speakingSpeed' in loadedData)) {
+			loadedData.speakingSpeed = loadedData.wpm;
+			delete loadedData.wpm;
+		}
+		if (!loadedData || !('readingSpeed' in loadedData)) {
+			loadedData.readingSpeed = DEFAULT_SETTINGS.readingSpeed;
+		}
+		if (!loadedData || !('speakingSpeed' in loadedData)) {
+			loadedData.speakingSpeed = DEFAULT_SETTINGS.speakingSpeed;
+		}
+		
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
 	}
 
 	async saveSettings() {

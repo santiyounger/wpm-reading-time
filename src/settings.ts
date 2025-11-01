@@ -1,8 +1,10 @@
 export interface WPMTimeSettings {
-	wpm: number;
+	speakingSpeed: number; // WPM for speaking out loud
+	readingSpeed: number; // WPM for silent reading
 }
 
 export const DEFAULT_SETTINGS: WPMTimeSettings = {
-	wpm: 200
+	speakingSpeed: 200,
+	readingSpeed: 250
 };
 

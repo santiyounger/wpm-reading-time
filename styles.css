@@ -1,7 +1,46 @@
 /* Reading Time View Styles - Modern & Minimal (Sidebar) */
 
-.reading-time-content {
+.reading-time-tabs {
+	display: flex;
+	gap: 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+	padding: 0 1rem;
+	margin-bottom: 1rem;
+}
+
+.reading-time-tab {
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	color: var(--text-muted);
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	transition: color 0.2s ease;
+}
+
+.reading-time-tab:hover {
+	color: var(--text-normal);
+}
+
+.reading-time-tab.active {
+	color: var(--text-accent);
+	border-bottom-color: var(--text-accent);
+}
+
+.reading-time-tab-content {
 	padding: 1.5rem 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	align-items: center;
+	justify-content: center;
+	min-height: calc(100% - 60px);
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+}
+
+.reading-time-content {
+	padding: 0;
 	display: flex;
 	flex-direction: column;
 	gap: 0;

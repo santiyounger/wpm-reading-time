@@ -19,8 +19,10 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			const selectionStart = editor.getCursor('from');
 			const selectionEnd = editor.getCursor('to');
 
-			const wpm = plugin.settings.wpm;
-			const { formatted, totalSeconds, wordCount } = calculateReadingTime(selectedText, wpm);
+			const readingSpeed = plugin.settings.readingSpeed;
+			const speakingSpeed = plugin.settings.speakingSpeed;
+			const { formatted: readingFormatted, totalSeconds: readingSeconds, wordCount } = calculateReadingTime(selectedText, readingSpeed);
+			const { formatted: speakingFormatted, totalSeconds: speakingSeconds } = calculateReadingTime(selectedText, speakingSpeed);
 			
 			// Open or reveal the view in the right sidebar
 			let readingTimeView: ReadingTimeView;
@@ -45,7 +47,11 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				plugin.view = readingTimeView;
 			}
 			
-			readingTimeView.updateContent(formatted, totalSeconds, wpm, wordCount);
+			readingTimeView.updateContent(
+				readingFormatted, readingSeconds, readingSpeed,
+				speakingFormatted, speakingSeconds, speakingSpeed,
+				wordCount
+			);
 			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
 			
 			// Restore the selection after all async operations complete

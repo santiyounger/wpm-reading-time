@@ -17,18 +17,34 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', { text: 'WPM Reading Time Settings' });
 
 		new Setting(containerEl)
-			.setName('Words per minute (WPM)')
-			.setDesc('Set your reading speed in words per minute. Average reading speed is around 200-250 WPM.')
+			.setName('Reading speed (WPM)')
+			.setDesc('Set your silent reading speed in words per minute. Average reading speed is around 250-300 WPM.')
 			.addText(text => text
-				.setPlaceholder('200')
-				.setValue(this.plugin.settings.wpm.toString())
+				.setPlaceholder('250')
+				.setValue(this.plugin.settings.readingSpeed.toString())
 				.onChange(async (value) => {
-					const wpm = parseInt(value, 10);
-					if (isNaN(wpm) || wpm <= 0) {
-						new Notice('WPM must be a positive number.');
+					const speed = parseInt(value, 10);
+					if (isNaN(speed) || speed <= 0) {
+						new Notice('Reading speed must be a positive number.');
 						return;
 					}
-					this.plugin.settings.wpm = wpm;
+					this.plugin.settings.readingSpeed = speed;
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Speaking speed (WPM)')
+			.setDesc('Set your speaking/reading out loud speed in words per minute. Average speaking speed is around 150-200 WPM.')
+			.addText(text => text
+				.setPlaceholder('200')
+				.setValue(this.plugin.settings.speakingSpeed.toString())
+				.onChange(async (value) => {
+					const speed = parseInt(value, 10);
+					if (isNaN(speed) || speed <= 0) {
+						new Notice('Speaking speed must be a positive number.');
+						return;
+					}
+					this.plugin.settings.speakingSpeed = speed;
 					await this.plugin.saveSettings();
 				}));
 	}
