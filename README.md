@@ -1,4 +1,4 @@
-# WPM Reading Time
+# How Long to Read (Reading Time WPM)
 
 A powerful Obsidian plugin that calculates reading time for selected text based on customizable words per minute (WPM) presets. Perfect for writers, editors, and anyone who wants to know how long it takes to read their content.
 
@@ -19,7 +19,7 @@ A powerful Obsidian plugin that calculates reading time for selected text based 
 1. Open Obsidian
 2. Go to **Settings → Community plugins**
 3. Make sure "Safe mode" is **off**
-4. Click **Browse** and search for "WPM Reading Time"
+4. Click **Browse** and search for "How Long to Read (Reading Time WPM)"
 5. Click **Install**, then **Enable**
 
 ### Manual Installation
@@ -33,7 +33,7 @@ A powerful Obsidian plugin that calculates reading time for selected text based 
 4. Navigate to: `.obsidian/plugins/wpm-time/`
 5. Paste the files into this folder
 6. Reload Obsidian (Ctrl/Cmd + R or restart the app)
-7. Go to **Settings → Community plugins** and enable "WPM Reading Time"
+7. Go to **Settings → Community plugins** and enable "How Long to Read (Reading Time WPM)"
 
 ## Usage
 
@@ -60,7 +60,7 @@ A powerful Obsidian plugin that calculates reading time for selected text based 
 
 ## Settings
 
-Access settings via **Settings → Community plugins → WPM Reading Time**, or click the gear icon in the dropdown menu.
+Access settings via **Settings → Community plugins → How Long to Read (Reading Time WPM)**, or click the gear icon in the dropdown menu.
 
 ### Default Preset
 

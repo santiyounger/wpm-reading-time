@@ -1,6 +1,6 @@
 {
 	"id": "wpm-time",
-	"name": "WPM Reading Time",
+	"name": "How Long to Read (Reading Time WPM)",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Calculate reading time for selected text based on your custom words per minute (WPM) setting.",
