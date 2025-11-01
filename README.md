@@ -1,13 +1,14 @@
 # WPM Reading Time
 
-Calculate reading time for selected text in Obsidian based on your custom words per minute (WPM) settings.
+Calculate reading time for selected text in Obsidian based on your custom words per minute (WPM) presets.
 
 ## Features
 
-- Calculate reading time for selected text based on customizable WPM settings
-- Separate settings for silent reading speed and speaking/reading aloud speed
+- Calculate reading time for selected text based on customizable WPM presets
+- Create multiple reading speed presets (e.g., "My Reading Time", "My Speaking Time")
+- Switch between presets using an intuitive dropdown menu
 - View reading time in a dedicated sidebar panel
-- Switch between reading time and speaking time calculations
+- Quick access to settings via gear icon in dropdown
 
 ## Installation
 
@@ -27,14 +28,18 @@ Calculate reading time for selected text in Obsidian based on your custom words 
 
 1. Select any text in your note
 2. Run the command **Calculate reading time** from the command palette (Ctrl/Cmd + P)
-3. The reading time will be displayed in a sidebar panel with both reading and speaking time estimates
+3. The reading time will be displayed in a sidebar panel
+4. Use the dropdown to switch between different reading speed presets
 
 ## Settings
 
-Configure your reading speeds in **Settings → WPM Reading Time Settings**:
+Configure your reading speed presets in **Settings → WPM Reading Time Settings**:
 
-- **Reading speed (WPM)**: Your silent reading speed in words per minute (default: 250 WPM)
-- **Speaking speed (WPM)**: Your speaking/reading aloud speed in words per minute (default: 200 WPM)
+- **Add multiple presets**: Create custom presets like "My Reading Time" (250 WPM), "My Speaking Time" (200 WPM), etc.
+- **Preset name**: Give each preset a descriptive name
+- **Reading speed (WPM)**: Set words per minute for each preset
+- **Default preset**: Choose which preset is selected by default
+- Quick access to settings is also available via the gear icon (⚙️) in the dropdown menu
 
 ## Development
 

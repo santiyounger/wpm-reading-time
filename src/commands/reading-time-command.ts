@@ -64,8 +64,12 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			// Handler for opening settings
 			const onOpenSettings = () => {
 				// Open settings and navigate to this plugin's tab
-				(plugin.app as any).setting.open();
-				(plugin.app as any).setting.openTabById(plugin.manifest.id);
+				// Note: Using internal Obsidian API (not in public types)
+				const app = plugin.app as any;
+				if (app.setting) {
+					app.setting.open();
+					app.setting.openTabById(plugin.manifest.id);
+				}
 			};
 			
 			readingTimeView.updateContent(
