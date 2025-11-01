@@ -2,8 +2,8 @@
 	"id": "wpm-time",
 	"name": "How Long to Read (Reading Time WPM)",
 	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Calculate reading time for selected text based on your custom words per minute (WPM) setting.",
+	"minAppVersion": "1.0.0",
+	"description": "Calculate reading time for selected text using customizable words per minute presets.",
 	"author": "Santi Younger",
 	"authorUrl": "https://www.santiyounger.com/",
 	"isDesktopOnly": false
