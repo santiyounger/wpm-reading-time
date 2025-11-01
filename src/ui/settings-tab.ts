@@ -59,13 +59,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const requestLink = linksContainer.createEl('a', {
 			href: 'https://github.com/santiyounger/wpm-reading-time/issues',
 			attr: { 
-				'aria-label': 'Submit a Request',
+				'aria-label': 'Write a Request',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
 			cls: 'reading-time-link'
 		});
-		requestLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-message-square-plus"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9 10h6"></path><path d="M12 7v6"></path></svg>Submit a Request</a>';
+		requestLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-message-square-plus"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9 10h6"></path><path d="M12 7v6"></path></svg>Write a Request</a>';
 
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');

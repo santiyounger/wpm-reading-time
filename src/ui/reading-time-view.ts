@@ -275,7 +275,7 @@ export class ReadingTimeView extends ItemView {
 			const noteTitleContainer = centeredContent.createDiv('reading-time-note-title');
 			
 			// Single line with text and note link
-			noteTitleContainer.createSpan({ text: 'Next time you can select some text, right now we are using this full note: ' });
+			noteTitleContainer.createSpan({ text: 'You can also select specific text next time. Currently, you are calculating the full note. ' });
 			const noteLink = noteTitleContainer.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
@@ -346,7 +346,7 @@ export class ReadingTimeView extends ItemView {
 		}
 
 		// "because it's:" and word count combined with speed label
-		const becauseDiv = timeDisplay.createDiv('reading-time-because');
+		const becauseDiv = timeDisplay.createDiv('reading-time-heading');
 		becauseDiv.createSpan({ text: 'because it\'s: ' });
 		becauseDiv.createSpan({ text: `${this.wordCount}`, cls: 'reading-time-number' });
 		becauseDiv.createSpan({ text: ' words long' });
