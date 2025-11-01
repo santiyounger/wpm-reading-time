@@ -28,15 +28,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tag="${GITHUB_REF#refs/tags/}"
-          
-          # Prepare files for release
-          files="main.js manifest.json"
-          if [ -f "styles.css" ]; then
-            files="$files styles.css"
-          fi
-          
+
           gh release create "$tag" \
             --title="$tag" \
             --draft \
-            $files
+            main.js manifest.json styles.css
 
