@@ -8,11 +8,17 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 		id: 'calculate-reading-time',
 		name: 'Calculate reading time',
 		editorCallback: async (editor: Editor, view: MarkdownView) => {
-			const selectedText = editor.getSelection();
+			let selectedText = editor.getSelection();
 			
+			// If no text is selected, use the whole note content
 			if (!selectedText || selectedText.trim().length === 0) {
-				new Notice('Please select some text first.');
-				return;
+				selectedText = editor.getValue();
+				
+				// If the note is empty, show a notice
+				if (!selectedText || selectedText.trim().length === 0) {
+					new Notice('Note is empty. Please add some content or select text to analyze.');
+					return;
+				}
 			}
 
 			// Save selection range to restore it later - do this immediately

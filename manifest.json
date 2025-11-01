@@ -3,7 +3,7 @@
 	"name": "How Long to Read (Reading Time WPM)",
 	"version": "1.0.0",
 	"minAppVersion": "1.0.0",
-	"description": "Calculate reading time estimates for selected text using customizable words per minute (WPM) presets. Create multiple presets for different reading speeds, perfect for writers, content creators, and knowledge workers.",
+	"description": "Calculate reading time estimates for selected text using your own reading speed in Words Per Minute.",
 	"author": "Santi Younger",
 	"authorUrl": "https://www.santiyounger.com/",
 	"isDesktopOnly": false

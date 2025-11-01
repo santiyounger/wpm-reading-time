@@ -14,7 +14,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		// Cleanup any existing tooltips before re-rendering
-		document.body.querySelectorAll('.reading-time-wpm-tooltip').forEach(el => el.remove());
+		this.closeAllTooltips();
 
 		containerEl.empty();
 
@@ -231,10 +231,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			e.preventDefault();
 			e.stopPropagation();
 			
-			// Remove existing tooltip if any
-			if (tooltip) {
-				tooltip.remove();
-			}
+			// Close all existing tooltips (including from other buttons)
+			this.closeAllTooltips();
 			
 			// Create tooltip
 			tooltip = document.createElement('div');
@@ -346,7 +344,10 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				this.display(); // Refresh the settings view
 			});
 		}
-	}
 
+	private closeAllTooltips(): void {
+		// Close all tooltips from any calculator button
+		document.body.querySelectorAll('.reading-time-wpm-tooltip').forEach(el => el.remove());
+	}
 }
 
