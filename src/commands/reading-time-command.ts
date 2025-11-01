@@ -13,30 +13,30 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 		let noteTitle = '';
 		let noteFile: TFile | null = null;
 		
+		// Get note title from metadata cache or file name (for both whole note and selected text)
+		if (view.file) {
+			noteFile = view.file;
+			// Try to get title from metadata cache (Obsidian's standard way)
+			const metadata = plugin.app.metadataCache.getFileCache(view.file);
+			if (metadata?.frontmatter?.title) {
+				noteTitle = metadata.frontmatter.title;
+			} else {
+				// Use file basename (filename without extension)
+				noteTitle = view.file.basename;
+			}
+		}
+		
 		// If no text is selected, use the whole note content
 		if (!selectedText || selectedText.trim().length === 0) {
 			selectedText = editor.getValue();
 			isWholeNote = true;
-			
-			// Get note title from metadata cache or file name
-			if (view.file) {
-				noteFile = view.file;
-				// Try to get title from metadata cache (Obsidian's standard way)
-				const metadata = plugin.app.metadataCache.getFileCache(view.file);
-				if (metadata?.frontmatter?.title) {
-					noteTitle = metadata.frontmatter.title;
-				} else {
-					// Use file basename (filename without extension)
-					noteTitle = view.file.basename;
-				}
-			}
 				
-				// If the note is empty, show a notice
-				if (!selectedText || selectedText.trim().length === 0) {
-					new Notice('Note is empty. Please add some content or select text to analyze.');
-					return;
-				}
+			// If the note is empty, show a notice
+			if (!selectedText || selectedText.trim().length === 0) {
+				new Notice('Note is empty. Please add some content or select text to analyze.');
+				return;
 			}
+		}
 
 			// Save selection range to restore it later - do this immediately
 			const selectionStart = editor.getCursor('from');

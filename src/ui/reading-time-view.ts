@@ -251,8 +251,7 @@ export class ReadingTimeView extends ItemView {
 		clockIcon.classList.add('svg-icon');
 		clockIcon.classList.add('lucide-clock');
 		clockIcon.style.display = 'inline-block';
-		clockIcon.style.verticalAlign = 'middle';
-		clockIcon.style.marginRight = '4px';
+		clockIcon.style.flexShrink = '0';
 		
 		const clockCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 		clockCircle.setAttribute('cx', '12');
@@ -267,15 +266,15 @@ export class ReadingTimeView extends ItemView {
 		pluginTitle.appendChild(clockIcon);
 		pluginTitle.createSpan({ text: 'How Long to Read This Text' });
 		
-		// Centered content wrapper for everything below the title
-		const centeredContent = mainContent.createDiv('reading-time-centered-content');
-		
-		// Note title header (only shown when analyzing whole note)
-		if (this.isWholeNote && this.noteTitle) {
-			const noteTitleContainer = centeredContent.createDiv('reading-time-note-title');
+		// Note title header (shown when analyzing whole note or selected text from a note)
+		if (this.noteTitle) {
+			const noteTitleContainer = mainContent.createDiv('reading-time-note-title');
 			
 			// Single line with text and note link
-			noteTitleContainer.createSpan({ text: 'You can also select specific text next time. Currently, calculating this full note: ' });
+			const messageText = this.isWholeNote 
+				? 'You can also select specific text next time. Currently, calculating this full note: '
+				: 'You are using some selected text from this note: ';
+			noteTitleContainer.createSpan({ text: messageText });
 			const noteLink = noteTitleContainer.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
@@ -309,6 +308,9 @@ export class ReadingTimeView extends ItemView {
 				}
 			});
 		}
+		
+		// Centered content wrapper for everything below the title
+		const centeredContent = mainContent.createDiv('reading-time-centered-content');
 		
 		// Heading
 		centeredContent.createEl('div', { 

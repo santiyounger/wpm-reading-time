@@ -152,6 +152,10 @@
 	text-align: center;
 	border-bottom: 1px solid var(--background-modifier-border);
 	align-self: stretch;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.375rem;
 }
 
 .reading-time-note-title {
