@@ -77,21 +77,21 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const defaultHeader = headerRow.createDiv('reading-time-header-default');
 		const defaultHeaderTitle = defaultHeader.createDiv('reading-time-header-default-title reading-time-header-with-icon');
 		defaultHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Default</span>';
-		defaultHeader.createEl('div', { text: 'Select your default preset', cls: 'reading-time-header-default-subtitle' });
+		defaultHeader.createEl('div', { text: 'Select Your Default Preset', cls: 'reading-time-header-default-subtitle' });
 		
 		// Speed header with subheading and icon
 		const speedHeader = headerRow.createDiv('reading-time-header-speed');
 		const speedHeaderTitle = speedHeader.createDiv('reading-time-header-speed-title reading-time-header-with-icon');
 		speedHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-gauge"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Speed</span>';
 		const speedSubtitle = speedHeader.createEl('div', { cls: 'reading-time-header-speed-subtitle' });
-		speedSubtitle.innerHTML = 'WPM stand for:<br>Words Per Minute';
+		speedSubtitle.innerHTML = 'WPM Stands For:<br>Words Per Minute';
 		
 		// Title header with icon and subtitle
 		const nameHeader = headerRow.createDiv('reading-time-header-name');
 		const nameHeaderTitle = nameHeader.createDiv('reading-time-header-name-title reading-time-header-with-icon');
 		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Title</span>';
 		const nameSubtitle = nameHeader.createEl('div', { cls: 'reading-time-header-name-subtitle' });
-		nameSubtitle.innerHTML = 'You can add an optional title<br>Example: My Speaking Speed';
+		nameSubtitle.innerHTML = 'You Can Add an Optional Title<br>Example: My Speaking Speed';
 		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
 
 		// Display all presets
