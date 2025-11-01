@@ -216,7 +216,7 @@
 	font-size: 2.5rem;
 	font-weight: 400;
 	color: var(--text-accent);
-	letter-spacing: -0.03em;
+	letter-spacing: 0;
 	line-height: 1.1;
 	margin: 0;
 	padding: 0;
@@ -230,6 +230,8 @@
 .reading-time-unit-group {
 	white-space: nowrap;
 	display: inline-block;
+	margin: 0;
+	padding: 0;
 }
 
 .reading-time-seconds {
@@ -238,7 +240,8 @@
 
 .reading-time-separator {
 	white-space: normal;
-	margin: 0 0.1em;
+	margin: 0;
+	padding: 0;
 }
 
 .reading-time-to-read {
