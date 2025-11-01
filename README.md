@@ -29,8 +29,8 @@ Switch between presets via dropdown menu. Useful when you need different speeds 
 ### Detailed Analytics
 See reading time, word count, and your current reading speed all displayed clearly in one place.
 
-### Cross-Platform
-Designed to work on desktop and mobile. Your presets will sync if you use Obsidian Sync.
+### Desktop Only
+Currently optimized for desktop use. Mobile support coming soon.
 
 ### Native Design
 Matches Obsidian's design language. Feels like a built-in feature.

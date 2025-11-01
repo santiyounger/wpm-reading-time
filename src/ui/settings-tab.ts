@@ -35,13 +35,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const supportLink = linksContainer.createEl('a', {
 			href: 'https://www.santiyounger.com/contact',
 			attr: { 
-				'aria-label': 'Contact the Author',
+				'aria-label': 'Contact Santi (Author)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
 			cls: 'reading-time-link'
 		});
-		supportLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>Contact the Author</a>';
+		supportLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>Contact Santi (Author)</a>';
 
 		// GitHub link
 		const githubLink = linksContainer.createEl('a', {
@@ -99,27 +99,28 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			this.renderPresetSetting(presetsContainer, preset, index);
 		});
 
-		// Add new preset button
-		new Setting(presetsContainer)
-			.addButton(button => button
-				.setIcon('plus')
-				.setTooltip('To find out your reading speed, I put together a calculator for you in my website. Select to add a new preset.')
+		// Add new preset button with calculator on the left
+		const addPresetSetting = new Setting(presetsContainer);
+		
+		// WPM calculator link (on the left side of the add button)
+		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator');
+		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (Words Per Minute), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
+		
+		addPresetSetting.addButton(button => button
+			.setIcon('plus')
+			.setTooltip('To find out your reading speed, I put together a calculator for you in my website. Select to add a new preset.')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
 						id: `preset-${Date.now()}`,
-						name: '',
-						speed: 0  // Start with 0 instead of auto-filling
+					name: '',
+					speed: 0  // Start with 0 instead of auto-filling
 					};
 					this.plugin.settings.presets.push(newPreset);
 					this.plugin.saveSettings().then(() => {
 						this.display(); // Refresh the settings view
 					});
 				}));
-
-		// WPM calculator link (above the learn more section)
-		const wpmCalculatorLink = containerEl.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (Words Per Minute), use <a href="http://localhost:6074/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
 
 		// Learn more about my work section
 		const learnMoreContainer = containerEl.createDiv('reading-time-learn-more');
