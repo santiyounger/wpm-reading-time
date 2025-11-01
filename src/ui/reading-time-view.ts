@@ -9,6 +9,7 @@ export class ReadingTimeView extends ItemView {
 	presetTimes: Map<string, { formatted: string; seconds: number }> = new Map();
 	wordCount: number = 0;
 	onPresetChange?: (presetId: string) => void;
+	onOpenSettings?: () => void;
 	dropdownCleanup?: () => void;
 
 	constructor(leaf: WorkspaceLeaf) {
@@ -32,13 +33,15 @@ export class ReadingTimeView extends ItemView {
 		selectedPresetId: string,
 		presetTimes: Map<string, { formatted: string; seconds: number }>,
 		wordCount: number,
-		onPresetChange: (presetId: string) => void
+		onPresetChange: (presetId: string) => void,
+		onOpenSettings?: () => void
 	): void {
 		this.presets = presets;
 		this.selectedPresetId = selectedPresetId;
 		this.presetTimes = presetTimes;
 		this.wordCount = wordCount;
 		this.onPresetChange = onPresetChange;
+		this.onOpenSettings = onOpenSettings;
 		this.render();
 	}
 
@@ -117,12 +120,12 @@ export class ReadingTimeView extends ItemView {
 		// Display selected preset with styled WPM phrase - two line layout
 		const displayContent = dropdownButton.createDiv('reading-time-dropdown-content');
 		
-		// First line: "[speed] Word Per Minute"
+		// First line: "[speed] Words Per Minute"
 		const firstLine = displayContent.createDiv('reading-time-dropdown-line');
 		firstLine.createSpan({ text: `${currentPreset.speed} ` });
 		const wpmPhrase = firstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'ord ' });
+		wpmPhrase.createSpan({ text: 'ords ' });
 		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
@@ -143,22 +146,9 @@ export class ReadingTimeView extends ItemView {
 		// Create menu items for each preset
 		for (const preset of this.presets) {
 			const menuItem = dropdownMenu.createDiv('reading-time-dropdown-item');
-			const itemContent = menuItem.createDiv('reading-time-dropdown-content');
-			
-			// First line: "[speed] Word Per Minute"
-			const itemFirstLine = itemContent.createDiv('reading-time-dropdown-line');
-			itemFirstLine.createSpan({ text: `${preset.speed} ` });
-			const itemWpmPhrase = itemFirstLine.createSpan({ cls: 'reading-time-wpm-phrase' });
-			itemWpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
-			itemWpmPhrase.createSpan({ text: 'ord ' });
-			itemWpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
-			itemWpmPhrase.createSpan({ text: 'er ' });
-			itemWpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-			itemWpmPhrase.createSpan({ text: 'inute' });
-			
-			// Second line: "(preset name)"
-			const itemSecondLine = itemContent.createDiv('reading-time-dropdown-line');
-			itemSecondLine.createSpan({ text: `(${preset.name})` });
+			const itemText = menuItem.createSpan('reading-time-dropdown-item-text');
+			itemText.createSpan({ text: `${preset.speed} WPM ` });
+			itemText.createSpan({ text: `(${preset.name})` });
 			
 			if (preset.id === this.selectedPresetId) {
 				menuItem.classList.add('selected');
@@ -174,6 +164,24 @@ export class ReadingTimeView extends ItemView {
 					this.render();
 				} else {
 					dropdownMenu.style.display = 'none';
+				}
+			});
+		}
+		
+		// Settings option at the bottom
+		if (this.onOpenSettings) {
+			const settingsDivider = dropdownMenu.createDiv('reading-time-dropdown-divider');
+			
+			const settingsItem = dropdownMenu.createDiv('reading-time-dropdown-item reading-time-dropdown-settings');
+			const settingsContent = settingsItem.createSpan('reading-time-dropdown-item-text');
+			settingsContent.createSpan({ text: '⚙️ ' });
+			settingsContent.createSpan({ text: 'Settings' });
+			
+			settingsItem.addEventListener('click', (e) => {
+				e.stopPropagation();
+				dropdownMenu.style.display = 'none';
+				if (this.onOpenSettings) {
+					this.onOpenSettings();
 				}
 			});
 		}

@@ -56,6 +56,7 @@
 	z-index: 1000;
 	max-height: 300px;
 	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .reading-time-dropdown-item {
@@ -63,6 +64,8 @@
 	color: var(--text-normal);
 	cursor: pointer;
 	transition: background-color 0.15s ease;
+	white-space: normal;
+	word-wrap: break-word;
 }
 
 .reading-time-dropdown-item:hover {
@@ -71,6 +74,26 @@
 
 .reading-time-dropdown-item.selected {
 	background: var(--background-modifier-active);
+}
+
+.reading-time-dropdown-item-text {
+	display: inline;
+	white-space: normal;
+}
+
+.reading-time-dropdown-divider {
+	border-top: 1px solid var(--background-modifier-border);
+	margin: 0.25rem 0;
+}
+
+.reading-time-dropdown-settings {
+	color: var(--text-muted);
+	font-size: 0.9rem;
+}
+
+.reading-time-dropdown-settings:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
 }
 
 .reading-time-tab-content {

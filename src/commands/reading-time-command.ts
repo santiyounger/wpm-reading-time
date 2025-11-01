@@ -61,12 +61,20 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				await plugin.saveSettings();
 			};
 			
+			// Handler for opening settings
+			const onOpenSettings = () => {
+				if (plugin.settingTab) {
+					plugin.settingTab.display();
+				}
+			};
+			
 			readingTimeView.updateContent(
 				plugin.settings.presets,
 				plugin.settings.selectedPresetId,
 				presetTimes,
 				wordCount,
-				onPresetChange
+				onPresetChange,
+				onOpenSettings
 			);
 			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
 			
