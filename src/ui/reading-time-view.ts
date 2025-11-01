@@ -1,16 +1,14 @@
 import { ItemView, WorkspaceLeaf } from 'obsidian';
+import { WPMTimePreset } from '../settings';
 
 export const READING_TIME_VIEW_TYPE = 'reading-time-view';
 
 export class ReadingTimeView extends ItemView {
-	readingFormatted: string = '';
-	readingSeconds: number = 0;
-	readingSpeed: number = 0;
-	speakingFormatted: string = '';
-	speakingSeconds: number = 0;
-	speakingSpeed: number = 0;
+	presets: WPMTimePreset[] = [];
+	selectedPresetId: string = '';
+	presetTimes: Map<string, { formatted: string; seconds: number }> = new Map();
 	wordCount: number = 0;
-	activeTab: 'reading' | 'speaking' = 'reading';
+	onPresetChange?: (presetId: string) => void;
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -29,40 +27,48 @@ export class ReadingTimeView extends ItemView {
 	}
 
 	updateContent(
-		readingFormatted: string, readingSeconds: number, readingSpeed: number,
-		speakingFormatted: string, speakingSeconds: number, speakingSpeed: number,
-		wordCount: number
+		presets: WPMTimePreset[],
+		selectedPresetId: string,
+		presetTimes: Map<string, { formatted: string; seconds: number }>,
+		wordCount: number,
+		onPresetChange: (presetId: string) => void
 	): void {
-		this.readingFormatted = readingFormatted;
-		this.readingSeconds = readingSeconds;
-		this.readingSpeed = readingSpeed;
-		this.speakingFormatted = speakingFormatted;
-		this.speakingSeconds = speakingSeconds;
-		this.speakingSpeed = speakingSpeed;
+		this.presets = presets;
+		this.selectedPresetId = selectedPresetId;
+		this.presetTimes = presetTimes;
 		this.wordCount = wordCount;
+		this.onPresetChange = onPresetChange;
 		this.render();
 	}
 
-	private renderTabContent(container: HTMLElement, isReading: boolean): void {
-		const formatted = isReading ? this.readingFormatted : this.speakingFormatted;
-		const speed = isReading ? this.readingSpeed : this.speakingSpeed;
-		const heading = isReading 
-			? 'You would read this in:' 
-			: 'You would read this out loud in:';
-		const speedText = isReading
-			? 'and you read at a speed of:'
-			: 'and you read out loud at a speed of:';
+	private render(): void {
+		const { contentEl } = this;
+		contentEl.empty();
 
+		if (this.presets.length === 0 || !this.selectedPresetId) {
+			return;
+		}
+
+		const currentPreset = this.presets.find(p => p.id === this.selectedPresetId);
+		const currentTime = this.presetTimes.get(this.selectedPresetId);
+		
+		if (!currentPreset || !currentTime) {
+			return;
+		}
+
+		// Main content container
+		const mainContent = contentEl.createDiv('reading-time-content');
+		
 		// Heading
-		container.createEl('div', { 
-			text: heading, 
+		mainContent.createEl('div', { 
+			text: 'You would read this in:', 
 			cls: 'reading-time-heading' 
 		});
 		
 		// Main time display
-		const timeDisplay = container.createDiv('reading-time-display');
+		const timeDisplay = mainContent.createDiv('reading-time-display');
 		timeDisplay.createEl('div', { 
-			text: formatted, 
+			text: currentTime.formatted, 
 			cls: 'reading-time-formatted' 
 		});
 
@@ -72,10 +78,23 @@ export class ReadingTimeView extends ItemView {
 		becauseDiv.createSpan({ text: `${this.wordCount}`, cls: 'reading-time-number' });
 		becauseDiv.createSpan({ text: ' words long' });
 
-		// Speed info
+		// Speed info with dropdown
 		const speedDiv = timeDisplay.createDiv('reading-time-wpm');
-		speedDiv.createSpan({ text: `${speedText} ` });
-		speedDiv.createSpan({ text: `${speed}`, cls: 'reading-time-number' });
+		speedDiv.createSpan({ text: 'and you read at a speed of: ' });
+		
+		// Dropdown select element
+		const select = speedDiv.createEl('select', { cls: 'reading-time-preset-select' });
+		for (const preset of this.presets) {
+			const option = select.createEl('option', { 
+				text: `${preset.name} (${preset.speed} WPM)`,
+				value: preset.id 
+			});
+			if (preset.id === this.selectedPresetId) {
+				option.selected = true;
+			}
+		}
+		
+		// Add WPM phrase after dropdown
 		speedDiv.createSpan({ text: ' ' });
 		const wpmPhrase = speedDiv.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
@@ -84,57 +103,17 @@ export class ReadingTimeView extends ItemView {
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'inute' });
-	}
 
-	private render(): void {
-		const { contentEl } = this;
-		contentEl.empty();
-
-		// Tab buttons
-		const tabContainer = contentEl.createDiv('reading-time-tabs');
-		const readingTab = tabContainer.createDiv('reading-time-tab');
-		readingTab.textContent = 'Reading Time';
-		if (this.activeTab === 'reading') {
-			readingTab.classList.add('active');
-		}
-		
-		const speakingTab = tabContainer.createDiv('reading-time-tab');
-		speakingTab.textContent = 'Speaking Time';
-		if (this.activeTab === 'speaking') {
-			speakingTab.classList.add('active');
-		}
-
-		// Tab content container
-		const mainContent = contentEl.createDiv('reading-time-content');
-		const readingContent = mainContent.createDiv('reading-time-tab-content');
-		const speakingContent = mainContent.createDiv('reading-time-tab-content');
-		
-		readingContent.style.display = this.activeTab === 'reading' ? 'flex' : 'none';
-		speakingContent.style.display = this.activeTab === 'speaking' ? 'flex' : 'none';
-
-		// Render content for both tabs
-		this.renderTabContent(readingContent, true);
-		this.renderTabContent(speakingContent, false);
-
-		// Tab click handlers - use addEventListener for better reliability
-		readingTab.addEventListener('click', (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			this.activeTab = 'reading';
-			readingTab.classList.add('active');
-			speakingTab.classList.remove('active');
-			readingContent.style.display = 'flex';
-			speakingContent.style.display = 'none';
-		});
-
-		speakingTab.addEventListener('click', (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			this.activeTab = 'speaking';
-			speakingTab.classList.add('active');
-			readingTab.classList.remove('active');
-			speakingContent.style.display = 'flex';
-			readingContent.style.display = 'none';
+		// Dropdown change handler
+		select.addEventListener('change', (e) => {
+			const target = e.target as HTMLSelectElement;
+			const newPresetId = target.value;
+			if (this.onPresetChange && newPresetId !== this.selectedPresetId) {
+				this.selectedPresetId = newPresetId;
+				this.onPresetChange(newPresetId);
+				// Re-render to show new preset's time
+				this.render();
+			}
 		});
 	}
 

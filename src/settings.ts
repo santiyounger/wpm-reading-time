@@ -1,10 +1,19 @@
+export interface WPMTimePreset {
+	id: string;
+	name: string;
+	speed: number;
+}
+
 export interface WPMTimeSettings {
-	speakingSpeed: number; // WPM for speaking out loud
-	readingSpeed: number; // WPM for silent reading
+	presets: WPMTimePreset[];
+	selectedPresetId: string;
 }
 
 export const DEFAULT_SETTINGS: WPMTimeSettings = {
-	speakingSpeed: 200,
-	readingSpeed: 250
+	presets: [
+		{ id: 'reading', name: 'My Reading Time', speed: 250 },
+		{ id: 'speaking', name: 'My Speaking Time', speed: 200 }
+	],
+	selectedPresetId: 'reading'
 };
 

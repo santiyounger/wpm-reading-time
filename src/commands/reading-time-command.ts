@@ -19,10 +19,18 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			const selectionStart = editor.getCursor('from');
 			const selectionEnd = editor.getCursor('to');
 
-			const readingSpeed = plugin.settings.readingSpeed;
-			const speakingSpeed = plugin.settings.speakingSpeed;
-			const { formatted: readingFormatted, totalSeconds: readingSeconds, wordCount } = calculateReadingTime(selectedText, readingSpeed);
-			const { formatted: speakingFormatted, totalSeconds: speakingSeconds } = calculateReadingTime(selectedText, speakingSpeed);
+			// Calculate times for all presets
+			const presetTimes = new Map<string, { formatted: string; seconds: number }>();
+			let wordCount = 0;
+			
+			for (const preset of plugin.settings.presets) {
+				const result = calculateReadingTime(selectedText, preset.speed);
+				presetTimes.set(preset.id, {
+					formatted: result.formatted,
+					seconds: result.totalSeconds
+				});
+				wordCount = result.wordCount; // All should have same word count
+			}
 			
 			// Open or reveal the view in the right sidebar
 			let readingTimeView: ReadingTimeView;
@@ -47,10 +55,18 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				plugin.view = readingTimeView;
 			}
 			
+			// Handler for preset changes
+			const onPresetChange = async (presetId: string) => {
+				plugin.settings.selectedPresetId = presetId;
+				await plugin.saveSettings();
+			};
+			
 			readingTimeView.updateContent(
-				readingFormatted, readingSeconds, readingSpeed,
-				speakingFormatted, speakingSeconds, speakingSpeed,
-				wordCount
+				plugin.settings.presets,
+				plugin.settings.selectedPresetId,
+				presetTimes,
+				wordCount,
+				onPresetChange
 			);
 			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
 			

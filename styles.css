@@ -1,29 +1,31 @@
 /* Reading Time View Styles - Modern & Minimal (Sidebar) */
 
-.reading-time-tabs {
-	display: flex;
-	gap: 0;
-	border-bottom: 1px solid var(--background-modifier-border);
-	padding: 0 1rem;
-	margin-bottom: 1rem;
-}
-
-.reading-time-tab {
-	padding: 0.75rem 1rem;
-	cursor: pointer;
-	color: var(--text-muted);
-	border-bottom: 2px solid transparent;
-	margin-bottom: -1px;
-	transition: color 0.2s ease;
-}
-
-.reading-time-tab:hover {
+.reading-time-preset-select {
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
 	color: var(--text-normal);
+	font-size: 1rem;
+	padding: 0.5rem 0.75rem;
+	line-height: 1.5;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	min-width: 200px;
+	margin: 0 0.25rem;
+	height: auto;
+	vertical-align: middle;
 }
 
-.reading-time-tab.active {
-	color: var(--text-accent);
-	border-bottom-color: var(--text-accent);
+.reading-time-preset-select:hover {
+	border-color: var(--background-modifier-border-hover);
+}
+
+.reading-time-preset-select:focus {
+	outline: 2px solid var(--background-modifier-border-focus);
+	outline-offset: 2px;
+	border-color: var(--background-modifier-border-focus);
 }
 
 .reading-time-tab-content {

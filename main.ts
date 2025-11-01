@@ -31,20 +31,48 @@ export default class WPMTimePlugin extends Plugin {
 
 	async loadSettings() {
 		const loadedData = await this.loadData();
+		let migratedData: any = loadedData || {};
 		
-		// Migrate old settings format (wpm) to new format (speakingSpeed, readingSpeed)
-		if (loadedData && 'wpm' in loadedData && !('speakingSpeed' in loadedData)) {
-			loadedData.speakingSpeed = loadedData.wpm;
-			delete loadedData.wpm;
-		}
-		if (!loadedData || !('readingSpeed' in loadedData)) {
-			loadedData.readingSpeed = DEFAULT_SETTINGS.readingSpeed;
-		}
-		if (!loadedData || !('speakingSpeed' in loadedData)) {
-			loadedData.speakingSpeed = DEFAULT_SETTINGS.speakingSpeed;
+		// Migrate old settings format to new preset-based format
+		if (loadedData && !('presets' in loadedData)) {
+			// Old format: migrate readingSpeed/speakingSpeed or wpm to presets
+			let readingSpeed = DEFAULT_SETTINGS.presets[0].speed;
+			let speakingSpeed = DEFAULT_SETTINGS.presets[1].speed;
+			
+			if ('wpm' in loadedData && typeof loadedData.wpm === 'number') {
+				speakingSpeed = loadedData.wpm;
+			}
+			if ('readingSpeed' in loadedData && typeof loadedData.readingSpeed === 'number') {
+				readingSpeed = loadedData.readingSpeed;
+			}
+			if ('speakingSpeed' in loadedData && typeof loadedData.speakingSpeed === 'number') {
+				speakingSpeed = loadedData.speakingSpeed;
+			}
+			
+			migratedData.presets = [
+				{ id: 'reading', name: 'My Reading Time', speed: readingSpeed },
+				{ id: 'speaking', name: 'My Speaking Time', speed: speakingSpeed }
+			];
+			migratedData.selectedPresetId = 'reading';
 		}
 		
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
+		// Ensure presets array exists and has at least default presets
+		if (!migratedData.presets || !Array.isArray(migratedData.presets) || migratedData.presets.length === 0) {
+			migratedData.presets = DEFAULT_SETTINGS.presets;
+		}
+		
+		// Ensure selectedPresetId exists and is valid
+		if (!migratedData.selectedPresetId) {
+			migratedData.selectedPresetId = DEFAULT_SETTINGS.selectedPresetId;
+		}
+		
+		// Validate that selectedPresetId exists in presets
+		const presetIds = (migratedData.presets || []).map((p: any) => p.id);
+		if (!presetIds.includes(migratedData.selectedPresetId)) {
+			migratedData.selectedPresetId = presetIds[0] || DEFAULT_SETTINGS.selectedPresetId;
+		}
+		
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, migratedData);
 	}
 
 	async saveSettings() {
