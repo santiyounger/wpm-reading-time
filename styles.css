@@ -122,6 +122,13 @@
 	-moz-user-select: text;
 }
 
+.reading-time-note-title {
+	font-size: 0.875rem;
+	color: var(--text-muted);
+	margin-bottom: 0.5rem;
+	opacity: 0.8;
+}
+
 .reading-time-heading {
 	text-align: center;
 	font-size: 1rem;

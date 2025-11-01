@@ -344,6 +344,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				this.display(); // Refresh the settings view
 			});
 		}
+	}
 
 	private closeAllTooltips(): void {
 		// Close all tooltips from any calculator button

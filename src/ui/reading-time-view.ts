@@ -8,6 +8,8 @@ export class ReadingTimeView extends ItemView {
 	selectedPresetId: string = '';
 	presetTimes: Map<string, { formatted: string; seconds: number }> = new Map();
 	wordCount: number = 0;
+	isWholeNote: boolean = false;
+	noteTitle: string = '';
 	onPresetChange?: (presetId: string) => void;
 	onOpenSettings?: () => void;
 	dropdownCleanup?: () => void;
@@ -34,12 +36,16 @@ export class ReadingTimeView extends ItemView {
 		presetTimes: Map<string, { formatted: string; seconds: number }>,
 		wordCount: number,
 		onPresetChange: (presetId: string) => void,
-		onOpenSettings?: () => void
+		onOpenSettings?: () => void,
+		isWholeNote: boolean = false,
+		noteTitle: string = ''
 	): void {
 		this.presets = presets;
 		this.selectedPresetId = selectedPresetId;
 		this.presetTimes = presetTimes;
 		this.wordCount = wordCount;
+		this.isWholeNote = isWholeNote;
+		this.noteTitle = noteTitle;
 		this.onPresetChange = onPresetChange;
 		this.onOpenSettings = onOpenSettings;
 		this.render();
@@ -67,6 +73,12 @@ export class ReadingTimeView extends ItemView {
 
 		// Main content container
 		const mainContent = contentEl.createDiv('reading-time-content');
+		
+		// Note title header (only shown when analyzing whole note)
+		if (this.isWholeNote && this.noteTitle) {
+			const noteTitleDiv = mainContent.createDiv('reading-time-note-title');
+			noteTitleDiv.textContent = `for this whole note ${this.noteTitle}`;
+		}
 		
 		// Heading
 		mainContent.createEl('div', { 
