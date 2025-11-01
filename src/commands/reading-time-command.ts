@@ -19,17 +19,33 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			const selectionStart = editor.getCursor('from');
 			const selectionEnd = editor.getCursor('to');
 
-			// Calculate times for all presets
+			// Filter out presets with invalid speeds (must be > 0)
+			const validPresets = plugin.settings.presets.filter(p => p.speed > 0);
+			
+			if (validPresets.length === 0) {
+				new Notice('No valid presets found. Please configure at least one preset with a speed > 0 in settings.');
+				return;
+			}
+			
+			// Calculate times for all valid presets
 			const presetTimes = new Map<string, { formatted: string; seconds: number }>();
 			let wordCount = 0;
 			
-			for (const preset of plugin.settings.presets) {
+			for (const preset of validPresets) {
 				const result = calculateReadingTime(selectedText, preset.speed);
 				presetTimes.set(preset.id, {
 					formatted: result.formatted,
 					seconds: result.totalSeconds
 				});
 				wordCount = result.wordCount; // All should have same word count
+			}
+			
+			// Ensure selected preset is valid, if not use first valid preset
+			let selectedPresetId = plugin.settings.selectedPresetId;
+			if (!validPresets.find(p => p.id === selectedPresetId)) {
+				selectedPresetId = validPresets[0].id;
+				plugin.settings.selectedPresetId = selectedPresetId;
+				await plugin.saveSettings();
 			}
 			
 			// Open or reveal the view in the right sidebar
@@ -73,8 +89,8 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			};
 			
 			readingTimeView.updateContent(
-				plugin.settings.presets,
-				plugin.settings.selectedPresetId,
+				validPresets,
+				selectedPresetId,
 				presetTimes,
 				wordCount,
 				onPresetChange,
