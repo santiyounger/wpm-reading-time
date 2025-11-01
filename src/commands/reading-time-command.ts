@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, Notice } from 'obsidian';
+import { Editor, MarkdownView, Notice, TFile } from 'obsidian';
 import { calculateReadingTime } from '../utils/reading-time';
 import { WPMTimePlugin } from '../types';
 import { ReadingTimeView, READING_TIME_VIEW_TYPE } from '../ui/reading-time-view';
@@ -8,26 +8,28 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 		id: 'calculate-reading-time',
 		name: 'Calculate reading time',
 		editorCallback: async (editor: Editor, view: MarkdownView) => {
-			let selectedText = editor.getSelection();
-			let isWholeNote = false;
-			let noteTitle = '';
+		let selectedText = editor.getSelection();
+		let isWholeNote = false;
+		let noteTitle = '';
+		let noteFile: TFile | null = null;
+		
+		// If no text is selected, use the whole note content
+		if (!selectedText || selectedText.trim().length === 0) {
+			selectedText = editor.getValue();
+			isWholeNote = true;
 			
-			// If no text is selected, use the whole note content
-			if (!selectedText || selectedText.trim().length === 0) {
-				selectedText = editor.getValue();
-				isWholeNote = true;
-				
-				// Get note title from metadata cache or file name
-				if (view.file) {
-					// Try to get title from metadata cache (Obsidian's standard way)
-					const metadata = plugin.app.metadataCache.getFileCache(view.file);
-					if (metadata?.frontmatter?.title) {
-						noteTitle = metadata.frontmatter.title;
-					} else {
-						// Use file basename (filename without extension)
-						noteTitle = view.file.basename;
-					}
+			// Get note title from metadata cache or file name
+			if (view.file) {
+				noteFile = view.file;
+				// Try to get title from metadata cache (Obsidian's standard way)
+				const metadata = plugin.app.metadataCache.getFileCache(view.file);
+				if (metadata?.frontmatter?.title) {
+					noteTitle = metadata.frontmatter.title;
+				} else {
+					// Use file basename (filename without extension)
+					noteTitle = view.file.basename;
 				}
+			}
 				
 				// If the note is empty, show a notice
 				if (!selectedText || selectedText.trim().length === 0) {
@@ -117,7 +119,8 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				onPresetChange,
 				onOpenSettings,
 				isWholeNote,
-				noteTitle
+				noteTitle,
+				noteFile
 			);
 			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
 			

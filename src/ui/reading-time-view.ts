@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf } from 'obsidian';
+import { ItemView, WorkspaceLeaf, TFile } from 'obsidian';
 import { WPMTimePreset } from '../settings';
 
 export const READING_TIME_VIEW_TYPE = 'reading-time-view';
@@ -10,9 +10,13 @@ export class ReadingTimeView extends ItemView {
 	wordCount: number = 0;
 	isWholeNote: boolean = false;
 	noteTitle: string = '';
+	noteFile: TFile | null = null;
 	onPresetChange?: (presetId: string) => void;
 	onOpenSettings?: () => void;
 	dropdownCleanup?: () => void;
+	metadataCleanup?: () => void;
+	renameCleanup?: () => void;
+	workspaceCleanup?: () => void;
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -38,7 +42,8 @@ export class ReadingTimeView extends ItemView {
 		onPresetChange: (presetId: string) => void,
 		onOpenSettings?: () => void,
 		isWholeNote: boolean = false,
-		noteTitle: string = ''
+		noteTitle: string = '',
+		noteFile: TFile | null = null
 	): void {
 		this.presets = presets;
 		this.selectedPresetId = selectedPresetId;
@@ -46,9 +51,164 @@ export class ReadingTimeView extends ItemView {
 		this.wordCount = wordCount;
 		this.isWholeNote = isWholeNote;
 		this.noteTitle = noteTitle;
+		this.noteFile = noteFile;
 		this.onPresetChange = onPresetChange;
 		this.onOpenSettings = onOpenSettings;
+		this.setupDynamicNoteTitle();
 		this.render();
+	}
+
+	private getCurrentNoteTitle(): string {
+		if (!this.noteFile) {
+			return this.noteTitle;
+		}
+		// Try to get title from metadata cache (Obsidian's standard way)
+		const metadata = this.app.metadataCache.getFileCache(this.noteFile);
+		if (metadata?.frontmatter?.title) {
+			return metadata.frontmatter.title;
+		}
+		// Use file basename (filename without extension)
+		return this.noteFile.basename;
+	}
+
+	private setupDynamicNoteTitle(): void {
+		// Clean up existing listeners
+		if (this.metadataCleanup) {
+			this.metadataCleanup();
+			this.metadataCleanup = undefined;
+		}
+		if (this.renameCleanup) {
+			this.renameCleanup();
+			this.renameCleanup = undefined;
+		}
+		if (this.workspaceCleanup) {
+			this.workspaceCleanup();
+			this.workspaceCleanup = undefined;
+		}
+
+		// Only set up listeners if we're tracking a whole note
+		if (!this.isWholeNote || !this.noteFile) {
+			return;
+		}
+
+		// Store the original file path for rename tracking
+		const originalFilePath = this.noteFile.path;
+
+		// Listen for metadata changes (including frontmatter title changes)
+		const metadataHandler = (file: TFile) => {
+			// Check if this is our file (compare by path)
+			if (file.path === this.noteFile?.path || file.path === originalFilePath) {
+				// Update the file reference in case it changed
+				this.noteFile = file;
+				const newTitle = this.getCurrentNoteTitle();
+				if (newTitle !== this.noteTitle) {
+					this.noteTitle = newTitle;
+					// Update only the note title part without re-rendering everything
+					this.updateNoteTitleDisplay();
+				}
+			}
+		};
+		this.app.metadataCache.on('changed', metadataHandler);
+		this.metadataCleanup = () => {
+			this.app.metadataCache.off('changed', metadataHandler);
+		};
+
+		// Listen for file renames
+		const renameHandler = (file: TFile, oldPath: string) => {
+			// Check if the renamed file matches our tracked file
+			if (oldPath === originalFilePath || oldPath === this.noteFile?.path) {
+				this.noteFile = file;
+				const newTitle = this.getCurrentNoteTitle();
+				this.noteTitle = newTitle;
+				// Update only the note title part without re-rendering everything
+				this.updateNoteTitleDisplay();
+			}
+		};
+		this.app.vault.on('rename', renameHandler);
+		this.renameCleanup = () => {
+			this.app.vault.off('rename', renameHandler);
+		};
+
+		// Also listen for workspace active leaf changes to catch file switches and renames in real-time
+		const workspaceHandler = () => {
+			// Refresh the title display when workspace changes
+			if (this.noteFile) {
+				// Check if file still exists and update title
+				const file = this.app.vault.getAbstractFileByPath(this.noteFile.path);
+				if (file instanceof TFile) {
+					this.noteFile = file;
+					const newTitle = this.getCurrentNoteTitle();
+					if (newTitle !== this.noteTitle) {
+						this.noteTitle = newTitle;
+						this.updateNoteTitleDisplay();
+					}
+				}
+			}
+		};
+		
+		// Listen to multiple workspace events for better real-time updates
+		this.app.workspace.on('active-leaf-change', workspaceHandler);
+		this.app.workspace.on('file-open', workspaceHandler);
+		this.workspaceCleanup = () => {
+			this.app.workspace.off('active-leaf-change', workspaceHandler);
+			this.app.workspace.off('file-open', workspaceHandler);
+		};
+
+		// Periodically check for title changes (as a fallback for any missed events)
+		// Use a more frequent check for real-time updates
+		const intervalId = window.setInterval(() => {
+			if (this.noteFile && this.isWholeNote) {
+				const currentTitle = this.getCurrentNoteTitle();
+				if (currentTitle !== this.noteTitle) {
+					this.noteTitle = currentTitle;
+					this.updateNoteTitleDisplay();
+				}
+			}
+		}, 500); // Check every 500ms for near real-time updates
+
+		// Store interval cleanup in metadataCleanup (will be cleaned up together)
+		const originalMetadataCleanup = this.metadataCleanup;
+		this.metadataCleanup = () => {
+			if (originalMetadataCleanup) originalMetadataCleanup();
+			window.clearInterval(intervalId);
+		};
+	}
+
+	private updateNoteTitleDisplay(): void {
+		if (!this.isWholeNote || !this.noteTitle) {
+			return;
+		}
+		// Find the note title div and update only the note link part
+		const noteTitleDiv = this.contentEl.querySelector('.reading-time-note-title');
+		if (noteTitleDiv) {
+			// Find the accent span that contains the note link
+			const noteLink = noteTitleDiv.querySelector('.reading-time-accent.reading-time-note-link') as HTMLElement;
+			if (noteLink) {
+				noteLink.textContent = `[[${this.noteTitle}]]`;
+				// Ensure click handler is still attached (in case element was recreated)
+				if (!noteLink.dataset.clickHandlerAttached) {
+					noteLink.style.cursor = 'pointer';
+					noteLink.addEventListener('click', async (e) => {
+						e.preventDefault();
+						if (this.noteFile) {
+							// Open the note file directly
+							const leaf = this.app.workspace.getMostRecentLeaf();
+							if (leaf) {
+								await leaf.openFile(this.noteFile);
+							} else {
+								// Fallback: create new leaf if none exists
+								const newLeaf = this.app.workspace.getLeaf(false);
+								await newLeaf.openFile(this.noteFile);
+							}
+						} else if (this.noteTitle) {
+							// Fallback: try to open by title/name using link format
+							await this.app.workspace.openLinkText(this.noteTitle, '', false);
+						}
+					});
+					noteLink.dataset.clickHandlerAttached = 'true';
+				}
+			}
+		}
 	}
 
 	private render(): void {
@@ -80,8 +240,26 @@ export class ReadingTimeView extends ItemView {
 			noteTitleDiv.createSpan({ text: 'You can select text and then run this plugin' });
 			noteTitleDiv.createEl('br');
 			noteTitleDiv.createSpan({ text: 'Right now we are using this whole note: ' });
-			const noteLink = noteTitleDiv.createSpan({ cls: 'reading-time-accent' });
+			const noteLink = noteTitleDiv.createSpan({ cls: 'reading-time-accent reading-time-note-link' });
 			noteLink.textContent = `[[${this.noteTitle}]]`;
+			noteLink.style.cursor = 'pointer';
+			noteLink.addEventListener('click', async (e) => {
+				e.preventDefault();
+				if (this.noteFile) {
+					// Open the note file directly
+					const leaf = this.app.workspace.getMostRecentLeaf();
+					if (leaf) {
+						await leaf.openFile(this.noteFile);
+					} else {
+						// Fallback: create new leaf if none exists
+						const newLeaf = this.app.workspace.getLeaf(false);
+						await newLeaf.openFile(this.noteFile);
+					}
+				} else if (this.noteTitle) {
+					// Fallback: try to open by title/name using link format
+					await this.app.workspace.openLinkText(this.noteTitle, '', false);
+				}
+			});
 		}
 		
 		// Heading
@@ -240,6 +418,18 @@ export class ReadingTimeView extends ItemView {
 		if (this.dropdownCleanup) {
 			this.dropdownCleanup();
 			this.dropdownCleanup = undefined;
+		}
+		if (this.metadataCleanup) {
+			this.metadataCleanup();
+			this.metadataCleanup = undefined;
+		}
+		if (this.renameCleanup) {
+			this.renameCleanup();
+			this.renameCleanup = undefined;
+		}
+		if (this.workspaceCleanup) {
+			this.workspaceCleanup();
+			this.workspaceCleanup = undefined;
 		}
 		contentEl.empty();
 	}
