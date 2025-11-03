@@ -21,7 +21,9 @@ jobs:
         id: ver
         run: |
           VERSION=$(jq -r '.version' manifest.json)
+          NAME=$(jq -r '.name' manifest.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "name=$NAME" >> $GITHUB_OUTPUT
 
       - name: Get latest GitHub release tag
         id: latest
@@ -113,9 +115,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.version }}
-          name: ${{ steps.ver.outputs.version }}
+          name: ${{ steps.ver.outputs.name }} ${{ steps.ver.outputs.version }}
           draft: false
           prerelease: false
+          generate_release_notes: true
           files: |
             main.js
             manifest.json
