@@ -65,7 +65,8 @@ jobs:
               notes = '';
             }
             if (previous) {
-              notes += `\n\nSee Changes (Nerd friendly): ${previous}...${current}`;
+              const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}`;
+              notes += `\n\n[See Changes (Nerd friendly)](${url})`;
             }
             return notes;
         env:
