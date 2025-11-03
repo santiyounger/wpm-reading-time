@@ -149,4 +149,3 @@ If you encounter any issues or have feature requests, please open an issue on th
 ## Credits
 
 Created by [Santi Younger](https://www.santiyounger.com/) to help writers and knowledge workers better understand their content's reading time.
-
