@@ -23,6 +23,53 @@ jobs:
           VERSION=$(jq -r '.version' manifest.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Get latest GitHub release tag
+        id: latest
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const { owner, repo } = context.repo;
+            try {
+              const rel = await github.rest.repos.getLatestRelease({ owner, repo });
+              return rel.data.tag_name || '';
+            } catch (e) {
+              if (e.status === 404) {
+                return '';
+              }
+              throw e;
+            }
+
+      - name: Compare manifest version with latest release
+        id: vercmp
+        run: |
+          LATEST='${{ steps.latest.outputs.result }}'
+          CUR='${{ steps.ver.outputs.version }}'
+          parse_semver() {
+            IFS='.' read -r MAJ MIN PAT <<< "$1"
+            echo "${MAJ:-0} ${MIN:-0} ${PAT:-0}"
+          }
+          cmp_versions() {
+            # returns 0 if $1 > $2, else 1
+            read -r A1 A2 A3 <<< "$(parse_semver "$1")"
+            read -r B1 B2 B3 <<< "$(parse_semver "$2")"
+            if [ "$A1" -gt "$B1" ]; then return 0; fi
+            if [ "$A1" -lt "$B1" ]; then return 1; fi
+            if [ "$A2" -gt "$B2" ]; then return 0; fi
+            if [ "$A2" -lt "$B2" ]; then return 1; fi
+            if [ "$A3" -gt "$B3" ]; then return 0; fi
+            return 1
+          }
+          if [ -z "$LATEST" ]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            if cmp_versions "$CUR" "$LATEST"; then
+              echo "should_release=true" >> $GITHUB_OUTPUT
+            else
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Determine if tag already exists
         id: tag_check
         run: |
@@ -33,7 +80,7 @@ jobs:
           fi
 
       - name: Create and push tag
-        if: steps.tag_check.outputs.exists == 'false'
+        if: steps.tag_check.outputs.exists == 'false' && steps.vercmp.outputs.should_release == 'true'
         run: |
           git tag ${{ steps.ver.outputs.version }}
           git push origin ${{ steps.ver.outputs.version }}
@@ -48,9 +95,11 @@ jobs:
         run: npm ci
 
       - name: Build plugin
+        if: steps.vercmp.outputs.should_release == 'true'
         run: npm run build
 
       - name: Prepare release artifacts
+        if: steps.vercmp.outputs.should_release == 'true'
         id: artifacts
         run: |
           # Ensure required files exist
@@ -60,6 +109,7 @@ jobs:
           if [ -f styles.css ]; then echo "has_css=true" >> $GITHUB_OUTPUT; else echo "has_css=false" >> $GITHUB_OUTPUT; fi
 
       - name: Create GitHub release and upload assets
+        if: steps.vercmp.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.version }}
