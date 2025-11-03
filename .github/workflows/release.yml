@@ -145,7 +145,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.version }}
-          name: ${{ steps.ver.outputs.name }} ${{ steps.ver.outputs.version }}
+          name: WPM Reading Time ${{ steps.ver.outputs.version }}
           draft: false
           prerelease: false
           body: ${{ steps.notes.outputs.result }}
