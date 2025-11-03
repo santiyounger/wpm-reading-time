@@ -1,36 +1,74 @@
-name: Release Obsidian plugin
+name: Tag, build and release on manifest version change
 
 on:
   push:
-    tags:
-      - "*"
+    branches: [ master ]
+    paths:
+      - 'manifest.json'
 
 jobs:
-  build:
+  tag-build-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: "18.x"
+          fetch-depth: 0
+
+      - name: Read version from manifest.json
+        id: ver
+        run: |
+          VERSION=$(jq -r '.version' manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Determine if tag already exists
+        id: tag_check
+        run: |
+          if git rev-parse -q --verify "refs/tags/${{ steps.ver.outputs.version }}"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create and push tag
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          git tag ${{ steps.ver.outputs.version }}
+          git push origin ${{ steps.ver.outputs.version }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build plugin
-        run: |
-          npm install
-          npm run build
+        run: npm run build
 
-      - name: Create release
+      - name: Prepare release artifacts
+        id: artifacts
+        run: |
+          # Ensure required files exist
+          test -f main.js
+          test -f manifest.json
+          # styles.css is optional
+          if [ -f styles.css ]; then echo "has_css=true" >> $GITHUB_OUTPUT; else echo "has_css=false" >> $GITHUB_OUTPUT; fi
+
+      - name: Create GitHub release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.version }}
+          name: ${{ steps.ver.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            main.js
+            manifest.json
+            styles.css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag="${GITHUB_REF#refs/tags/}"
-
-          gh release create "$tag" \
-            --title="$tag" \
-            --notes="Release $tag" \
-            main.js manifest.json styles.css
-
