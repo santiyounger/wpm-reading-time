@@ -122,3 +122,24 @@ jobs:
             styles.css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract description from README.md
+        if: steps.vercmp.outputs.should_release == 'true'
+        id: repo_desc
+        run: |
+          DESC=$(awk 'f==1 && NF{print; exit} /^# /{f=1}' README.md | tr -d '\r')
+          if [ -z "$DESC" ]; then DESC="Obsidian plugin that estimates reading time using personalized WPM presets."; fi
+          # Truncate to 160 chars for GitHub description
+          if [ ${#DESC} -gt 160 ]; then DESC="${DESC:0:157}..."; fi
+          echo "text=$DESC" >> $GITHUB_OUTPUT
+
+      - name: Update GitHub repository description
+        if: steps.vercmp.outputs.should_release == 'true'
+        uses: actions/github-script@v7
+        env:
+          DESC: ${{ steps.repo_desc.outputs.text }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const description = process.env.DESC || '';
+            await github.rest.repos.update({ owner, repo, description });
