@@ -63,7 +63,7 @@ jobs:
             }
             if (previous) {
               const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}`;
-              notes += `\n\n[See Changes (Nerd friendly)](${url})`;
+              notes += `\n\n[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
             }
             return notes;
         env:
