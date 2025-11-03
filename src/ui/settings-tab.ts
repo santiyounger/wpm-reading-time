@@ -89,10 +89,16 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		// Add new preset button with calculator on the left
 		const addPresetSetting = new Setting(presetsContainer);
+		// Layout: calculator flush-left, button flush-right
+		addPresetSetting.controlEl.style.alignItems = 'flex-start';
+		addPresetSetting.controlEl.style.justifyContent = 'space-between';
+		addPresetSetting.controlEl.style.width = '100%';
 		
 		// WPM calculator link (on the left side of the add button)
 		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (<span class="reading-time-wpm-phrase"><span class="reading-time-accent">W</span><span>ords </span><span class="reading-time-accent">P</span><span>er </span><span class="reading-time-accent">M</span><span>inute</span></span>), use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
+		wpmCalculatorLink.style.textAlign = 'center';
+		wpmCalculatorLink.style.flex = '1 1 auto';
+		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (<span class="reading-time-wpm-phrase"><span class="reading-time-accent">W</span><span>ords </span><span class="reading-time-accent">P</span><span>er </span><span class="reading-time-accent">M</span><span>inute</span></span>),<br>use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
@@ -300,7 +306,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				tooltipContent = clone.innerHTML.trim();
 			} else {
 				// Fallback if calculator div not found
-				tooltipContent = 'To find out your reading speed (Words Per Minute), use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
+				tooltipContent = 'To find out your reading speed (Words Per Minute),<br>use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
 			}
 			
 			// Create tooltip

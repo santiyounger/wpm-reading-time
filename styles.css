@@ -404,13 +404,13 @@
 .reading-time-wpm-calculator {
 	margin: 0;
 	padding: 0.75rem 1rem;
-	background: var(--background-modifier-form-field);
-	border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    border: none;
 	border-radius: 6px;
 	font-size: 0.875rem;
 	color: var(--text-normal);
-	text-align: center;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    box-shadow: none;
 	flex: 1;
 	min-width: 0;
 	margin-right: 0.5rem;
@@ -474,6 +474,11 @@
 
 .reading-time-header-default-title {
 	justify-content: center;
+}
+
+/* Slightly smaller font for the Default header title text */
+.reading-time-header-default-title span {
+    font-size: 0.875rem;
 }
 
 .reading-time-header-speed-title {
@@ -660,7 +665,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .reading-time-learn-more-text {
