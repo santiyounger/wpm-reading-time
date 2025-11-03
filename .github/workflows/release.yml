@@ -57,13 +57,19 @@ jobs:
                 previous_tag_name: previous || undefined,
               });
               notes = res.data.body || '';
+              // Remove any default "Full Changelog:" lines GitHub may include
+              notes = notes
+                .split('\n')
+                .filter(line => !/^\*\*Full Changelog\*\*:/i.test(line.trim()))
+                .join('\n')
+                .trim();
             } catch (e) {
               // Fallback to empty notes
               notes = '';
             }
             if (previous) {
               const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}`;
-              notes += `\n\n[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
+              notes += `${notes ? '\n\n' : ''}[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
             }
             return notes;
         env:
