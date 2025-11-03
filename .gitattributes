@@ -1,3 +1,5 @@
 .github/workflows/release.yml linguist-generated=true
 .github/workflows/sync-versions.yml linguist-generated=true
+.github/workflows/release.yml -diff
+.github/workflows/sync-versions.yml -diff
 

@@ -40,41 +40,7 @@ jobs:
               throw e;
             }
 
-      - name: Generate release notes body
-        id: notes
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            const { owner, repo } = context.repo;
-            const current = process.env.CURRENT;
-            const previous = process.env.PREVIOUS;
-            let notes = '';
-            try {
-              const res = await github.rest.repos.generateReleaseNotes({
-                owner, repo,
-                tag_name: current,
-                previous_tag_name: previous || undefined,
-              });
-              notes = res.data.body || '';
-              // Remove any default "Full Changelog:" lines GitHub may include
-              notes = notes
-                .split('\n')
-                .filter(line => !/^\*\*Full Changelog\*\*:/i.test(line.trim()))
-                .join('\n')
-                .trim();
-            } catch (e) {
-              // Fallback to empty notes
-              notes = '';
-            }
-            if (previous) {
-              const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}?diff=split&w=1`;
-              notes += `${notes ? '\n\n' : ''}[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
-            }
-            return notes;
-        env:
-          CURRENT: ${{ steps.ver.outputs.version }}
-          PREVIOUS: ${{ steps.latest.outputs.result }}
+      
 
       - name: Compare manifest version with latest release
         id: vercmp
@@ -114,6 +80,43 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Generate release notes body
+        if: steps.vercmp.outputs.should_release == 'true'
+        id: notes
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const { owner, repo } = context.repo;
+            const current = process.env.CURRENT;
+            const previous = process.env.PREVIOUS;
+            let notes = '';
+            try {
+              const res = await github.rest.repos.generateReleaseNotes({
+                owner, repo,
+                tag_name: current,
+                previous_tag_name: previous || undefined,
+              });
+              notes = res.data.body || '';
+              // Remove any default "Full Changelog:" lines GitHub may include
+              notes = notes
+                .split('\n')
+                .filter(line => !/^\*\*Full Changelog\*\*:/i.test(line.trim()))
+                .join('\n')
+                .trim();
+            } catch (e) {
+              // Fallback to empty notes
+              notes = '';
+            }
+            if (previous) {
+              const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}?diff=split&w=1`;
+              notes += `${notes ? '\n\n' : ''}[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
+            }
+            return notes;
+        env:
+          CURRENT: ${{ steps.ver.outputs.version }}
+          PREVIOUS: ${{ steps.latest.outputs.result }}
 
       - name: Create and push tag
         if: steps.tag_check.outputs.exists == 'false' && steps.vercmp.outputs.should_release == 'true'
