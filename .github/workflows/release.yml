@@ -42,6 +42,36 @@ jobs:
               throw e;
             }
 
+      - name: Generate release notes body
+        if: steps.vercmp.outputs.should_release == 'true'
+        id: notes
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const { owner, repo } = context.repo;
+            const current = process.env.CURRENT;
+            const previous = process.env.PREVIOUS;
+            let notes = '';
+            try {
+              const res = await github.rest.repos.generateReleaseNotes({
+                owner, repo,
+                tag_name: current,
+                previous_tag_name: previous || undefined,
+              });
+              notes = res.data.body || '';
+            } catch (e) {
+              // Fallback to empty notes
+              notes = '';
+            }
+            if (previous) {
+              notes += `\n\nFull Changelog: ${previous}...${current}`;
+            }
+            return notes;
+        env:
+          CURRENT: ${{ steps.ver.outputs.version }}
+          PREVIOUS: ${{ steps.latest.outputs.result }}
+
       - name: Compare manifest version with latest release
         id: vercmp
         run: |
@@ -118,7 +148,7 @@ jobs:
           name: ${{ steps.ver.outputs.name }} ${{ steps.ver.outputs.version }}
           draft: false
           prerelease: false
-          generate_release_notes: true
+          body: ${{ steps.notes.outputs.result }}
           files: |
             main.js
             manifest.json
