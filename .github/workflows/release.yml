@@ -65,7 +65,7 @@ jobs:
               notes = '';
             }
             if (previous) {
-              notes += `\n\nFull Changelog: ${previous}...${current}`;
+              notes += `\n\nSee Changes (Nerd friendly): ${previous}...${current}`;
             }
             return notes;
         env:

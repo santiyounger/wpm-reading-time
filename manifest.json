@@ -1,7 +1,7 @@
 {
 	"id": "wpm-reading-time",
 	"name": "How Long to Read This Text (WPM Reading Time)",
-	"version": "1.0.3",
+	"version": "1.0.2",
 	"minAppVersion": "1.0.0",
 	"description": "Calculate reading time estimates for selected text using your own reading speed in Words Per Minute.",
 	"author": "Santi Younger",
