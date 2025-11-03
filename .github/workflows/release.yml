@@ -3,8 +3,6 @@ name: Tag, build and release on manifest version change
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'manifest.json'
 
 jobs:
   tag-build-release:
@@ -96,7 +94,7 @@ jobs:
           if [ -z "$LATEST" ]; then
             echo "should_release=true" >> $GITHUB_OUTPUT
           else
-            if cmp_versions "$CUR" "$LATEST"; then
+            if cmp_versions "$CUR" "$LATEST" || [ "$CUR" = "$LATEST" ]; then
               echo "should_release=true" >> $GITHUB_OUTPUT
             else
               echo "should_release=false" >> $GITHUB_OUTPUT
