@@ -68,7 +68,7 @@ jobs:
               notes = '';
             }
             if (previous) {
-              const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}`;
+              const url = `https://github.com/${owner}/${repo}/compare/${previous}...${current}?diff=split&w=1`;
               notes += `${notes ? '\n\n' : ''}[Here's a List of What Has Changed Since the Last Version of This Plugin](${url})`;
             }
             return notes;
