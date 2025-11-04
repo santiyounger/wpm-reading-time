@@ -36,7 +36,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const mailIcon = this.createMailIcon();
 		supportLink.appendChild(mailIcon);
-		supportLink.createSpan({ text: 'Contact Santi (author)' });
+		supportLink.createSpan({ text: 'contact Santi (author)' });
 
 		// GitHub link
 		const githubLink = linksContainer.createEl('a', {
@@ -100,7 +100,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator reading-time-wpm-calculator-flex');
 		const calcIcon = this.createCalculatorIcon();
 		wpmCalculatorLink.appendChild(calcIcon);
-		wpmCalculatorLink.createSpan({ text: 'To find out your reading speed (' });
+		wpmCalculatorLink.createSpan({ text: 'to find out your reading speed (' });
 		const wpmPhrase = wpmCalculatorLink.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -120,7 +120,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
+			.setTooltip('to find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -165,7 +165,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		briefcaseIcon.appendChild(briefcaseRect);
 		learnMoreText.appendChild(briefcaseIcon);
 		
-		learnMoreText.createEl('span', { text: 'Check out my work at:' });
+		learnMoreText.createEl('span', { text: 'check out my work at:' });
 		
 		// External link icon
 		const externalLinkIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -317,7 +317,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			document.body.appendChild(tooltip);
 			
 			// Build tooltip content using DOM methods
-			tooltip.createSpan({ text: 'To find out your reading speed (' });
+			tooltip.createSpan({ text: 'to find out your reading speed (' });
 			const wpmPhrase = tooltip.createSpan({ cls: 'reading-time-wpm-phrase' });
 			wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 			wpmPhrase.createSpan({ text: 'ords ' });
@@ -336,9 +336,11 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
-			// Using inline styles for dynamic positioning is acceptable here
+			// Using CSS custom properties for dynamic positioning (required for tooltip placement)
 			const rect = calculatorBtn.getBoundingClientRect();
-			tooltip.setAttribute('style', `position: fixed; left: ${rect.right + 12}px; top: ${rect.top}px; transform: translateY(-50%);`);
+			tooltip.style.setProperty('--tooltip-left', `${rect.right + 12}px`);
+			tooltip.style.setProperty('--tooltip-top', `${rect.top}px`);
+			tooltip.classList.add('reading-time-tooltip-positioned');
 			
 			// Close on outside click
 			const closeTooltip = (event: MouseEvent) => {
@@ -364,7 +366,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			}
 		};
 		// Store cleanup reference on the container so it can be called if needed
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 		(presetContainer as any)._tooltipCleanup = cleanup;
 		// Only allow numbers in speed input
 		speedInput.addEventListener('input', (e) => {

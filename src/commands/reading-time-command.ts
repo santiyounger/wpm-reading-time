@@ -19,7 +19,8 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			// Try to get title from metadata cache (Obsidian's standard way)
 			const metadata = plugin.app.metadataCache.getFileCache(view.file);
 			if (metadata?.frontmatter?.title) {
-				noteTitle = metadata.frontmatter.title;
+				const titleValue = metadata.frontmatter.title;
+				noteTitle = typeof titleValue === 'string' ? titleValue : view.file.basename;
 			} else {
 				// Use file basename (filename without extension)
 				noteTitle = view.file.basename;
@@ -104,14 +105,14 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			
 			// Handler for opening settings
 			const onOpenSettings = () => {
-				// Open settings and navigate to this plugin's tab
-				// Note: Using internal Obsidian API (not in public types)
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const app = plugin.app as any;
-				if (app.setting) {
-					app.setting.open();
-					app.setting.openTabById(plugin.manifest.id);
-				}
+			// Open settings and navigate to this plugin's tab
+			// Note: Using internal Obsidian API (not in public types)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+			const app = plugin.app as any;
+			if (app.setting) {
+				app.setting.open();
+				app.setting.openTabById(plugin.manifest.id);
+			}
 			};
 			
 			readingTimeView.updateContent(

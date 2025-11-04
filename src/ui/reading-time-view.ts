@@ -65,6 +65,7 @@ export class ReadingTimeView extends ItemView {
 		// Try to get title from metadata cache (Obsidian's standard way)
 		const metadata = this.app.metadataCache.getFileCache(this.noteFile);
 		if (metadata?.frontmatter?.title) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const title = metadata.frontmatter.title;
 			return typeof title === 'string' ? title : this.noteFile.basename;
 		}

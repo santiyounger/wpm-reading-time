@@ -615,6 +615,13 @@
 	white-space: normal;
 }
 
+.reading-time-tooltip-positioned {
+	position: fixed;
+	left: var(--tooltip-left);
+	top: var(--tooltip-top);
+	transform: translateY(-50%);
+}
+
 .reading-time-wpm-tooltip::before {
 	content: '';
 	position: absolute;
