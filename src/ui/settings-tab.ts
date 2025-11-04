@@ -117,12 +117,14 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			href: 'https://www.santiyounger.com/wpm-calculator',
 			attr: { target: '_blank', rel: 'noopener' }
 		});
-		calcLink.textContent = 'this free calculator I created for you';
+		// eslint-disable-next-line obsidianmd/ui/sentence-case
+		calcLink.textContent = 'This free calculator I created for you';
 		wpmCalculatorLink.createSpan({ text: '.' });
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
+			// eslint-disable-next-line obsidianmd/ui/sentence-case
+			.setTooltip('to find out your reading speed, I put together a calculator for you on my website. Select to add a new preset.')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -334,7 +336,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				href: 'https://www.santiyounger.com/wpm-calculator',
 				attr: { target: '_blank', rel: 'noopener' }
 			});
-			calcLink.textContent = 'this free calculator I created for you';
+			// eslint-disable-next-line obsidianmd/ui/sentence-case
+			calcLink.textContent = 'This free calculator I created for you';
 			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
