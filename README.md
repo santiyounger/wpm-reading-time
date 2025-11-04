@@ -2,6 +2,8 @@
 
 **Know exactly how long your notes take to read.**
 
+![Screenshot of WPM Reading Time plugin](https://santiyounger.b-cdn.net/obsidian-plugins/2025-11-04%2010-01-06.png)
+
 Stop guessing reading times. How Long to Read calculates estimates for any selected text using your personalized reading speed presets. Useful for writers, content strategists, and knowledge workers who need timing information.
 
 ## Who is this for?
