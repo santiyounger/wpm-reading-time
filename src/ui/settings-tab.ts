@@ -19,7 +19,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		// Use Setting.setHeading() for consistent UI
-		const headingSetting = new Setting(containerEl).setHeading().setName('WPM Reading Time - How Long to Read This Text');
+		const headingSetting = new Setting(containerEl).setHeading().setName('Wpm reading time - how long to read this text');
 		// Center the heading
 		headingSetting.settingEl.classList.add('reading-time-settings-heading');
 
@@ -30,7 +30,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const supportLink = linksContainer.createEl('a', {
 			href: 'https://www.santiyounger.com/contact',
 			attr: { 
-				'aria-label': 'Contact Santi (author)',
+				'aria-label': 'Contact santi (author)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
@@ -197,7 +197,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			attr: { target: '_blank', rel: 'noopener' }
 		});
 		learnMoreLink.appendChild(externalLinkIcon);
-		learnMoreLink.createEl('span', { text: 'santiyounger.com' });
+		learnMoreLink.createEl('span', { text: 'Santiyounger.com' });
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
