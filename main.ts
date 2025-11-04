@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import { WPMTimeSettings, DEFAULT_SETTINGS } from './src/settings';
+import { WPMTimeSettings, WPMTimePreset, DEFAULT_SETTINGS } from './src/settings';
 import { registerReadingTimeCommand } from './src/commands/reading-time-command';
 import { WPMTimeSettingTab } from './src/ui/settings-tab';
 import { ReadingTimeView, READING_TIME_VIEW_TYPE } from './src/ui/reading-time-view';
@@ -26,14 +26,14 @@ export default class WPMTimePlugin extends Plugin {
 		this.addSettingTab(this.settingTab);
 	}
 
-	async onunload() {
-		// Cleanup view
-		this.app.workspace.detachLeavesOfType(READING_TIME_VIEW_TYPE);
+	onunload() {
+		// Note: Do not detach leaves here as it will reset the leaf position
+		// The view will be cleaned up automatically when the plugin unloads
 	}
 
 	async loadSettings() {
 		const loadedData = await this.loadData();
-		let migratedData: any = loadedData || {};
+		let migratedData: Partial<WPMTimeSettings> = loadedData || {};
 		
 		// Migrate old settings format to new preset-based format
 		if (loadedData && !('presets' in loadedData)) {
@@ -69,7 +69,7 @@ export default class WPMTimePlugin extends Plugin {
 		}
 		
 		// Validate that selectedPresetId exists in presets
-		const presetIds = (migratedData.presets || []).map((p: any) => p.id);
+		const presetIds = (migratedData.presets || []).map((p: WPMTimePreset) => p.id);
 		if (!presetIds.includes(migratedData.selectedPresetId)) {
 			migratedData.selectedPresetId = presetIds[0] || DEFAULT_SETTINGS.selectedPresetId;
 		}

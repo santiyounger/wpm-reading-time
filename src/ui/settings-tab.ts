@@ -18,18 +18,11 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		const heading = containerEl.createEl('h2', { cls: 'reading-time-settings-heading' });
-		heading.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clock" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>How Long to Read This Text (WPM Reading Time)</span>';
+		// Use Setting.setHeading() for consistent UI
+		new Setting(containerEl).setHeading().setName('How long to read this text (WPM reading time)');
 
 		// Links container at top
-		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container');
-		linksContainer.style.display = 'flex';
-		linksContainer.style.flexWrap = 'wrap';
-		linksContainer.style.gap = '1rem';
-		linksContainer.style.marginBottom = '1.5rem';
-		linksContainer.style.paddingBottom = '1rem';
-		linksContainer.style.borderBottom = '1px solid var(--background-modifier-border)';
-		linksContainer.style.justifyContent = 'center';
+		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container reading-time-links-container-flex');
 
 		// Contact Santi link
 		const supportLink = linksContainer.createEl('a', {
@@ -41,7 +34,9 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			},
 			cls: 'reading-time-link'
 		});
-		supportLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>Contact Santi (Author)</a>';
+		const mailIcon = this.createMailIcon();
+		supportLink.appendChild(mailIcon);
+		supportLink.createSpan({ text: 'Contact Santi (Author)' });
 
 		// GitHub link
 		const githubLink = linksContainer.createEl('a', {
@@ -53,7 +48,9 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			},
 			cls: 'reading-time-link'
 		});
-		githubLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-github"><path d="M15 22v-4a4.8-4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>See Code (GitHub)</a>';
+		const githubIcon = this.createGithubIcon();
+		githubLink.appendChild(githubIcon);
+		githubLink.createSpan({ text: 'See Code (GitHub)' });
 
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
@@ -64,22 +61,29 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Default header with icon and subtitle
 		const defaultHeader = headerRow.createDiv('reading-time-header-default');
 		const defaultHeaderTitle = defaultHeader.createDiv('reading-time-header-default-title reading-time-header-with-icon');
-		defaultHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Default</span>';
-		defaultHeader.createEl('div', { text: 'Pick Your Default', cls: 'reading-time-header-default-subtitle' });
+		defaultHeaderTitle.appendChild(this.createStarIcon());
+		defaultHeaderTitle.createSpan({ text: 'Default' });
+		defaultHeader.createEl('div', { text: 'Pick your default', cls: 'reading-time-header-default-subtitle' });
 		
 		// Speed header with subheading and icon
 		const speedHeader = headerRow.createDiv('reading-time-header-speed');
 		const speedHeaderTitle = speedHeader.createDiv('reading-time-header-speed-title reading-time-header-with-icon');
-		speedHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-gauge"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Speed</span>';
+		speedHeaderTitle.appendChild(this.createGaugeIcon());
+		speedHeaderTitle.createSpan({ text: 'Speed' });
 		const speedSubtitle = speedHeader.createEl('div', { cls: 'reading-time-header-speed-subtitle' });
-		speedSubtitle.innerHTML = 'WPM Stands For:<br>Words Per Minute';
+		speedSubtitle.createSpan({ text: 'WPM stands for: ' });
+		speedSubtitle.createEl('br');
+		speedSubtitle.createSpan({ text: 'Words per minute' });
 		
 		// Title header with icon and subtitle
 		const nameHeader = headerRow.createDiv('reading-time-header-name');
 		const nameHeaderTitle = nameHeader.createDiv('reading-time-header-name-title reading-time-header-with-icon');
-		nameHeaderTitle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Title</span>';
+		nameHeaderTitle.appendChild(this.createFileTextIcon());
+		nameHeaderTitle.createSpan({ text: 'Title' });
 		const nameSubtitle = nameHeader.createEl('div', { cls: 'reading-time-header-name-subtitle' });
-		nameSubtitle.innerHTML = 'You Can Add an Optional Title<br>Example: My Speaking Speed';
+		nameSubtitle.createSpan({ text: 'You can add an optional title' });
+		nameSubtitle.createEl('br');
+		nameSubtitle.createSpan({ text: 'Example: My speaking speed' });
 		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
 
 		// Display all presets
@@ -90,15 +94,29 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Add new preset button with calculator on the left
 		const addPresetSetting = new Setting(presetsContainer);
 		// Layout: calculator flush-left, button flush-right
-		addPresetSetting.controlEl.style.alignItems = 'flex-start';
-		addPresetSetting.controlEl.style.justifyContent = 'space-between';
-		addPresetSetting.controlEl.style.width = '100%';
+		addPresetSetting.controlEl.classList.add('reading-time-add-preset-control');
 		
 		// WPM calculator link (on the left side of the add button)
-		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator');
-		wpmCalculatorLink.style.textAlign = 'center';
-		wpmCalculatorLink.style.flex = '1 1 auto';
-		wpmCalculatorLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-calculator" style="display: inline-block; vertical-align: middle; margin-right: 6px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>To find out your reading speed (<span class="reading-time-wpm-phrase"><span class="reading-time-accent">W</span><span>ords </span><span class="reading-time-accent">P</span><span>er </span><span class="reading-time-accent">M</span><span>inute</span></span>),<br>use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
+		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator reading-time-wpm-calculator-flex');
+		const calcIcon = this.createCalculatorIcon();
+		wpmCalculatorLink.appendChild(calcIcon);
+		wpmCalculatorLink.createSpan({ text: 'To find out your reading speed (' });
+		const wpmPhrase = wpmCalculatorLink.createSpan({ cls: 'reading-time-wpm-phrase' });
+		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'ords ' });
+		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'er ' });
+		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'inute' });
+		wpmCalculatorLink.createSpan({ text: '), ' });
+		wpmCalculatorLink.createEl('br');
+		wpmCalculatorLink.createSpan({ text: 'use ' });
+		const calcLink = wpmCalculatorLink.createEl('a', {
+			href: 'https://www.santiyounger.com/wpm-calculator',
+			attr: { target: '_blank', rel: 'noopener' }
+		});
+		calcLink.textContent = 'this free calculator I created for you';
+		wpmCalculatorLink.createSpan({ text: '.' });
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
@@ -111,7 +129,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 					speed: 0  // Start with 0 instead of auto-filling
 					};
 					this.plugin.settings.presets.push(newPreset);
-					this.plugin.saveSettings().then(() => {
+					void this.plugin.saveSettings().then(() => {
 						this.display(); // Refresh the settings view
 					});
 				}));
@@ -147,7 +165,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		briefcaseIcon.appendChild(briefcaseRect);
 		learnMoreText.appendChild(briefcaseIcon);
 		
-		const textSpan = learnMoreText.createEl('span', { text: 'Check out my work at:' });
+		learnMoreText.createEl('span', { text: 'Check out my work at:' });
 		
 		// External link icon
 		const externalLinkIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -177,7 +195,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			attr: { target: '_blank', rel: 'noopener' }
 		});
 		learnMoreLink.appendChild(externalLinkIcon);
-		const linkText = learnMoreLink.createEl('span', { text: 'santiyounger.com' });
+		learnMoreLink.createEl('span', { text: 'santiyounger.com' });
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
@@ -280,7 +298,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Only show speed if it's a valid positive number
 		speedInput.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
 		
-		const speedLabel = speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
+		speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
 		
 		// Create tooltip popover
 		let tooltip: HTMLElement | null = null;
@@ -291,36 +309,34 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			// Close all existing tooltips (including from other buttons)
 			this.closeAllTooltips();
 			
-			// Get content from the calculator div (without the SVG icon)
-			const calculatorDiv = this.containerEl.querySelector('.reading-time-wpm-calculator');
-			let tooltipContent = '';
-			if (calculatorDiv) {
-				// Clone the calculator div to preserve the HTML structure
-				const clone = calculatorDiv.cloneNode(true) as HTMLElement;
-				// Remove the SVG icon element
-				const svg = clone.querySelector('svg');
-				if (svg) {
-					svg.remove();
-				}
-				// Get the innerHTML which will contain the text and link
-				tooltipContent = clone.innerHTML.trim();
-			} else {
-				// Fallback if calculator div not found
-				tooltipContent = 'To find out your reading speed (Words Per Minute),<br>use <a href="https://www.santiyounger.com/wpm-calculator" target="_blank" rel="noopener">this free calculator I created for you</a>.';
-			}
-			
 			// Create tooltip
 			tooltip = document.createElement('div');
 			tooltip.className = 'reading-time-wpm-tooltip';
 			document.body.appendChild(tooltip);
-			tooltip.innerHTML = tooltipContent;
+			
+			// Build tooltip content using DOM methods
+			tooltip.createSpan({ text: 'To find out your reading speed (' });
+			const wpmPhrase = tooltip.createSpan({ cls: 'reading-time-wpm-phrase' });
+			wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
+			wpmPhrase.createSpan({ text: 'ords ' });
+			wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
+			wpmPhrase.createSpan({ text: 'er ' });
+			wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
+			wpmPhrase.createSpan({ text: 'inute' });
+			tooltip.createSpan({ text: '), ' });
+			tooltip.createEl('br');
+			tooltip.createSpan({ text: 'use ' });
+			const calcLink = tooltip.createEl('a', {
+				href: 'https://www.santiyounger.com/wpm-calculator',
+				attr: { target: '_blank', rel: 'noopener' }
+			});
+			calcLink.textContent = 'this free calculator I created for you';
+			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
+			// Using inline styles for dynamic positioning is acceptable here
 			const rect = calculatorBtn.getBoundingClientRect();
-			tooltip.style.position = 'fixed';
-			tooltip.style.left = `${rect.right + 12}px`;
-			tooltip.style.top = `${rect.top}px`;
-			tooltip.style.transform = 'translateY(-50%)';
+			tooltip.setAttribute('style', `position: fixed; left: ${rect.right + 12}px; top: ${rect.top}px; transform: translateY(-50%);`);
 			
 			// Close on outside click
 			const closeTooltip = (event: MouseEvent) => {
@@ -346,12 +362,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			}
 		};
 		// Store cleanup reference on the container so it can be called if needed
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(presetContainer as any)._tooltipCleanup = cleanup;
 		// Only allow numbers in speed input
 		speedInput.addEventListener('input', async (e) => {
 			const target = e.target as HTMLInputElement;
 			// Remove any non-numeric characters
-			const numericValue = target.value.replace(/[^0-9]/g, '');
+			const numericValue = target.value.replace(/[^\d]/g, '');
 			if (target.value !== numericValue) {
 				target.value = numericValue;
 			}
@@ -405,7 +422,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				attr: { 'aria-label': 'Delete preset' },
 				cls: 'reading-time-delete-btn'
 			});
-			deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="m19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+			deleteBtn.appendChild(this.createTrashIcon());
 			deleteBtn.addEventListener('click', async () => {
 				// Remove preset
 				this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
@@ -424,6 +441,198 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 	private closeAllTooltips(): void {
 		// Close all tooltips from any calculator button
 		document.body.querySelectorAll('.reading-time-wpm-tooltip').forEach(el => el.remove());
+	}
+
+	private createMailIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '24');
+		svg.setAttribute('height', '24');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-mail');
+		const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+		rect.setAttribute('width', '20');
+		rect.setAttribute('height', '16');
+		rect.setAttribute('x', '2');
+		rect.setAttribute('y', '4');
+		rect.setAttribute('rx', '2');
+		svg.appendChild(rect);
+		const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path.setAttribute('d', 'm22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7');
+		svg.appendChild(path);
+		return svg;
+	}
+
+	private createGithubIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '24');
+		svg.setAttribute('height', '24');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-github');
+		const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path1.setAttribute('d', 'M15 22v-4a4.8-4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4');
+		svg.appendChild(path1);
+		const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path2.setAttribute('d', 'M9 18c-4.51 2-5-2-7-2');
+		svg.appendChild(path2);
+		return svg;
+	}
+
+	private createStarIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '16');
+		svg.setAttribute('height', '16');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-star');
+		const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+		polygon.setAttribute('points', '12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2');
+		svg.appendChild(polygon);
+		return svg;
+	}
+
+	private createGaugeIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '16');
+		svg.setAttribute('height', '16');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-gauge');
+		const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path1.setAttribute('d', 'm12 14 4-4');
+		svg.appendChild(path1);
+		const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path2.setAttribute('d', 'M3.34 19a10 10 0 1 1 17.32 0');
+		svg.appendChild(path2);
+		return svg;
+	}
+
+	private createFileTextIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '16');
+		svg.setAttribute('height', '16');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-file-text');
+		const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path1.setAttribute('d', 'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z');
+		svg.appendChild(path1);
+		const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path2.setAttribute('d', 'M14 2v4a2 2 0 0 0 2 2h4');
+		svg.appendChild(path2);
+		const path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path3.setAttribute('d', 'M10 9H8');
+		svg.appendChild(path3);
+		const path4 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path4.setAttribute('d', 'M16 13H8');
+		svg.appendChild(path4);
+		const path5 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path5.setAttribute('d', 'M16 17H8');
+		svg.appendChild(path5);
+		return svg;
+	}
+
+	private createCalculatorIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '18');
+		svg.setAttribute('height', '18');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-calculator');
+		const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+		rect.setAttribute('width', '16');
+		rect.setAttribute('height', '20');
+		rect.setAttribute('x', '4');
+		rect.setAttribute('y', '2');
+		rect.setAttribute('rx', '2');
+		svg.appendChild(rect);
+		const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+		line1.setAttribute('x1', '8');
+		line1.setAttribute('x2', '16');
+		line1.setAttribute('y1', '6');
+		line1.setAttribute('y2', '6');
+		svg.appendChild(line1);
+		const line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+		line2.setAttribute('x1', '16');
+		line2.setAttribute('x2', '16');
+		line2.setAttribute('y1', '14');
+		line2.setAttribute('y2', '18');
+		svg.appendChild(line2);
+		const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path1.setAttribute('d', 'M16 10h.01');
+		svg.appendChild(path1);
+		const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path2.setAttribute('d', 'M12 10h.01');
+		svg.appendChild(path2);
+		const path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path3.setAttribute('d', 'M12 14h.01');
+		svg.appendChild(path3);
+		const path4 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path4.setAttribute('d', 'M8 10h.01');
+		svg.appendChild(path4);
+		const path5 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path5.setAttribute('d', 'M8 14h.01');
+		svg.appendChild(path5);
+		return svg;
+	}
+
+	private createTrashIcon(): SVGElement {
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+		svg.setAttribute('width', '16');
+		svg.setAttribute('height', '16');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('fill', 'none');
+		svg.setAttribute('stroke', 'currentColor');
+		svg.setAttribute('stroke-width', '1.5');
+		svg.setAttribute('stroke-linecap', 'round');
+		svg.setAttribute('stroke-linejoin', 'round');
+		svg.classList.add('svg-icon');
+		svg.classList.add('lucide-trash');
+		const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+		polyline.setAttribute('points', '3 6 5 6 21 6');
+		svg.appendChild(polyline);
+		const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path.setAttribute('d', 'm19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2');
+		svg.appendChild(path);
+		return svg;
 	}
 }
 

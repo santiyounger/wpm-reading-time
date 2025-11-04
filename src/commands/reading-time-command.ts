@@ -104,6 +104,7 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			const onOpenSettings = () => {
 				// Open settings and navigate to this plugin's tab
 				// Note: Using internal Obsidian API (not in public types)
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const app = plugin.app as any;
 				if (app.setting) {
 					app.setting.open();

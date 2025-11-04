@@ -187,7 +187,7 @@ export class ReadingTimeView extends ItemView {
 				noteLink.textContent = `[[${this.noteTitle}]]`;
 				// Ensure click handler is still attached (in case element was recreated)
 				if (!noteLink.dataset.clickHandlerAttached) {
-					noteLink.style.cursor = 'pointer';
+					noteLink.classList.add('reading-time-note-link');
 					noteLink.addEventListener('click', async (e) => {
 						e.preventDefault();
 						if (this.noteFile) {
@@ -250,8 +250,7 @@ export class ReadingTimeView extends ItemView {
 		clockIcon.setAttribute('stroke-linejoin', 'round');
 		clockIcon.classList.add('svg-icon');
 		clockIcon.classList.add('lucide-clock');
-		clockIcon.style.display = 'inline-block';
-		clockIcon.style.flexShrink = '0';
+		clockIcon.classList.add('reading-time-icon-inline');
 		
 		const clockCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 		clockCircle.setAttribute('cx', '12');
@@ -264,7 +263,7 @@ export class ReadingTimeView extends ItemView {
 		clockIcon.appendChild(clockPolyline);
 		
 		pluginTitle.appendChild(clockIcon);
-		pluginTitle.createSpan({ text: 'How Long to Read This Text' });
+		pluginTitle.createSpan({ text: 'How long to read this text' });
 		
 		// Note title header (shown when analyzing whole note or selected text from a note)
 		if (this.noteTitle) {
@@ -285,11 +284,9 @@ export class ReadingTimeView extends ItemView {
 				
 				// If link text is wider than available space, put it on its own line
 				if (linkTextWidth > container.width * 0.85) {
-					noteLink.style.display = 'block';
-					noteLink.style.marginTop = '0.25rem';
+					noteLink.classList.add('reading-time-note-link-block');
 				}
 			}, 0);
-			noteLink.style.cursor = 'pointer';
 			noteLink.addEventListener('click', async (e) => {
 				e.preventDefault();
 				if (this.noteFile) {
@@ -314,7 +311,7 @@ export class ReadingTimeView extends ItemView {
 		
 		// Heading
 		centeredContent.createEl('div', { 
-			text: 'You\'d read this in:', 
+			text: 'You\'d read this in', 
 			cls: 'reading-time-heading' 
 		});
 		
@@ -387,8 +384,7 @@ export class ReadingTimeView extends ItemView {
 		arrow.textContent = '▼';
 		
 		// Dropdown menu (hidden by default)
-		const dropdownMenu = dropdownContainer.createDiv('reading-time-dropdown-menu');
-		dropdownMenu.style.display = 'none';
+		const dropdownMenu = dropdownContainer.createDiv('reading-time-dropdown-menu reading-time-dropdown-menu-hidden');
 		
 		// Create menu items for each preset
 		for (const preset of this.presets) {
@@ -406,18 +402,20 @@ export class ReadingTimeView extends ItemView {
 				if (this.onPresetChange && preset.id !== this.selectedPresetId) {
 					this.selectedPresetId = preset.id;
 					this.onPresetChange(preset.id);
-					dropdownMenu.style.display = 'none';
+					dropdownMenu.classList.remove('reading-time-dropdown-menu-visible');
+					dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 					// Re-render to show new preset's time
 					this.render();
 				} else {
-					dropdownMenu.style.display = 'none';
+					dropdownMenu.classList.remove('reading-time-dropdown-menu-visible');
+					dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 				}
 			});
 		}
 		
 		// Settings option at the bottom
 		if (this.onOpenSettings) {
-			const settingsDivider = dropdownMenu.createDiv('reading-time-dropdown-divider');
+			dropdownMenu.createDiv('reading-time-dropdown-divider');
 			
 			const settingsItem = dropdownMenu.createDiv('reading-time-dropdown-item reading-time-dropdown-settings');
 			const settingsContent = settingsItem.createSpan('reading-time-dropdown-item-text');
@@ -426,7 +424,8 @@ export class ReadingTimeView extends ItemView {
 			
 			settingsItem.addEventListener('click', (e) => {
 				e.stopPropagation();
-				dropdownMenu.style.display = 'none';
+				dropdownMenu.classList.remove('reading-time-dropdown-menu-visible');
+				dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 				if (this.onOpenSettings) {
 					this.onOpenSettings();
 				}
@@ -441,8 +440,8 @@ export class ReadingTimeView extends ItemView {
 			
 			if (isOpen) {
 				// First show it to measure its height
-				dropdownMenu.style.display = 'block';
-				dropdownMenu.style.visibility = 'hidden';
+				dropdownMenu.classList.remove('reading-time-dropdown-menu-hidden');
+				dropdownMenu.classList.add('reading-time-dropdown-menu-measuring');
 				
 				// Calculate available space below and above the dropdown button
 				const buttonRect = dropdownButton.getBoundingClientRect();
@@ -455,24 +454,19 @@ export class ReadingTimeView extends ItemView {
 				
 				// If not enough space below but enough space above, open upwards
 				if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
+					dropdownMenu.classList.remove('reading-time-dropdown-menu-down');
 					dropdownMenu.classList.add('reading-time-dropdown-menu-up');
-					dropdownMenu.style.top = 'auto';
-					dropdownMenu.style.bottom = '100%';
-					dropdownMenu.style.marginTop = '0';
-					dropdownMenu.style.marginBottom = '0.25rem';
 				} else {
 					dropdownMenu.classList.remove('reading-time-dropdown-menu-up');
-					dropdownMenu.style.top = '100%';
-					dropdownMenu.style.bottom = 'auto';
-					dropdownMenu.style.marginTop = '0.25rem';
-					dropdownMenu.style.marginBottom = '0';
+					dropdownMenu.classList.add('reading-time-dropdown-menu-down');
 				}
 				
 				// Make it visible now
-				dropdownMenu.style.visibility = 'visible';
+				dropdownMenu.classList.remove('reading-time-dropdown-menu-measuring');
+				dropdownMenu.classList.add('reading-time-dropdown-menu-visible');
 			} else {
-				dropdownMenu.style.display = 'none';
-				dropdownMenu.style.visibility = '';
+				dropdownMenu.classList.remove('reading-time-dropdown-menu-visible');
+				dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 			}
 		};
 		
@@ -482,7 +476,8 @@ export class ReadingTimeView extends ItemView {
 		const closeDropdown = (e: MouseEvent) => {
 			if (!dropdownContainer.contains(e.target as Node)) {
 				isOpen = false;
-				dropdownMenu.style.display = 'none';
+				dropdownMenu.classList.remove('reading-time-dropdown-menu-visible');
+				dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 			}
 		};
 		
@@ -498,24 +493,10 @@ export class ReadingTimeView extends ItemView {
 		
 		// Settings link below dropdown
 		if (this.onOpenSettings) {
-			const settingsLink = speedDiv.createDiv('reading-time-settings-link');
-			settingsLink.style.cursor = 'pointer';
-			settingsLink.style.display = 'flex';
-			settingsLink.style.alignItems = 'center';
-			settingsLink.style.justifyContent = 'center';
-			settingsLink.style.gap = '0.375rem';
-			settingsLink.style.marginTop = '0.5rem';
-			settingsLink.style.fontSize = '0.875rem';
-			settingsLink.style.color = 'var(--text-muted)';
-			settingsLink.style.transition = 'color 0.15s ease';
+			const settingsLink = speedDiv.createDiv('reading-time-settings-link reading-time-settings-link-wrapper');
 			
 			// Wrapper span for underline effect that covers everything
-			const underlineWrapper = settingsLink.createSpan();
-			underlineWrapper.style.display = 'inline-flex';
-			underlineWrapper.style.alignItems = 'baseline';
-			underlineWrapper.style.gap = '0.375rem';
-			underlineWrapper.style.borderBottom = '1px solid currentColor';
-			underlineWrapper.style.paddingBottom = '0.05em';
+			const underlineWrapper = settingsLink.createSpan('reading-time-underline-wrapper');
 			
 			// Create gear icon SVG
 			const gearIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -558,10 +539,7 @@ export class ReadingTimeView extends ItemView {
 			arrowUpIcon.setAttribute('stroke-linejoin', 'round');
 			arrowUpIcon.classList.add('svg-icon');
 			arrowUpIcon.classList.add('lucide-arrow-up');
-			arrowUpIcon.style.display = 'inline-block';
-			arrowUpIcon.style.verticalAlign = 'middle';
-			arrowUpIcon.style.marginLeft = '0.125rem';
-			arrowUpIcon.style.marginRight = '0.125rem';
+			arrowUpIcon.classList.add('reading-time-arrow-icon');
 			
 			const arrowUpPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			arrowUpPath.setAttribute('d', 'm5 12 7-7 7 7');
@@ -584,22 +562,14 @@ export class ReadingTimeView extends ItemView {
 					this.onOpenSettings();
 				}
 			});
-			
-			settingsLink.addEventListener('mouseenter', () => {
-				settingsLink.style.color = 'var(--text-normal)';
-			});
-			
-			settingsLink.addEventListener('mouseleave', () => {
-				settingsLink.style.color = 'var(--text-muted)';
-			});
 		}
 	}
 
-	async onOpen(): Promise<void> {
+	onOpen(): void {
 		this.render();
 	}
 
-	async onClose(): Promise<void> {
+	onClose(): void {
 		const { contentEl } = this;
 		if (this.dropdownCleanup) {
 			this.dropdownCleanup();
