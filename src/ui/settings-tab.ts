@@ -28,7 +28,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const supportLink = linksContainer.createEl('a', {
 			href: 'https://www.santiyounger.com/contact',
 			attr: { 
-				'aria-label': 'Contact Santi (author)',
+				'aria-label': 'contact Santi (author)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
@@ -115,7 +115,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			href: 'https://www.santiyounger.com/wpm-calculator',
 			attr: { target: '_blank', rel: 'noopener' }
 		});
-		calcLink.textContent = 'This free calculator I created for you';
+		calcLink.textContent = 'this free calculator I created for you';
 		wpmCalculatorLink.createSpan({ text: '.' });
 		
 		addPresetSetting.addButton(button => button
@@ -332,7 +332,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				href: 'https://www.santiyounger.com/wpm-calculator',
 				attr: { target: '_blank', rel: 'noopener' }
 			});
-			calcLink.textContent = 'This free calculator I created for you';
+			calcLink.textContent = 'this free calculator I created for you';
 			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
