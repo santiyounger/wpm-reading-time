@@ -157,7 +157,7 @@
 	border-bottom: 1px solid var(--background-modifier-border);
 	align-self: stretch;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
 	gap: 0.375rem;
 }
@@ -837,6 +837,8 @@
 .reading-time-icon-inline {
 	display: inline-block;
 	flex-shrink: 0;
+	align-self: flex-start;
+	margin-top: 0.125rem;
 }
 
 .reading-time-note-link-block {
