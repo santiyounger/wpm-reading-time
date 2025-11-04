@@ -32,7 +32,7 @@ export default class WPMTimePlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		const loadedData = await this.loadData();
+		const loadedData = await this.loadData() as Partial<WPMTimeSettings> | null;
 		let migratedData: Partial<WPMTimeSettings> = loadedData || {};
 		
 		// Migrate old settings format to new preset-based format
@@ -41,14 +41,15 @@ export default class WPMTimePlugin extends Plugin {
 			let readingSpeed = DEFAULT_SETTINGS.presets[0].speed;
 			let speakingSpeed = DEFAULT_SETTINGS.presets[1].speed;
 			
-			if ('wpm' in loadedData && typeof loadedData.wpm === 'number') {
-				speakingSpeed = loadedData.wpm;
+			const oldData = loadedData as Record<string, unknown>;
+			if ('wpm' in oldData && typeof oldData.wpm === 'number') {
+				speakingSpeed = oldData.wpm;
 			}
-			if ('readingSpeed' in loadedData && typeof loadedData.readingSpeed === 'number') {
-				readingSpeed = loadedData.readingSpeed;
+			if ('readingSpeed' in oldData && typeof oldData.readingSpeed === 'number') {
+				readingSpeed = oldData.readingSpeed;
 			}
-			if ('speakingSpeed' in loadedData && typeof loadedData.speakingSpeed === 'number') {
-				speakingSpeed = loadedData.speakingSpeed;
+			if ('speakingSpeed' in oldData && typeof oldData.speakingSpeed === 'number') {
+				speakingSpeed = oldData.speakingSpeed;
 			}
 			
 			migratedData.presets = [

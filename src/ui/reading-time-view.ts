@@ -27,7 +27,7 @@ export class ReadingTimeView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return 'Reading Time';
+		return 'Reading time';
 	}
 
 	getIcon(): string {
@@ -65,7 +65,8 @@ export class ReadingTimeView extends ItemView {
 		// Try to get title from metadata cache (Obsidian's standard way)
 		const metadata = this.app.metadataCache.getFileCache(this.noteFile);
 		if (metadata?.frontmatter?.title) {
-			return metadata.frontmatter.title;
+			const title = metadata.frontmatter.title;
+			return typeof title === 'string' ? title : this.noteFile.basename;
 		}
 		// Use file basename (filename without extension)
 		return this.noteFile.basename;
@@ -188,22 +189,24 @@ export class ReadingTimeView extends ItemView {
 				// Ensure click handler is still attached (in case element was recreated)
 				if (!noteLink.dataset.clickHandlerAttached) {
 					noteLink.classList.add('reading-time-note-link');
-					noteLink.addEventListener('click', async (e) => {
+					noteLink.addEventListener('click', (e) => {
 						e.preventDefault();
-						if (this.noteFile) {
-							// Open the note file directly
-							const leaf = this.app.workspace.getMostRecentLeaf();
-							if (leaf) {
-								await leaf.openFile(this.noteFile);
-							} else {
-								// Fallback: create new leaf if none exists
-								const newLeaf = this.app.workspace.getLeaf(false);
-								await newLeaf.openFile(this.noteFile);
+						void (async () => {
+							if (this.noteFile) {
+								// Open the note file directly
+								const leaf = this.app.workspace.getMostRecentLeaf();
+								if (leaf) {
+									await leaf.openFile(this.noteFile);
+								} else {
+									// Fallback: create new leaf if none exists
+									const newLeaf = this.app.workspace.getLeaf(false);
+									await newLeaf.openFile(this.noteFile);
+								}
+							} else if (this.noteTitle) {
+								// Fallback: try to open by title/name using link format
+								await this.app.workspace.openLinkText(this.noteTitle, '', false);
 							}
-						} else if (this.noteTitle) {
-							// Fallback: try to open by title/name using link format
-							await this.app.workspace.openLinkText(this.noteTitle, '', false);
-						}
+						})();
 					});
 					noteLink.dataset.clickHandlerAttached = 'true';
 				}
@@ -287,22 +290,24 @@ export class ReadingTimeView extends ItemView {
 					noteLink.classList.add('reading-time-note-link-block');
 				}
 			}, 0);
-			noteLink.addEventListener('click', async (e) => {
+			noteLink.addEventListener('click', (e) => {
 				e.preventDefault();
-				if (this.noteFile) {
-					// Open the note file directly
-					const leaf = this.app.workspace.getMostRecentLeaf();
-					if (leaf) {
-						await leaf.openFile(this.noteFile);
-					} else {
-						// Fallback: create new leaf if none exists
-						const newLeaf = this.app.workspace.getLeaf(false);
-						await newLeaf.openFile(this.noteFile);
+				void (async () => {
+					if (this.noteFile) {
+						// Open the note file directly
+						const leaf = this.app.workspace.getMostRecentLeaf();
+						if (leaf) {
+							await leaf.openFile(this.noteFile);
+						} else {
+							// Fallback: create new leaf if none exists
+							const newLeaf = this.app.workspace.getLeaf(false);
+							await newLeaf.openFile(this.noteFile);
+						}
+					} else if (this.noteTitle) {
+						// Fallback: try to open by title/name using link format
+						await this.app.workspace.openLinkText(this.noteTitle, '', false);
 					}
-				} else if (this.noteTitle) {
-					// Fallback: try to open by title/name using link format
-					await this.app.workspace.openLinkText(this.noteTitle, '', false);
-				}
+				})();
 			});
 		}
 		

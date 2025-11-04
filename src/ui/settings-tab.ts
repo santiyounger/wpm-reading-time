@@ -19,7 +19,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		// Use Setting.setHeading() for consistent UI
-		new Setting(containerEl).setHeading().setName('How long to read this text (WPM reading time)');
+		new Setting(containerEl).setHeading().setName('How long to read this text (wpm reading time)');
 
 		// Links container at top
 		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container reading-time-links-container-flex');
@@ -28,7 +28,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const supportLink = linksContainer.createEl('a', {
 			href: 'https://www.santiyounger.com/contact',
 			attr: { 
-				'aria-label': 'Contact Santi (Author)',
+				'aria-label': 'Contact Santi (author)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
@@ -36,13 +36,13 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const mailIcon = this.createMailIcon();
 		supportLink.appendChild(mailIcon);
-		supportLink.createSpan({ text: 'Contact Santi (Author)' });
+		supportLink.createSpan({ text: 'Contact Santi (author)' });
 
 		// GitHub link
 		const githubLink = linksContainer.createEl('a', {
 			href: 'https://github.com/santiyounger/wpm-reading-time',
 			attr: { 
-				'aria-label': 'See Code (GitHub)',
+				'aria-label': 'See code (GitHub)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
@@ -50,7 +50,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const githubIcon = this.createGithubIcon();
 		githubLink.appendChild(githubIcon);
-		githubLink.createSpan({ text: 'See Code (GitHub)' });
+		githubLink.createSpan({ text: 'See code (GitHub)' });
 
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
@@ -115,12 +115,12 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			href: 'https://www.santiyounger.com/wpm-calculator',
 			attr: { target: '_blank', rel: 'noopener' }
 		});
-		calcLink.textContent = 'this free calculator I created for you';
+		calcLink.textContent = 'This free calculator I created for you';
 		wpmCalculatorLink.createSpan({ text: '.' });
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			.setTooltip('To find out your reading speed, I put together a calculator for you in my website. Select to add a new preset.')
+			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset.')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -210,36 +210,38 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			attr: { 'aria-label': 'Set as default preset' }
 		});
 		defaultCheckbox.checked = this.plugin.settings.selectedPresetId === preset.id;
-		defaultCheckbox.addEventListener('change', async (e) => {
+		defaultCheckbox.addEventListener('change', (e) => {
 			const target = e.target as HTMLInputElement;
-			if (target.checked) {
-				// Uncheck all other checkboxes and set this as default
-				this.containerEl.querySelectorAll('.reading-time-default-checkbox').forEach((cb: HTMLInputElement) => {
-					if (cb !== target) {
-						cb.checked = false;
-					}
-				});
-				this.plugin.settings.selectedPresetId = preset.id;
-				await this.plugin.saveSettings();
-			} else {
-				// If trying to uncheck the default, switch to first other preset if available
-				if (this.plugin.settings.selectedPresetId === preset.id) {
-					const firstOtherPreset = this.plugin.settings.presets.find(p => p.id !== preset.id);
-					if (firstOtherPreset) {
-						const firstCheckbox = this.containerEl.querySelector(`input[data-preset-id="${firstOtherPreset.id}"]`) as HTMLInputElement;
-						if (firstCheckbox) {
-							target.checked = false;
-							firstCheckbox.checked = true;
-							this.plugin.settings.selectedPresetId = firstOtherPreset.id;
-							await this.plugin.saveSettings();
-						} else {
-							target.checked = true; // Can't uncheck if no other preset found
+			void (async () => {
+				if (target.checked) {
+					// Uncheck all other checkboxes and set this as default
+					this.containerEl.querySelectorAll('.reading-time-default-checkbox').forEach((cb: HTMLInputElement) => {
+						if (cb !== target) {
+							cb.checked = false;
 						}
-					} else {
-						target.checked = true; // Only one preset, must stay checked
+					});
+					this.plugin.settings.selectedPresetId = preset.id;
+					await this.plugin.saveSettings();
+				} else {
+					// If trying to uncheck the default, switch to first other preset if available
+					if (this.plugin.settings.selectedPresetId === preset.id) {
+						const firstOtherPreset = this.plugin.settings.presets.find(p => p.id !== preset.id);
+						if (firstOtherPreset) {
+							const firstCheckbox = this.containerEl.querySelector(`input[data-preset-id="${firstOtherPreset.id}"]`) as HTMLInputElement;
+							if (firstCheckbox) {
+								target.checked = false;
+								firstCheckbox.checked = true;
+								this.plugin.settings.selectedPresetId = firstOtherPreset.id;
+								await this.plugin.saveSettings();
+							} else {
+								target.checked = true; // Can't uncheck if no other preset found
+							}
+						} else {
+							target.checked = true; // Only one preset, must stay checked
+						}
 					}
 				}
-			}
+			})();
 		});
 		defaultCheckbox.setAttribute('data-preset-id', preset.id);
 
@@ -330,7 +332,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				href: 'https://www.santiyounger.com/wpm-calculator',
 				attr: { target: '_blank', rel: 'noopener' }
 			});
-			calcLink.textContent = 'this free calculator I created for you';
+			calcLink.textContent = 'This free calculator I created for you';
 			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
@@ -365,42 +367,46 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(presetContainer as any)._tooltipCleanup = cleanup;
 		// Only allow numbers in speed input
-		speedInput.addEventListener('input', async (e) => {
-			const target = e.target as HTMLInputElement;
-			// Remove any non-numeric characters
-			const numericValue = target.value.replace(/[^\d]/g, '');
-			if (target.value !== numericValue) {
-				target.value = numericValue;
-			}
-			
-			const speed = parseInt(numericValue, 10);
-			if (!numericValue) {
-				preset.speed = 0;
-				await this.plugin.saveSettings();
-				return; // Allow empty during typing
-			}
-			if (isNaN(speed) || speed <= 0) {
-				return; // Don't show notice while typing
-			}
-			preset.speed = speed;
-			await this.plugin.saveSettings();
-		});
-		speedInput.addEventListener('blur', async (e) => {
-			const target = e.target as HTMLInputElement;
-			const speed = parseInt(target.value, 10);
-			if (!target.value || isNaN(speed) || speed <= 0) {
-				// If empty or invalid, set to 0 (which will exclude it from being used)
-				if (!target.value) {
-					preset.speed = 0;
-					target.value = '';
-				} else {
-					new Notice('Speed must be a positive number.');
-					target.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
+		speedInput.addEventListener('input', (e) => {
+			void (async () => {
+				const target = e.target as HTMLInputElement;
+				// Remove any non-numeric characters
+				const numericValue = target.value.replace(/[^\d]/g, '');
+				if (target.value !== numericValue) {
+					target.value = numericValue;
 				}
+				
+				const speed = parseInt(numericValue, 10);
+				if (!numericValue) {
+					preset.speed = 0;
+					await this.plugin.saveSettings();
+					return; // Allow empty during typing
+				}
+				if (isNaN(speed) || speed <= 0) {
+					return; // Don't show notice while typing
+				}
+				preset.speed = speed;
 				await this.plugin.saveSettings();
-				// Refresh dropdown to exclude invalid presets
-				this.display();
-			}
+			})();
+		});
+		speedInput.addEventListener('blur', (e) => {
+			void (async () => {
+				const target = e.target as HTMLInputElement;
+				const speed = parseInt(target.value, 10);
+				if (!target.value || isNaN(speed) || speed <= 0) {
+					// If empty or invalid, set to 0 (which will exclude it from being used)
+					if (!target.value) {
+						preset.speed = 0;
+						target.value = '';
+					} else {
+						new Notice('Speed must be a positive number.');
+						target.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
+					}
+					await this.plugin.saveSettings();
+					// Refresh dropdown to exclude invalid presets
+					this.display();
+				}
+			})();
 		});
 
 		// Title input
@@ -410,10 +416,12 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			cls: 'reading-time-name-input'
 		});
 		nameInput.value = preset.name;
-		nameInput.addEventListener('input', async (e) => {
-			const target = e.target as HTMLInputElement;
-			preset.name = target.value.trim();
-			await this.plugin.saveSettings();
+		nameInput.addEventListener('input', (e) => {
+			void (async () => {
+				const target = e.target as HTMLInputElement;
+				preset.name = target.value.trim();
+				await this.plugin.saveSettings();
+			})();
 		});
 
 		// Delete button (only if more than one preset)
@@ -423,17 +431,19 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				cls: 'reading-time-delete-btn'
 			});
 			deleteBtn.appendChild(this.createTrashIcon());
-			deleteBtn.addEventListener('click', async () => {
-				// Remove preset
-				this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
-				
-				// If this was the selected preset, switch to first available
-				if (this.plugin.settings.selectedPresetId === preset.id) {
-					this.plugin.settings.selectedPresetId = this.plugin.settings.presets[0]?.id || '';
-				}
-				
-				await this.plugin.saveSettings();
-				this.display(); // Refresh the settings view
+			deleteBtn.addEventListener('click', () => {
+				void (async () => {
+					// Remove preset
+					this.plugin.settings.presets = this.plugin.settings.presets.filter(p => p.id !== preset.id);
+					
+					// If this was the selected preset, switch to first available
+					if (this.plugin.settings.selectedPresetId === preset.id) {
+						this.plugin.settings.selectedPresetId = this.plugin.settings.presets[0]?.id || '';
+					}
+					
+					await this.plugin.saveSettings();
+					this.display(); // Refresh the settings view
+				})();
 			});
 		}
 	}

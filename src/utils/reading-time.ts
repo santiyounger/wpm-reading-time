@@ -58,7 +58,7 @@ function countWordsSmart(text: string): number {
 		// Remove leading and trailing punctuation marks
 		// Keep letters, numbers, apostrophes, and hyphens
 		// This pattern matches one or more non-word characters (except apostrophe and hyphen) at start or end
-		let cleaned = token.replace(/^[^a-zA-Z0-9'\-]+|[^a-zA-Z0-9'\-]+$/g, '');
+		let cleaned = token.replace(/^[^a-zA-Z0-9'-]+|[^a-zA-Z0-9'-]+$/g, '');
 		
 		// After cleaning, verify there's actual word content (letters or numbers)
 		// This filters out standalone punctuation, apostrophes-only, or hyphens-only tokens

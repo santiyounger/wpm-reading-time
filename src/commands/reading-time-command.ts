@@ -95,9 +95,11 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			}
 			
 			// Handler for preset changes
-			const onPresetChange = async (presetId: string) => {
-				plugin.settings.selectedPresetId = presetId;
-				await plugin.saveSettings();
+			const onPresetChange = (presetId: string) => {
+				void (async () => {
+					plugin.settings.selectedPresetId = presetId;
+					await plugin.saveSettings();
+				})();
 			};
 			
 			// Handler for opening settings
@@ -123,7 +125,7 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				noteTitle,
 				noteFile
 			);
-			plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
+			void plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
 			
 			// Restore the selection after all async operations complete
 			// Use setTimeout to ensure it happens after the view operations
