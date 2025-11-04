@@ -570,11 +570,12 @@ export class ReadingTimeView extends ItemView {
 		}
 	}
 
-	onOpen(): void {
+	onOpen(): Promise<void> {
 		this.render();
+		return Promise.resolve();
 	}
 
-	onClose(): void {
+	onClose(): Promise<void> {
 		const { contentEl } = this;
 		if (this.dropdownCleanup) {
 			this.dropdownCleanup();
@@ -593,5 +594,6 @@ export class ReadingTimeView extends ItemView {
 			this.workspaceCleanup = undefined;
 		}
 		contentEl.empty();
+		return Promise.resolve();
 	}
 }
