@@ -120,7 +120,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset.')
+			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
