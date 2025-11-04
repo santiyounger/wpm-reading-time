@@ -267,7 +267,7 @@ export class ReadingTimeView extends ItemView {
 		clockIcon.appendChild(clockPolyline);
 		
 		pluginTitle.appendChild(clockIcon);
-		pluginTitle.createSpan({ text: 'How long to read this text' });
+		pluginTitle.createSpan({ text: 'WPM Reading Time - How Long to Read This Text' });
 		
 		// Note title header (shown when analyzing whole note or selected text from a note)
 		if (this.noteTitle) {

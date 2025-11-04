@@ -19,7 +19,9 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		// Use Setting.setHeading() for consistent UI
-		new Setting(containerEl).setHeading().setName('How long to read this text (wpm reading time)');
+		const headingSetting = new Setting(containerEl).setHeading().setName('WPM Reading Time - How Long to Read This Text');
+		// Center the heading
+		headingSetting.settingEl.classList.add('reading-time-settings-heading');
 
 		// Links container at top
 		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container reading-time-links-container-flex');
@@ -28,7 +30,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const supportLink = linksContainer.createEl('a', {
 			href: 'https://www.santiyounger.com/contact',
 			attr: { 
-				'aria-label': 'contact Santi (author)',
+				'aria-label': 'Contact Santi (author)',
 				'target': '_blank',
 				'rel': 'noopener'
 			},
@@ -36,7 +38,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const mailIcon = this.createMailIcon();
 		supportLink.appendChild(mailIcon);
-		supportLink.createSpan({ text: 'contact Santi (author)' });
+		supportLink.createSpan({ text: 'Contact Santi (author)' });
 
 		// GitHub link
 		const githubLink = linksContainer.createEl('a', {
@@ -100,7 +102,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator reading-time-wpm-calculator-flex');
 		const calcIcon = this.createCalculatorIcon();
 		wpmCalculatorLink.appendChild(calcIcon);
-		wpmCalculatorLink.createSpan({ text: 'to find out your reading speed (' });
+		wpmCalculatorLink.createSpan({ text: 'To find out your reading speed (' });
 		const wpmPhrase = wpmCalculatorLink.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -120,7 +122,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			.setTooltip('to find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
+			.setTooltip('To find out your reading speed, I put together a calculator for you on my website. Select to add a new preset')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -165,7 +167,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		briefcaseIcon.appendChild(briefcaseRect);
 		learnMoreText.appendChild(briefcaseIcon);
 		
-		learnMoreText.createEl('span', { text: 'check out my work at:' });
+		learnMoreText.createEl('span', { text: 'Check out my work at:' });
 		
 		// External link icon
 		const externalLinkIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -317,7 +319,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			document.body.appendChild(tooltip);
 			
 			// Build tooltip content using DOM methods
-			tooltip.createSpan({ text: 'to find out your reading speed (' });
+			tooltip.createSpan({ text: 'To find out your reading speed (' });
 			const wpmPhrase = tooltip.createSpan({ cls: 'reading-time-wpm-phrase' });
 			wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 			wpmPhrase.createSpan({ text: 'ords ' });

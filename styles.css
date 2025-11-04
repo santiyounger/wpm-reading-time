@@ -141,6 +141,10 @@
 	-moz-user-select: text;
 }
 
+.reading-time-settings-heading {
+	text-align: center;
+}
+
 .reading-time-plugin-title {
 	font-size: 1.125rem;
 	font-weight: 600;

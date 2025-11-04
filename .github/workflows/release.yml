@@ -159,7 +159,15 @@ jobs:
           files: |
             main.js
             manifest.json
-            styles.css
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload styles.css if exists
+        if: steps.vercmp.outputs.should_release == 'true' && steps.artifacts.outputs.has_css == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.version }}
+          files: styles.css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
