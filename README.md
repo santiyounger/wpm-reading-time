@@ -4,32 +4,32 @@
 
 ![Screenshot of WPM Reading Time plugin](https://santiyounger.b-cdn.net/obsidian-plugins/2025-11-04%2010-30-12.png)
 
-Stop guessing reading times. How Long to Read calculates estimates for any selected text using your personalized reading speed presets. Useful for writers, content strategists, and knowledge workers who need timing information.
+Stop guessing reading times. This Obsidian plugin calculates accurate estimates for any selected text using your personalized reading speed. Perfect for podcast scripts, YouTube content, presentations, and any writing where timing matters. Get real-time feedback as you write to better estimate how long your text will take to read aloud or silently.
 
 ## Who is this for?
 
-### Bloggers & Writers
-Know how long your articles will take to read. Useful for optimizing content length and setting reader expectations.
+### Podcasters & Video Creators
+Time your scripts accurately before recording. Know exactly how long your content will run when read aloud, helping you hit your target episode length every time.
 
-### Content Strategists
-Plan your presentations and speeches with confidence. Calculate reading time for speaking presets to nail your timing.
+### Public Speakers & Presenters
+Prepare presentations with confidence. Calculate speaking time for your slides and notes to stay within your allocated time slot.
 
-### Knowledge Workers
-Estimate how long it takes to review documents, research notes, or any text in your vault.
+### Content Writers
+Optimize article length and set accurate reader expectations. Understand how long your content takes to read, helping you match your audience's time constraints.
 
 ## Features
 
-### Smart Calculations
-Instantly calculates reading time based on word count and your personalized WPM settings. No manual counting needed.
+### Personalized Accuracy
+Get reading time estimates based on your actual reading speed. Create multiple presets for different scenarios and switch between them instantly.
 
-### Multiple Presets
-Create multiple presets for different scenarios: silent reading, speaking, slow reading, fast reading, and more. Each preset can have its own custom name and WPM value.
+### Flexible Presets
+Set up different speed profiles for silent reading, speaking, presenting, or any scenario you need. Each preset includes a custom name and WPM value.
 
-### Easy Preset Switching
-Switch between presets via dropdown menu. Useful when you need different speeds for different content types.
+### Quick Switching
+Switch between presets via dropdown menu whenever you need different speeds for different content types.
 
-### Detailed Analytics
-See reading time, word count, and your current reading speed all displayed clearly in one place.
+### Clear Results
+View reading time, word count, and current speed in a clean, easy-to-read format. All the information you need at a glance.
 
 ### Desktop Only
 Currently optimized for desktop use. Mobile support coming soon.
@@ -130,11 +130,10 @@ at a speed of:
 
 ## Tips
 
-- **Create presets for different contexts**: Reading silently vs. reading aloud vs. presenting
-- **Use descriptive names**: Name your presets clearly so you know when to use each one
-- **Adjust speeds based on material**: Technical content may require slower speeds than casual reading
-- **Quick calculations**: Select any text and run the command - no need to manually count words
-- **Personalize your WPM**: Use the companion web app to find your actual reading speed for more accurate estimates
+- **Match your context**: Create separate presets for silent reading, speaking, and presenting—each has different timing needs
+- **Use clear preset names**: Descriptive names help you quickly choose the right speed for each scenario
+- **Consider your material**: Technical or dense content may require slower speeds than casual reading
+- **Find your actual speed**: Use the companion web app to measure your personal WPM for the most accurate estimates
 
 ## Contributing
 
@@ -150,4 +149,4 @@ If you encounter any issues or have feature requests, please open an issue on th
 
 ## Credits
 
-Created by [Santi Younger](https://www.santiyounger.com/) to help writers and knowledge workers better understand their content's reading time.
+Created by [Santi Younger](https://www.santiyounger.com/) to help creators and professionals master their content timing.
