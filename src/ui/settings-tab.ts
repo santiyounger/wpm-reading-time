@@ -117,14 +117,12 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			href: 'https://www.santiyounger.com/wpm-calculator',
 			attr: { target: '_blank', rel: 'noopener' }
 		});
-		// eslint-disable-next-line obsidianmd/ui/sentence-case
-		calcLink.textContent = 'This free calculator I created for you';
+		calcLink.textContent = 'This free calculator';
 		wpmCalculatorLink.createSpan({ text: '.' });
 		
 		addPresetSetting.addButton(button => button
 			.setIcon('plus')
-			// eslint-disable-next-line obsidianmd/ui/sentence-case
-			.setTooltip('to find out your reading speed, I put together a calculator for you on my website. Select to add a new preset.')
+			.setTooltip('To find out your reading speed, use the calculator. Select to add a new preset')
 				.setCta()
 				.onClick(() => {
 					const newPreset: WPMTimePreset = {
@@ -336,8 +334,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				href: 'https://www.santiyounger.com/wpm-calculator',
 				attr: { target: '_blank', rel: 'noopener' }
 			});
-			// eslint-disable-next-line obsidianmd/ui/sentence-case
-			calcLink.textContent = 'This free calculator I created for you';
+			calcLink.textContent = 'This free calculator';
 			tooltip.createSpan({ text: '.' });
 			
 			// Position tooltip to the right of the button to avoid covering speed column
@@ -364,15 +361,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		calculatorBtn.addEventListener('click', showTooltip);
 		
 		// Cleanup tooltip when settings tab is closed or re-rendered
-		const cleanup = () => {
-			if (tooltip) {
-				tooltip.remove();
-				tooltip = null;
-			}
-		};
-		// Store cleanup reference on the container so it can be called if needed
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-		(presetContainer as any)._tooltipCleanup = cleanup;
+		// Note: Tooltips are cleaned up via closeAllTooltips() which removes all tooltips by class name
 		// Only allow numbers in speed input
 		speedInput.addEventListener('input', (e) => {
 			void (async () => {
