@@ -73,14 +73,19 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 			}
 			
 			// Open or reveal the view in the right sidebar
-			let readingTimeView: ReadingTimeView;
+			let readingTimeView: ReadingTimeView | null = null;
 			const existingLeaves = plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE);
 			
 			if (existingLeaves.length > 0) {
 				// View already exists, use it
-				readingTimeView = existingLeaves[0].view as ReadingTimeView;
-				plugin.view = readingTimeView;
-			} else {
+				const existingView = existingLeaves[0].view;
+				if (existingView instanceof ReadingTimeView) {
+					readingTimeView = existingView;
+					plugin.view = readingTimeView;
+				}
+			}
+			
+			if (!readingTimeView) {
 				// Create new view in right sidebar
 				const leaf = plugin.app.workspace.getRightLeaf(false);
 				if (!leaf) {
@@ -91,8 +96,33 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 					type: READING_TIME_VIEW_TYPE,
 					active: true,
 				});
-				readingTimeView = leaf.view as ReadingTimeView;
-				plugin.view = readingTimeView;
+				
+				// Wait for the view to be fully initialized
+				// Sometimes the view needs a moment to be ready
+				let attempts = 0;
+				const maxAttempts = 10;
+				while (attempts < maxAttempts) {
+					const view = leaf.view;
+					if (view instanceof ReadingTimeView) {
+						readingTimeView = view;
+						plugin.view = readingTimeView;
+						break;
+					}
+					// Wait a bit before retrying
+					await new Promise(resolve => setTimeout(resolve, 50));
+					attempts++;
+				}
+				
+				if (!readingTimeView) {
+					new Notice('Could not initialize reading time view.');
+					return;
+				}
+			}
+			
+			// Ensure we have a valid view before proceeding
+			if (!readingTimeView || typeof readingTimeView.updateContent !== 'function') {
+				new Notice('Reading time view is not ready. Please try again.');
+				return;
 			}
 			
 			// Handler for preset changes
@@ -130,7 +160,12 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				noteTitle,
 				noteFile
 			);
-			void plugin.app.workspace.revealLeaf(plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE)[0]);
+			
+			// Reveal the leaf containing the view
+			const viewLeaves = plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE);
+			if (viewLeaves.length > 0) {
+				void plugin.app.workspace.revealLeaf(viewLeaves[0]);
+			}
 			
 			// Restore the selection after all async operations complete
 			// Use setTimeout to ensure it happens after the view operations
