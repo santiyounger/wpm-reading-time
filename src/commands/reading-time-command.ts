@@ -3,7 +3,7 @@ import { calculateReadingTime } from '../utils/reading-time';
 import { WPMTimePlugin } from '../types';
 import { ReadingTimeView, READING_TIME_VIEW_TYPE } from '../ui/reading-time-view';
 
-export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: ReadingTimeView | null }): void {
+export function registerReadingTimeCommand(plugin: WPMTimePlugin): void {
 	plugin.addCommand({
 		id: 'calculate-reading-time',
 		name: 'Calculate reading time',
@@ -81,7 +81,6 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 				const existingView = existingLeaves[0].view;
 				if (existingView instanceof ReadingTimeView) {
 					readingTimeView = existingView;
-					plugin.view = readingTimeView;
 				}
 			}
 			
@@ -105,7 +104,6 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin & { view: Readi
 					const view = leaf.view;
 					if (view instanceof ReadingTimeView) {
 						readingTimeView = view;
-						plugin.view = readingTimeView;
 						break;
 					}
 					// Wait a bit before retrying

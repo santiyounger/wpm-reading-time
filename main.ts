@@ -6,7 +6,6 @@ import { ReadingTimeView, READING_TIME_VIEW_TYPE } from './src/ui/reading-time-v
 
 export default class WPMTimePlugin extends Plugin {
 	settings: WPMTimeSettings;
-	view: ReadingTimeView | null = null;
 	settingTab: WPMTimeSettingTab | null = null;
 
 	async onload() {

@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, TFile } from 'obsidian';
+import { ItemView, WorkspaceLeaf, TFile, setIcon } from 'obsidian';
 import { WPMTimePreset } from '../settings';
 
 export const READING_TIME_VIEW_TYPE = 'reading-time-view';
@@ -13,10 +13,6 @@ export class ReadingTimeView extends ItemView {
 	noteFile: TFile | null = null;
 	onPresetChange?: (presetId: string) => void;
 	onOpenSettings?: () => void;
-	dropdownCleanup?: () => void;
-	metadataCleanup?: () => void;
-	renameCleanup?: () => void;
-	workspaceCleanup?: () => void;
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -73,20 +69,6 @@ export class ReadingTimeView extends ItemView {
 	}
 
 	private setupDynamicNoteTitle(): void {
-		// Clean up existing listeners
-		if (this.metadataCleanup) {
-			this.metadataCleanup();
-			this.metadataCleanup = undefined;
-		}
-		if (this.renameCleanup) {
-			this.renameCleanup();
-			this.renameCleanup = undefined;
-		}
-		if (this.workspaceCleanup) {
-			this.workspaceCleanup();
-			this.workspaceCleanup = undefined;
-		}
-
 		// Only set up listeners if we're tracking a whole note
 		if (!this.isWholeNote || !this.noteFile) {
 			return;
@@ -96,39 +78,35 @@ export class ReadingTimeView extends ItemView {
 		const originalFilePath = this.noteFile.path;
 
 		// Listen for metadata changes (including frontmatter title changes)
-		const metadataHandler = (file: TFile) => {
-			// Check if this is our file (compare by path)
-			if (file.path === this.noteFile?.path || file.path === originalFilePath) {
-				// Update the file reference in case it changed
-				this.noteFile = file;
-				const newTitle = this.getCurrentNoteTitle();
-				if (newTitle !== this.noteTitle) {
+		this.registerEvent(
+			this.app.metadataCache.on('changed', (file: TFile) => {
+				// Check if this is our file (compare by path)
+				if (file.path === this.noteFile?.path || file.path === originalFilePath) {
+					// Update the file reference in case it changed
+					this.noteFile = file;
+					const newTitle = this.getCurrentNoteTitle();
+					if (newTitle !== this.noteTitle) {
+						this.noteTitle = newTitle;
+						// Update only the note title part without re-rendering everything
+						this.updateNoteTitleDisplay();
+					}
+				}
+			})
+		);
+
+		// Listen for file renames
+		this.registerEvent(
+			this.app.vault.on('rename', (file: TFile, oldPath: string) => {
+				// Check if the renamed file matches our tracked file
+				if (oldPath === originalFilePath || oldPath === this.noteFile?.path) {
+					this.noteFile = file;
+					const newTitle = this.getCurrentNoteTitle();
 					this.noteTitle = newTitle;
 					// Update only the note title part without re-rendering everything
 					this.updateNoteTitleDisplay();
 				}
-			}
-		};
-		this.app.metadataCache.on('changed', metadataHandler);
-		this.metadataCleanup = () => {
-			this.app.metadataCache.off('changed', metadataHandler);
-		};
-
-		// Listen for file renames
-		const renameHandler = (file: TFile, oldPath: string) => {
-			// Check if the renamed file matches our tracked file
-			if (oldPath === originalFilePath || oldPath === this.noteFile?.path) {
-				this.noteFile = file;
-				const newTitle = this.getCurrentNoteTitle();
-				this.noteTitle = newTitle;
-				// Update only the note title part without re-rendering everything
-				this.updateNoteTitleDisplay();
-			}
-		};
-		this.app.vault.on('rename', renameHandler);
-		this.renameCleanup = () => {
-			this.app.vault.off('rename', renameHandler);
-		};
+			})
+		);
 
 		// Also listen for workspace active leaf changes to catch file switches and renames in real-time
 		const workspaceHandler = () => {
@@ -146,33 +124,24 @@ export class ReadingTimeView extends ItemView {
 				}
 			}
 		};
-		
+
 		// Listen to multiple workspace events for better real-time updates
-		this.app.workspace.on('active-leaf-change', workspaceHandler);
-		this.app.workspace.on('file-open', workspaceHandler);
-		this.workspaceCleanup = () => {
-			this.app.workspace.off('active-leaf-change', workspaceHandler);
-			this.app.workspace.off('file-open', workspaceHandler);
-		};
+		this.registerEvent(this.app.workspace.on('active-leaf-change', workspaceHandler));
+		this.registerEvent(this.app.workspace.on('file-open', workspaceHandler));
 
 		// Periodically check for title changes (as a fallback for any missed events)
 		// Use a more frequent check for real-time updates
-		const intervalId = window.setInterval(() => {
-			if (this.noteFile && this.isWholeNote) {
-				const currentTitle = this.getCurrentNoteTitle();
-				if (currentTitle !== this.noteTitle) {
-					this.noteTitle = currentTitle;
-					this.updateNoteTitleDisplay();
+		this.registerInterval(
+			window.setInterval(() => {
+				if (this.noteFile && this.isWholeNote) {
+					const currentTitle = this.getCurrentNoteTitle();
+					if (currentTitle !== this.noteTitle) {
+						this.noteTitle = currentTitle;
+						this.updateNoteTitleDisplay();
+					}
 				}
-			}
-		}, 500); // Check every 500ms for near real-time updates
-
-		// Store interval cleanup in metadataCleanup (will be cleaned up together)
-		const originalMetadataCleanup = this.metadataCleanup;
-		this.metadataCleanup = () => {
-			if (originalMetadataCleanup) originalMetadataCleanup();
-			window.clearInterval(intervalId);
-		};
+			}, 500) // Check every 500ms for near real-time updates
+		);
 	}
 
 	private updateNoteTitleDisplay(): void {
@@ -216,11 +185,6 @@ export class ReadingTimeView extends ItemView {
 
 	private render(): void {
 		const { contentEl } = this;
-		// Clean up any existing dropdown listeners
-		if (this.dropdownCleanup) {
-			this.dropdownCleanup();
-			this.dropdownCleanup = undefined;
-		}
 		contentEl.empty();
 
 		if (this.presets.length === 0 || !this.selectedPresetId) {
@@ -239,33 +203,11 @@ export class ReadingTimeView extends ItemView {
 		
 		// Plugin title at the top
 		const pluginTitle = mainContent.createDiv('reading-time-plugin-title');
-		
+
 		// Clock icon
-		const clockIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-		clockIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-		clockIcon.setAttribute('width', '20');
-		clockIcon.setAttribute('height', '20');
-		clockIcon.setAttribute('viewBox', '0 0 24 24');
-		clockIcon.setAttribute('fill', 'none');
-		clockIcon.setAttribute('stroke', 'currentColor');
-		clockIcon.setAttribute('stroke-width', '1.5');
-		clockIcon.setAttribute('stroke-linecap', 'round');
-		clockIcon.setAttribute('stroke-linejoin', 'round');
-		clockIcon.classList.add('svg-icon');
-		clockIcon.classList.add('lucide-clock');
-		clockIcon.classList.add('reading-time-icon-inline');
-		
-		const clockCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-		clockCircle.setAttribute('cx', '12');
-		clockCircle.setAttribute('cy', '12');
-		clockCircle.setAttribute('r', '10');
-		clockIcon.appendChild(clockCircle);
-		
-		const clockPolyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-		clockPolyline.setAttribute('points', '12 6 12 12 16 14');
-		clockIcon.appendChild(clockPolyline);
-		
-		pluginTitle.appendChild(clockIcon);
+		const clockIconContainer = pluginTitle.createSpan({ cls: 'reading-time-icon-inline' });
+		setIcon(clockIconContainer, 'clock');
+
 		pluginTitle.createSpan({ text: 'WPM Reading Time - How Long to Read This Text' });
 		
 		// Note title header (shown when analyzing whole note or selected text from a note)
@@ -476,7 +418,7 @@ export class ReadingTimeView extends ItemView {
 		};
 		
 		dropdownButton.addEventListener('click', toggleDropdown);
-		
+
 		// Close dropdown when clicking outside
 		const closeDropdown = (e: MouseEvent) => {
 			if (!dropdownContainer.contains(e.target as Node)) {
@@ -485,16 +427,9 @@ export class ReadingTimeView extends ItemView {
 				dropdownMenu.classList.add('reading-time-dropdown-menu-hidden');
 			}
 		};
-		
-		// Use a timeout to add the listener after current execution
-		setTimeout(() => {
-			document.addEventListener('click', closeDropdown);
-		}, 0);
-		
-		// Store cleanup function
-		this.dropdownCleanup = () => {
-			document.removeEventListener('click', closeDropdown);
-		};
+
+		// Register DOM event for automatic cleanup
+		this.registerDomEvent(document, 'click', closeDropdown);
 		
 		// Settings link below dropdown
 		if (this.onOpenSettings) {
@@ -502,62 +437,17 @@ export class ReadingTimeView extends ItemView {
 			
 			// Wrapper span for underline effect that covers everything
 			const underlineWrapper = settingsLink.createSpan('reading-time-underline-wrapper');
-			
-			// Create gear icon SVG
-			const gearIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			gearIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-			gearIcon.setAttribute('width', '14');
-			gearIcon.setAttribute('height', '14');
-			gearIcon.setAttribute('viewBox', '0 0 24 24');
-			gearIcon.setAttribute('fill', 'none');
-			gearIcon.setAttribute('stroke', 'currentColor');
-			gearIcon.setAttribute('stroke-width', '1.5');
-			gearIcon.setAttribute('stroke-linecap', 'round');
-			gearIcon.setAttribute('stroke-linejoin', 'round');
-			gearIcon.classList.add('svg-icon');
-			gearIcon.classList.add('lucide-settings');
-			
-			// Gear icon paths (lucide-settings icon)
-			const gearPath1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-			gearPath1.setAttribute('d', 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z');
-			gearIcon.appendChild(gearPath1);
-			
-			const gearCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-			gearCircle.setAttribute('cx', '12');
-			gearCircle.setAttribute('cy', '12');
-			gearCircle.setAttribute('r', '3');
-			gearIcon.appendChild(gearCircle);
-			
-			underlineWrapper.appendChild(gearIcon);
+
+			// Gear icon
+			const gearIconContainer = underlineWrapper.createSpan();
+			setIcon(gearIconContainer, 'settings');
+
 			underlineWrapper.createSpan({ text: 'You can change this ' });
-			
+
 			// Arrow up icon after "this"
-			const arrowUpIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			arrowUpIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-			arrowUpIcon.setAttribute('width', '12');
-			arrowUpIcon.setAttribute('height', '12');
-			arrowUpIcon.setAttribute('viewBox', '0 0 24 24');
-			arrowUpIcon.setAttribute('fill', 'none');
-			arrowUpIcon.setAttribute('stroke', 'currentColor');
-			arrowUpIcon.setAttribute('stroke-width', '1.5');
-			arrowUpIcon.setAttribute('stroke-linecap', 'round');
-			arrowUpIcon.setAttribute('stroke-linejoin', 'round');
-			arrowUpIcon.classList.add('svg-icon');
-			arrowUpIcon.classList.add('lucide-arrow-up');
-			arrowUpIcon.classList.add('reading-time-arrow-icon');
-			
-			const arrowUpPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-			arrowUpPath.setAttribute('d', 'm5 12 7-7 7 7');
-			arrowUpIcon.appendChild(arrowUpPath);
-			
-			const arrowUpLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-			arrowUpLine.setAttribute('x1', '12');
-			arrowUpLine.setAttribute('x2', '12');
-			arrowUpLine.setAttribute('y1', '19');
-			arrowUpLine.setAttribute('y2', '5');
-			arrowUpIcon.appendChild(arrowUpLine);
-			
-			underlineWrapper.appendChild(arrowUpIcon);
+			const arrowIconContainer = underlineWrapper.createSpan({ cls: 'reading-time-arrow-icon' });
+			setIcon(arrowIconContainer, 'arrow-up');
+
 			underlineWrapper.createSpan({ text: ' in the settings' });
 			
 			settingsLink.addEventListener('click', (e) => {
@@ -577,22 +467,6 @@ export class ReadingTimeView extends ItemView {
 
 	onClose(): Promise<void> {
 		const { contentEl } = this;
-		if (this.dropdownCleanup) {
-			this.dropdownCleanup();
-			this.dropdownCleanup = undefined;
-		}
-		if (this.metadataCleanup) {
-			this.metadataCleanup();
-			this.metadataCleanup = undefined;
-		}
-		if (this.renameCleanup) {
-			this.renameCleanup();
-			this.renameCleanup = undefined;
-		}
-		if (this.workspaceCleanup) {
-			this.workspaceCleanup();
-			this.workspaceCleanup = undefined;
-		}
 		contentEl.empty();
 		return Promise.resolve();
 	}
