@@ -139,13 +139,11 @@ jobs:
 
       - name: Prepare release artifacts
         if: steps.vercmp.outputs.should_release == 'true'
-        id: artifacts
         run: |
           # Ensure required files exist
           test -f main.js
           test -f manifest.json
-          # styles.css is optional
-          if [ -f styles.css ]; then echo "has_css=true" >> $GITHUB_OUTPUT; else echo "has_css=false" >> $GITHUB_OUTPUT; fi
+          test -f styles.css
 
       - name: Create GitHub release and upload assets
         if: steps.vercmp.outputs.should_release == 'true'
@@ -159,15 +157,7 @@ jobs:
           files: |
             main.js
             manifest.json
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload styles.css if exists
-        if: steps.vercmp.outputs.should_release == 'true' && steps.artifacts.outputs.has_css == 'true'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.ver.outputs.version }}
-          files: styles.css
+            styles.css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
