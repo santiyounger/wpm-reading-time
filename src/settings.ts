@@ -11,9 +11,7 @@ export interface WPMTimeSettings {
 
 export const DEFAULT_SETTINGS: WPMTimeSettings = {
 	presets: [
-		{ id: 'reading', name: 'My Reading Time', speed: 250 },
-		{ id: 'speaking', name: 'My Speaking Time', speed: 200 }
+		{ id: 'reading', name: 'My Reading Time', speed: 225 }
 	],
 	selectedPresetId: 'reading'
 };
-

@@ -1,10 +1,9 @@
-import { App, Notice, PluginSettingTab, Setting, setIcon, setTooltip } from 'obsidian';
+import { App, Notice, PluginSettingTab, setIcon, setTooltip } from 'obsidian';
 import { WPMTimePlugin } from '../types';
 import { WPMTimePreset } from '../settings';
 
 export class WPMTimeSettingTab extends PluginSettingTab {
 	plugin: WPMTimePlugin;
-	private eventCleanups: Array<() => void> = [];
 
 	constructor(app: App, plugin: WPMTimePlugin) {
 		super(app, plugin);
@@ -13,6 +12,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
+		const hasMultiplePresets = this.plugin.settings.presets.length > 1;
 
 		// Reset cleanup array when re-rendering
 		this.eventCleanups = [];
@@ -50,19 +50,50 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		setIcon(githubIconContainer, 'github');
 		githubLink.createSpan({ text: 'See code (GitHub)' });
 
+		// Calculator helper below the top links
+		const calculatorHelperContainer = containerEl.createDiv('reading-time-add-preset-section');
+		const wpmCalculatorLink = calculatorHelperContainer.createDiv('reading-time-wpm-calculator reading-time-wpm-calculator-flex');
+		const calcIconContainer = wpmCalculatorLink.createSpan();
+		setIcon(calcIconContainer, 'calculator');
+		const calculatorIntro = wpmCalculatorLink.createDiv('reading-time-wpm-calculator-line');
+		calculatorIntro.createSpan({ text: 'To find out your reading speed (' });
+		const wpmPhrase = calculatorIntro.createSpan({ cls: 'reading-time-wpm-phrase' });
+		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'ords ' });
+		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'er ' });
+		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
+		wpmPhrase.createSpan({ text: 'inute' });
+		calculatorIntro.createSpan({ text: '),' });
+		const calculatorAction = wpmCalculatorLink.createDiv('reading-time-wpm-calculator-line');
+		calculatorAction.createSpan({ text: 'Use ' });
+		const calcLink = calculatorAction.createEl('a', {
+			href: 'https://www.santiyounger.com/wpm-calculator',
+			attr: { target: '_blank', rel: 'noopener' }
+		});
+		calcLink.textContent = 'my free online calculator';
+		calculatorAction.createSpan({ text: '.' });
+
 		// Presets section
 		const presetsContainer = containerEl.createDiv('reading-time-presets-container');
+		const presetListContainer = presetsContainer.createDiv('reading-time-preset-list');
+		presetListContainer.classList.add(hasMultiplePresets ? 'reading-time-preset-list-multiple' : 'reading-time-preset-list-single');
 
 		// Header row
-		const headerRow = presetsContainer.createDiv('reading-time-preset-header-row');
+		const headerRow = presetListContainer.createDiv('reading-time-preset-header-row');
 		
-		// Default header with icon and subtitle
-		const defaultHeader = headerRow.createDiv('reading-time-header-default');
-		const defaultHeaderTitle = defaultHeader.createDiv('reading-time-header-default-title reading-time-header-with-icon');
-		const starIconContainer = defaultHeaderTitle.createSpan();
-		setIcon(starIconContainer, 'star');
-		defaultHeaderTitle.createSpan({ text: 'Default' });
-		defaultHeader.createEl('div', { text: 'Pick your default', cls: 'reading-time-header-default-subtitle' });
+		if (hasMultiplePresets) {
+			// Default header with icon and subtitle
+			const defaultHeader = headerRow.createDiv('reading-time-header-default');
+			const defaultHeaderTitle = defaultHeader.createDiv('reading-time-header-default-title reading-time-header-with-icon');
+			const starIconContainer = defaultHeaderTitle.createSpan();
+			setIcon(starIconContainer, 'star');
+			defaultHeaderTitle.createSpan({ text: 'Default' });
+			defaultHeader.createEl('div', {
+				text: 'Pick your default',
+				cls: 'reading-time-header-default-subtitle'
+			});
+		}
 		
 		// Speed header with subheading and icon
 		const speedHeader = headerRow.createDiv('reading-time-header-speed');
@@ -70,10 +101,10 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const gaugeIconContainer = speedHeaderTitle.createSpan();
 		setIcon(gaugeIconContainer, 'gauge');
 		speedHeaderTitle.createSpan({ text: 'Speed' });
-		const speedSubtitle = speedHeader.createEl('div', { cls: 'reading-time-header-speed-subtitle' });
-		speedSubtitle.createSpan({ text: 'WPM stands for: ' });
-		speedSubtitle.createEl('br');
-		speedSubtitle.createSpan({ text: 'Words per minute' });
+		speedHeader.createEl('div', {
+			text: 'WPM stands for: Words per minute\nUse calculator below to find the correct number for you',
+			cls: 'reading-time-header-speed-subtitle'
+		});
 		
 		// Title header with icon and subtitle
 		const nameHeader = headerRow.createDiv('reading-time-header-name');
@@ -81,59 +112,42 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const fileIconContainer = nameHeaderTitle.createSpan();
 		setIcon(fileIconContainer, 'file-text');
 		nameHeaderTitle.createSpan({ text: 'Title' });
-		const nameSubtitle = nameHeader.createEl('div', { cls: 'reading-time-header-name-subtitle' });
-		nameSubtitle.createSpan({ text: 'You can add an optional title' });
-		nameSubtitle.createEl('br');
-		nameSubtitle.createSpan({ text: 'Example: My speaking speed' });
-		headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' }); // Empty for delete button column
+		nameHeader.createEl('div', {
+			text: 'You can add an optional title\nExample: My speaking speed',
+			cls: 'reading-time-header-name-subtitle'
+		});
+		if (hasMultiplePresets) {
+			headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' });
+		}
 
 		// Display all presets
-		this.plugin.settings.presets.forEach((preset, index) => {
-			this.renderPresetSetting(presetsContainer, preset, index);
+		this.plugin.settings.presets.forEach((preset) => {
+			this.renderPresetSetting(presetListContainer, preset);
 		});
 
-		// Add new preset button with calculator on the left
-		const addPresetSetting = new Setting(presetsContainer);
-		// Layout: calculator flush-left, button flush-right
-		addPresetSetting.controlEl.classList.add('reading-time-add-preset-control');
-		
-		// WPM calculator link (on the left side of the add button)
-		const wpmCalculatorLink = addPresetSetting.controlEl.createDiv('reading-time-wpm-calculator reading-time-wpm-calculator-flex');
-		const calcIconContainer = wpmCalculatorLink.createSpan();
-		setIcon(calcIconContainer, 'calculator');
-		wpmCalculatorLink.createSpan({ text: 'To find out your reading speed (' });
-		const wpmPhrase = wpmCalculatorLink.createSpan({ cls: 'reading-time-wpm-phrase' });
-		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'ords ' });
-		wpmPhrase.createSpan({ text: 'P', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'er ' });
-		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
-		wpmPhrase.createSpan({ text: 'inute' });
-		wpmCalculatorLink.createSpan({ text: '), ' });
-		wpmCalculatorLink.createEl('br');
-		wpmCalculatorLink.createSpan({ text: 'use ' });
-		const calcLink = wpmCalculatorLink.createEl('a', {
-			href: 'https://www.santiyounger.com/wpm-calculator',
-			attr: { target: '_blank', rel: 'noopener' }
+		const addPresetButton = presetListContainer.createEl('button', {
+			cls: 'mod-cta reading-time-add-preset-btn',
+			attr: {
+				'aria-label': 'Add a new preset'
+			}
 		});
-		calcLink.textContent = 'This free calculator';
-		wpmCalculatorLink.createSpan({ text: '.' });
-		
-		addPresetSetting.addButton(button => button
-			.setIcon('plus')
-			.setTooltip('To find out your reading speed, use the calculator. Select to add a new preset')
-				.setCta()
-				.onClick(() => {
-					const newPreset: WPMTimePreset = {
-						id: `preset-${Date.now()}`,
-					name: '',
-					speed: 0  // Start with 0 instead of auto-filling
-					};
-					this.plugin.settings.presets.push(newPreset);
-					void this.plugin.saveSettings().then(() => {
-						this.display(); // Refresh the settings view
-					});
-				}));
+		setIcon(addPresetButton, 'plus');
+		addPresetButton.createSpan({ text: 'Add preset' });
+		addPresetButton.addEventListener('click', () => {
+			const newPreset: WPMTimePreset = {
+				id: `preset-${Date.now()}`,
+				name: '',
+				speed: 0
+			};
+			this.plugin.settings.presets.push(newPreset);
+			void this.plugin.saveSettings().then(() => {
+				this.display();
+			});
+		});
+		presetListContainer.createEl('div', {
+			cls: 'reading-time-add-preset-note',
+			text: 'Optionally, click Add preset that way when using this plugin in your notes, you can choose different speeds, for example "reading speed" vs "speaking out loud speed".'
+		});
 
 		// Learn more about my work section
 		const learnMoreContainer = containerEl.createDiv('reading-time-learn-more');
@@ -158,33 +172,33 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		learnMoreLink.createEl('span', { text: 'Santiyounger.com' });
 	}
 
-	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset, index: number): void {
-		// Preset container with horizontal layout
+	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset): void {
+		const hasMultiplePresets = this.plugin.settings.presets.length > 1;
+		// Outer preset container
 		const presetContainer = containerEl.createDiv('reading-time-preset-container');
+		const presetRow = presetContainer.createDiv('reading-time-preset-row');
 
-		// Default checkbox (first column)
-		const defaultCheckboxWrapper = presetContainer.createDiv('reading-time-default-wrapper');
-		const defaultCheckbox = defaultCheckboxWrapper.createEl('input', {
-			type: 'checkbox',
-			cls: 'reading-time-default-checkbox',
-			attr: { 'aria-label': 'Set as default preset' }
-		});
-		defaultCheckbox.checked = this.plugin.settings.selectedPresetId === preset.id;
-		defaultCheckbox.addEventListener('change', (e) => {
-			const target = e.target as HTMLInputElement;
-			void (async () => {
-				if (target.checked) {
-					// Uncheck all other checkboxes and set this as default
-					this.containerEl.querySelectorAll('.reading-time-default-checkbox').forEach((cb: HTMLInputElement) => {
-						if (cb !== target) {
-							cb.checked = false;
-						}
-					});
-					this.plugin.settings.selectedPresetId = preset.id;
-					await this.plugin.saveSettings();
-				} else {
-					// If trying to uncheck the default, switch to first other preset if available
-					if (this.plugin.settings.selectedPresetId === preset.id) {
+		if (hasMultiplePresets) {
+			// Default checkbox (first column)
+			const defaultCheckboxWrapper = presetRow.createDiv('reading-time-default-wrapper');
+			const defaultCheckbox = defaultCheckboxWrapper.createEl('input', {
+				type: 'checkbox',
+				cls: 'reading-time-default-checkbox',
+				attr: { 'aria-label': 'Set as default preset' }
+			});
+			defaultCheckbox.checked = this.plugin.settings.selectedPresetId === preset.id;
+			defaultCheckbox.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				void (async () => {
+					if (target.checked) {
+						this.containerEl.querySelectorAll('.reading-time-default-checkbox').forEach((cb: HTMLInputElement) => {
+							if (cb !== target) {
+								cb.checked = false;
+							}
+						});
+						this.plugin.settings.selectedPresetId = preset.id;
+						await this.plugin.saveSettings();
+					} else if (this.plugin.settings.selectedPresetId === preset.id) {
 						const firstOtherPreset = this.plugin.settings.presets.find(p => p.id !== preset.id);
 						if (firstOtherPreset) {
 							const firstCheckbox = this.containerEl.querySelector(`input[data-preset-id="${firstOtherPreset.id}"]`) as HTMLInputElement;
@@ -194,19 +208,19 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 								this.plugin.settings.selectedPresetId = firstOtherPreset.id;
 								await this.plugin.saveSettings();
 							} else {
-								target.checked = true; // Can't uncheck if no other preset found
+								target.checked = true;
 							}
 						} else {
-							target.checked = true; // Only one preset, must stay checked
+							target.checked = true;
 						}
 					}
-				}
-			})();
-		});
-		defaultCheckbox.setAttribute('data-preset-id', preset.id);
+				})();
+			});
+			defaultCheckbox.setAttribute('data-preset-id', preset.id);
+		}
 
 		// Speed input with WPM label
-		const speedWrapper = presetContainer.createDiv('reading-time-speed-wrapper');
+		const speedWrapper = presetRow.createDiv('reading-time-speed-wrapper');
 		
 		// WPM calculator button (first, on the left)
 		const calculatorBtnContainer = speedWrapper.createDiv('reading-time-wpm-calculator-btn-container');
@@ -281,7 +295,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 
 		// Title input
-		const nameInput = presetContainer.createEl('input', {
+		const nameInput = presetRow.createEl('input', {
 			type: 'text',
 			attr: { spellcheck: 'false', placeholder: 'Optional title' },
 			cls: 'reading-time-name-input'
@@ -296,8 +310,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 
 		// Delete button (only if more than one preset)
-		if (this.plugin.settings.presets.length > 1) {
-			const deleteBtn = presetContainer.createEl('button', {
+		if (hasMultiplePresets) {
+			const deleteBtn = presetRow.createEl('button', {
 				attr: { 'aria-label': 'Delete preset' },
 				cls: 'reading-time-delete-btn'
 			});
@@ -321,11 +335,6 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 	}
 
 	hide(): void {
-		// Clean up all event listeners (if any were tracked)
-		this.eventCleanups.forEach(cleanup => cleanup());
-		this.eventCleanups = [];
-
-		// Call parent implementation
 		super.hide();
 	}
 }
