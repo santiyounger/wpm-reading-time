@@ -4,6 +4,8 @@ import { WPMTimePreset } from '../settings';
 
 export class WPMTimeSettingTab extends PluginSettingTab {
 	plugin: WPMTimePlugin;
+	/** Inline control in the calculator blurb; kept in sync with the primary speed field. */
+	private calculatorPrimarySpeedEl: HTMLElement | null = null;
 
 	constructor(app: App, plugin: WPMTimePlugin) {
 		super(app, plugin);
@@ -15,6 +17,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const hasMultiplePresets = this.plugin.settings.presets.length > 1;
 
 		containerEl.empty();
+		this.calculatorPrimarySpeedEl = null;
 
 		// Links container at top
 		const linksContainer = containerEl.createDiv('setting-item-description reading-time-links-container reading-time-links-container-flex');
@@ -53,7 +56,27 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const calcIconContainer = wpmCalculatorLink.createSpan();
 		setIcon(calcIconContainer, 'calculator');
 		const calculatorIntro = wpmCalculatorLink.createDiv('reading-time-wpm-calculator-line');
-		calculatorIntro.createSpan({ text: 'To make the most of this plugin, below where it says "Speed" you enter your reading speed.\nIt only takes a minute to find your (' });
+		calculatorIntro.createSpan({ text: 'Your current speed is set to ' });
+		const speedTrigger = calculatorIntro.createEl('button', {
+			type: 'button',
+			cls: 'reading-time-wpm-calculator-speed-trigger',
+			text: this.formatPrimarySpeedDisplay()
+		});
+		speedTrigger.setAttribute(
+			'aria-label',
+			`Focus speed field (currently ${this.formatPrimarySpeedForAria()} words per minute)`
+		);
+		this.calculatorPrimarySpeedEl = speedTrigger;
+		speedTrigger.addEventListener('click', () => {
+			const input = containerEl.querySelector(
+				'#reading-time-settings-primary-speed-input'
+			) as HTMLInputElement | null;
+			input?.focus();
+			input?.select();
+		});
+		calculatorIntro.createSpan({
+			text: '. Click it to select the speed field and change it. To find out your ('
+		});
 		const wpmPhrase = calculatorIntro.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -99,7 +122,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		setIcon(gaugeIconContainer, 'gauge');
 		speedHeaderTitle.createSpan({ text: 'Speed' });
 		speedHeader.createEl('div', {
-			text: 'Reading speed.\nUse the calculator below to find the right number for you.',
+			text: 'Reading speed.\nUse the calculator link above to find the right number for you.',
 			cls: 'reading-time-header-speed-subtitle'
 		});
 		
@@ -121,6 +144,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		this.plugin.settings.presets.forEach((preset) => {
 			this.renderPresetSetting(presetListContainer, preset);
 		});
+		this.reconcilePrimarySpeedInputId();
 
 		const addPresetButton = presetListContainer.createEl('button', {
 			cls: 'mod-cta reading-time-add-preset-btn',
@@ -195,6 +219,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 						});
 						this.plugin.settings.selectedPresetId = preset.id;
 						await this.plugin.saveSettings();
+						this.reconcilePrimarySpeedInputId();
+						this.syncCalculatorPrimarySpeedUI();
 					} else if (this.plugin.settings.selectedPresetId === preset.id) {
 						const firstOtherPreset = this.plugin.settings.presets.find(p => p.id !== preset.id);
 						if (firstOtherPreset) {
@@ -204,6 +230,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 								firstCheckbox.checked = true;
 								this.plugin.settings.selectedPresetId = firstOtherPreset.id;
 								await this.plugin.saveSettings();
+								this.reconcilePrimarySpeedInputId();
+								this.syncCalculatorPrimarySpeedUI();
 							} else {
 								target.checked = true;
 							}
@@ -240,7 +268,8 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			type: 'text',
 			attr: {
 				spellcheck: 'false',
-				placeholder: 'Use calculator below'
+				placeholder: 'Enter WPM',
+				'data-preset-id': preset.id
 			},
 			cls: 'reading-time-speed-input'
 		});
@@ -262,6 +291,9 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				if (!numericValue) {
 					preset.speed = 0;
 					await this.plugin.saveSettings();
+					if (preset.id === this.getPrimaryPreset()?.id) {
+						this.syncCalculatorPrimarySpeedUI();
+					}
 					return; // Allow empty during typing
 				}
 				if (isNaN(speed) || speed <= 0) {
@@ -269,6 +301,9 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				}
 				preset.speed = speed;
 				await this.plugin.saveSettings();
+				if (preset.id === this.getPrimaryPreset()?.id) {
+					this.syncCalculatorPrimarySpeedUI();
+				}
 			})();
 		});
 		speedInput.addEventListener('blur', (e) => {
@@ -329,6 +364,42 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				})();
 			});
 		}
+	}
+
+	private getPrimaryPreset(): WPMTimePreset | undefined {
+		const { presets, selectedPresetId } = this.plugin.settings;
+		if (!presets.length) return undefined;
+		return presets.find((p) => p.id === selectedPresetId) ?? presets[0];
+	}
+
+	private formatPrimarySpeedDisplay(): string {
+		const p = this.getPrimaryPreset();
+		return p?.speed && p.speed > 0 ? String(p.speed) : 'Not set';
+	}
+
+	private formatPrimarySpeedForAria(): string {
+		const p = this.getPrimaryPreset();
+		return p?.speed && p.speed > 0 ? String(p.speed) : 'not set yet';
+	}
+
+	private syncCalculatorPrimarySpeedUI(): void {
+		if (!this.calculatorPrimarySpeedEl) return;
+		this.calculatorPrimarySpeedEl.textContent = this.formatPrimarySpeedDisplay();
+		this.calculatorPrimarySpeedEl.setAttribute(
+			'aria-label',
+			`Focus speed field (currently ${this.formatPrimarySpeedForAria()} words per minute)`
+		);
+	}
+
+	private reconcilePrimarySpeedInputId(): void {
+		const primary = this.getPrimaryPreset();
+		this.containerEl.querySelectorAll('.reading-time-speed-input').forEach((el) => {
+			const input = el as HTMLInputElement;
+			input.removeAttribute('id');
+			if (primary && input.dataset.presetId === primary.id) {
+				input.id = 'reading-time-settings-primary-speed-input';
+			}
+		});
 	}
 
 	hide(): void {
