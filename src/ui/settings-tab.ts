@@ -75,7 +75,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			input?.select();
 		});
 		calculatorIntro.createSpan({
-			text: '. Click it to select the speed field and change it. To find out your ('
+			text: '. Click it to select the speed field and change it. To find out your\n('
 		});
 		const wpmPhrase = calculatorIntro.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
