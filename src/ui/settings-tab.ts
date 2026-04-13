@@ -14,9 +14,6 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		const hasMultiplePresets = this.plugin.settings.presets.length > 1;
 
-		// Reset cleanup array when re-rendering
-		this.eventCleanups = [];
-
 		containerEl.empty();
 
 		// Links container at top
@@ -56,7 +53,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const calcIconContainer = wpmCalculatorLink.createSpan();
 		setIcon(calcIconContainer, 'calculator');
 		const calculatorIntro = wpmCalculatorLink.createDiv('reading-time-wpm-calculator-line');
-		calculatorIntro.createSpan({ text: 'To find out your reading speed (' });
+		calculatorIntro.createSpan({ text: 'To make the most of this plugin, below where it says "Speed" you enter your reading speed.\nIt only takes a minute to find your (' });
 		const wpmPhrase = calculatorIntro.createSpan({ cls: 'reading-time-wpm-phrase' });
 		wpmPhrase.createSpan({ text: 'W', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'ords ' });
@@ -64,14 +61,14 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		wpmPhrase.createSpan({ text: 'er ' });
 		wpmPhrase.createSpan({ text: 'M', cls: 'reading-time-accent' });
 		wpmPhrase.createSpan({ text: 'inute' });
-		calculatorIntro.createSpan({ text: '),' });
+		calculatorIntro.createSpan({ text: ') reading speed' });
 		const calculatorAction = wpmCalculatorLink.createDiv('reading-time-wpm-calculator-line');
-		calculatorAction.createSpan({ text: 'Use ' });
+		calculatorAction.createSpan({ text: 'with ' });
 		const calcLink = calculatorAction.createEl('a', {
 			href: 'https://www.santiyounger.com/wpm-calculator',
 			attr: { target: '_blank', rel: 'noopener' }
 		});
-		calcLink.textContent = 'my free online calculator';
+		calcLink.textContent = 'My free online calculator';
 		calculatorAction.createSpan({ text: '.' });
 
 		// Presets section
@@ -102,7 +99,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		setIcon(gaugeIconContainer, 'gauge');
 		speedHeaderTitle.createSpan({ text: 'Speed' });
 		speedHeader.createEl('div', {
-			text: 'WPM stands for: Words per minute\nUse calculator below to find the correct number for you',
+			text: 'Reading speed.\nUse the calculator below to find the right number for you.',
 			cls: 'reading-time-header-speed-subtitle'
 		});
 		
@@ -113,7 +110,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		setIcon(fileIconContainer, 'file-text');
 		nameHeaderTitle.createSpan({ text: 'Title' });
 		nameHeader.createEl('div', {
-			text: 'You can add an optional title\nExample: My speaking speed',
+			text: 'Optional title.\nFor example: my speaking speed.',
 			cls: 'reading-time-header-name-subtitle'
 		});
 		if (hasMultiplePresets) {
@@ -146,7 +143,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		presetListContainer.createEl('div', {
 			cls: 'reading-time-add-preset-note',
-			text: 'Optionally, click Add preset that way when using this plugin in your notes, you can choose different speeds, for example "reading speed" vs "speaking out loud speed".'
+			text: 'You can optionally add more presets. When you use the plugin in your notes, they appear in a dropdown so you can pick different speeds—for example, "reading speed" versus "speaking out loud speed".'
 		});
 
 		// Learn more about my work section
@@ -169,7 +166,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const externalIconContainer = learnMoreLink.createSpan();
 		setIcon(externalIconContainer, 'external-link');
-		learnMoreLink.createEl('span', { text: 'Santiyounger.com' });
+		learnMoreLink.createEl('span', { text: 'santiyounger.com' });
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset): void {

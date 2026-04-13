@@ -426,7 +426,7 @@
 	text-align: center;
 	box-shadow: none;
 	width: 100%;
-	max-width: 420px;
+	box-sizing: border-box;
 }
 
 .reading-time-presets-container .setting-item-control {
@@ -443,19 +443,28 @@
 .reading-time-wpm-calculator-flex {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: stretch;
 	gap: 0.2rem;
+}
+
+.reading-time-wpm-calculator-flex > span:first-child {
+	display: flex;
+	justify-content: center;
 }
 
 .reading-time-wpm-calculator-line {
 	display: block;
 	line-height: 1.45;
+	white-space: pre-line;
 }
 
 .reading-time-wpm-calculator a {
 	color: var(--text-accent);
-	font-weight: 500;
+	font-weight: inherit;
+	line-height: inherit;
+	vertical-align: baseline;
 	text-decoration: underline;
+	text-underline-offset: 0.1em;
 	transition: opacity 0.15s ease;
 }
 
@@ -600,6 +609,7 @@
 	font-size: 0.875rem;
 	font-weight: 500;
 	white-space: nowrap;
+	margin-right: 10px;
 }
 
 .reading-time-wpm-calculator-btn-container {
@@ -926,7 +936,9 @@
 .reading-time-add-preset-section {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: stretch;
+	width: 100%;
+	box-sizing: border-box;
 	gap: 0.75rem;
 	margin-top: 0;
 	padding-top: 1rem;
@@ -938,7 +950,7 @@
 	justify-content: center;
 	gap: 0.375rem;
 	align-self: flex-end;
-	margin-top: 0.5rem;
+	margin-top: 0;
 }
 
 .reading-time-add-preset-note {
