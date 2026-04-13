@@ -1,4 +1,4 @@
-import { App, Notice, PluginSettingTab, setIcon, setTooltip } from 'obsidian';
+import { App, Notice, PluginSettingTab, setIcon } from 'obsidian';
 import { WPMTimePlugin } from '../types';
 import { WPMTimePreset } from '../settings';
 
@@ -167,7 +167,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		presetListContainer.createEl('div', {
 			cls: 'reading-time-add-preset-note',
-			text: 'You can optionally add more presets. When you use the plugin in your notes, they appear in a dropdown so you can pick different speeds—for example, "reading speed" versus "speaking out loud speed".'
+			text: 'You can optionally add more presets. When you use the plugin in your notes, they appear in a dropdown so you can pick different speeds, for example, reading speed versus speaking out loud speed.'
 		});
 
 		// Learn more about my work section
@@ -246,22 +246,6 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 
 		// Speed input with WPM label
 		const speedWrapper = presetRow.createDiv('reading-time-speed-wrapper');
-		
-		// WPM calculator button (first, on the left)
-		const calculatorBtnContainer = speedWrapper.createDiv('reading-time-wpm-calculator-btn-container');
-		const calculatorBtn = calculatorBtnContainer.createEl('button', {
-			cls: 'clickable-icon reading-time-wpm-calculator-btn',
-			attr: {
-				'aria-label': 'Find your reading speed'
-			}
-		});
-		const iconContainer = calculatorBtn.createSpan();
-		setIcon(iconContainer, 'help-circle');
-
-		// Use Obsidian's tooltip - simpler and consistent
-		setTooltip(calculatorBtn, 'To find out your reading speed (Words Per Minute), use this free calculator: https://www.santiyounger.com/wpm-calculator', {
-			placement: 'right'
-		});
 
 		// Speed input (only numbers, right-aligned)
 		const speedInput = speedWrapper.createEl('input', {

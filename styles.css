@@ -634,27 +634,6 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 	margin-right: 10px;
 }
 
-.reading-time-wpm-calculator-btn-container {
-	flex-shrink: 0;
-	display: flex;
-	align-items: center;
-	position: relative;
-}
-
-.reading-time-wpm-calculator-btn {
-	width: 24px;
-	height: 24px;
-	color: var(--text-muted);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.reading-time-wpm-calculator-btn svg {
-	width: 18px;
-	height: 18px;
-}
-
 .reading-time-wpm-tooltip {
 	background: var(--background-primary);
 	border: 1px solid var(--background-modifier-border);
