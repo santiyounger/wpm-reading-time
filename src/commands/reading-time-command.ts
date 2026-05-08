@@ -1,7 +1,45 @@
-import { Editor, MarkdownView, Notice, TFile } from 'obsidian';
+import { Editor, MarkdownView, Notice, TFile, WorkspaceLeaf } from 'obsidian';
 import { calculateReadingTime } from '../utils/reading-time';
 import { WPMTimePlugin } from '../types';
 import { ReadingTimeView, READING_TIME_VIEW_TYPE } from '../ui/reading-time-view';
+
+async function getOrCreateReadingTimeView(plugin: WPMTimePlugin): Promise<ReadingTimeView | null> {
+	const existingLeaves = plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE);
+	let primaryLeaf: WorkspaceLeaf | null = existingLeaves[0] ?? null;
+
+	if (existingLeaves.length > 1) {
+		for (const duplicateLeaf of existingLeaves.slice(1)) {
+			await duplicateLeaf.setViewState({ type: 'empty' });
+			duplicateLeaf.detach();
+		}
+	}
+
+	if (!primaryLeaf) {
+		primaryLeaf = plugin.app.workspace.getRightLeaf(false);
+		if (!primaryLeaf) {
+			return null;
+		}
+
+		await primaryLeaf.setViewState({
+			type: READING_TIME_VIEW_TYPE,
+			active: true,
+		});
+	}
+
+	let attempts = 0;
+	const maxAttempts = 10;
+	while (attempts < maxAttempts) {
+		const view = primaryLeaf.view;
+		if (view instanceof ReadingTimeView) {
+			return view;
+		}
+
+		await new Promise((resolve) => window.setTimeout(resolve, 50));
+		attempts++;
+	}
+
+	return null;
+}
 
 export function registerReadingTimeCommand(plugin: WPMTimePlugin): void {
 	plugin.addCommand({
@@ -72,49 +110,11 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin): void {
 				await plugin.saveSettings();
 			}
 			
-			// Open or reveal the view in the right sidebar
-			let readingTimeView: ReadingTimeView | null = null;
-			const existingLeaves = plugin.app.workspace.getLeavesOfType(READING_TIME_VIEW_TYPE);
-			
-			if (existingLeaves.length > 0) {
-				// View already exists, use it
-				const existingView = existingLeaves[0].view;
-				if (existingView instanceof ReadingTimeView) {
-					readingTimeView = existingView;
-				}
-			}
-			
+			// Open or reveal a single shared view in the right sidebar.
+			const readingTimeView = await getOrCreateReadingTimeView(plugin);
 			if (!readingTimeView) {
-				// Create new view in right sidebar
-				const leaf = plugin.app.workspace.getRightLeaf(false);
-				if (!leaf) {
-					new Notice('Could not open reading time view.');
-					return;
-				}
-				await leaf.setViewState({
-					type: READING_TIME_VIEW_TYPE,
-					active: true,
-				});
-				
-				// Wait for the view to be fully initialized
-				// Sometimes the view needs a moment to be ready
-				let attempts = 0;
-				const maxAttempts = 10;
-				while (attempts < maxAttempts) {
-					const view = leaf.view;
-					if (view instanceof ReadingTimeView) {
-						readingTimeView = view;
-						break;
-					}
-					// Wait a bit before retrying
-					await new Promise(resolve => setTimeout(resolve, 50));
-					attempts++;
-				}
-				
-				if (!readingTimeView) {
-					new Notice('Could not initialize reading time view.');
-					return;
-				}
+				new Notice('Could not open reading time view.');
+				return;
 			}
 			
 			// Ensure we have a valid view before proceeding
