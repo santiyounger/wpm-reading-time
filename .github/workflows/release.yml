@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,6 +146,14 @@ jobs:
           test -f main.js
           test -f manifest.json
           test -f styles.css
+
+      - name: Generate artifact attestations
+        if: steps.vercmp.outputs.should_release == 'true'
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: |
+            main.js
+            styles.css
 
       - name: Create GitHub release and upload assets
         if: steps.vercmp.outputs.should_release == 'true'

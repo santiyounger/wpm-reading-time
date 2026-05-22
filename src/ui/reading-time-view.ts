@@ -223,7 +223,7 @@ export class ReadingTimeView extends ItemView {
 			noteLink.textContent = `[[${this.noteTitle}]]`;
 			
 			// Check if note link would overflow and force it to its own line
-			setTimeout(() => {
+			activeWindow.setTimeout(() => {
 				const container = noteTitleContainer.getBoundingClientRect();
 				const linkTextWidth = noteLink.scrollWidth;
 				
@@ -257,9 +257,9 @@ export class ReadingTimeView extends ItemView {
 		const centeredContent = mainContent.createDiv('reading-time-centered-content');
 		
 		// Heading
-		centeredContent.createEl('div', { 
-			text: 'You\'d read this in', 
-			cls: 'reading-time-heading' 
+		centeredContent.createDiv({
+			text: 'You\'d read this in',
+			cls: 'reading-time-heading'
 		});
 		
 		// Main time display
@@ -429,7 +429,7 @@ export class ReadingTimeView extends ItemView {
 		};
 
 		// Register DOM event for automatic cleanup
-		this.registerDomEvent(document, 'click', closeDropdown);
+		this.registerDomEvent(activeDocument, 'click', closeDropdown);
 		
 		// Settings link below dropdown
 		if (this.onOpenSettings) {

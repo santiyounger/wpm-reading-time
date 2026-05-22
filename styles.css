@@ -141,10 +141,6 @@
 	-moz-user-select: text;
 }
 
-.reading-time-settings-heading {
-	text-align: center;
-}
-
 .reading-time-plugin-title {
 	font-size: 1.125rem;
 	font-weight: 600;
@@ -285,11 +281,6 @@
 	gap: 0.5rem;
 }
 
-.reading-time-speed-label {
-	margin: 0;
-	padding: 0;
-}
-
 .reading-time-because {
 	font-size: 1rem;
 	font-weight: 400;
@@ -323,16 +314,13 @@
 	font-weight: 700;
 }
 
+.reading-time-note-title .reading-time-note-link,
 .reading-time-note-link {
 	cursor: pointer;
 	text-decoration: underline;
-	opacity: 1 !important;
+	opacity: 1;
 	transition: opacity 0.15s ease;
-	color: var(--text-accent) !important;
-}
-
-.reading-time-note-title .reading-time-note-link {
-	opacity: 1 !important;
+	color: var(--text-accent);
 }
 
 .reading-time-note-link:hover {
@@ -378,17 +366,11 @@
 .reading-time-preset-header-row {
 	display: grid;
 	grid-template-columns: var(--reading-time-grid);
-	column-gap: 14px;
-	row-gap: 8px;
+	gap: 8px 14px;
 	align-items: flex-start;
 	margin-bottom: 8px;
 	padding-bottom: 8px;
 	font-size: 0.875rem;
-	font-weight: 600;
-	color: var(--text-muted);
-}
-
-.reading-time-header-speed-title {
 	font-weight: 600;
 	color: var(--text-muted);
 }
@@ -433,11 +415,6 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-}
-
-.reading-time-wpm-calculator svg {
-	opacity: 1;
-	color: var(--text-accent);
 }
 
 .reading-time-wpm-calculator-flex {
@@ -524,6 +501,8 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 	display: flex;
 	align-items: center;
 	gap: 6px;
+	font-weight: 600;
+	color: var(--text-muted);
 }
 
 .reading-time-header-default-title {
@@ -572,6 +551,7 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
+	text-align: center;
 }
 
 .reading-time-settings-heading svg {
@@ -579,9 +559,10 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 }
 
 .reading-time-wpm-calculator svg {
+	opacity: 1;
+	color: var(--text-accent);
 	vertical-align: middle;
 	margin-right: 6px;
-	opacity: 0.7;
 }
 
 .reading-time-learn-more-text {
@@ -707,12 +688,6 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
     gap: 0.25rem;
 }
 
-.reading-time-learn-more-text {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-
 .reading-time-learn-more a {
 	color: var(--text-accent);
 	text-decoration: none;
@@ -771,8 +746,7 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 .reading-time-preset-row {
 	display: grid;
 	grid-template-columns: var(--reading-time-grid);
-	column-gap: 14px;
-	row-gap: 8px;
+	gap: 8px 14px;
 	align-items: center;
 	border: none;
 	padding: 0;
@@ -796,22 +770,6 @@ button.reading-time-wpm-calculator-speed-trigger:hover {
 
 .reading-time-preset-title strong {
 	color: var(--text-normal);
-}
-
-.reading-time-delete-btn {
-	background: var(--background-modifier-border);
-	color: var(--text-error);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 4px;
-	padding: 0.35rem 0.75rem;
-	font-size: 0.875rem;
-	cursor: pointer;
-	transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.reading-time-delete-btn:hover {
-	background: var(--background-modifier-border-hover);
-	border-color: var(--text-error);
 }
 
 .reading-time-preset-settings {

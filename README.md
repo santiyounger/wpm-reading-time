@@ -62,7 +62,7 @@ View reading time, word count, and speed information displayed clearly in the si
 
 To get the most accurate reading time estimates, you'll want to know your personal reading speed (WPM).
 
-**Need help calculating your WPM?** Use our [companion web app](https://www.santiyounger.com/) to determine your words per minute reading speed. Once you know your WPM number, enter it in the Obsidian plugin settings for accurate, personalized reading time estimates.
+**Need help calculating your WPM?** Use the companion web app at https://www.santiyounger.com/wpm-calculator to determine your words per minute reading speed. Once you know your WPM number, enter it in the plugin settings for accurate, personalized reading time estimates.
 
 ## Settings
 
@@ -137,7 +137,7 @@ at a speed of:
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to this plugin, please feel free to submit a Pull Request or open an issue on the [GitHub repository](https://github.com/santiyounger/wpm-reading-time).
+Contributions are welcome! If you'd like to contribute to this plugin, please feel free to submit a pull request or open an issue at https://github.com/santiyounger/wpm-reading-time.
 
 ## License
 
@@ -145,8 +145,8 @@ MIT
 
 ## Support
 
-If you encounter any issues or have feature requests, please open an issue on the [GitHub repository](https://github.com/santiyounger/wpm-reading-time).
+If you encounter any issues or have feature requests, please open an issue at https://github.com/santiyounger/wpm-reading-time.
 
 ## Credits
 
-Created by [Santi Younger](https://www.santiyounger.com/) to help creators and professionals master their content timing.
+Created by Santi Younger (https://www.santiyounger.com/) to help creators and professionals master their content timing.

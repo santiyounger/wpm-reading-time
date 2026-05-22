@@ -167,7 +167,7 @@ export function registerReadingTimeCommand(plugin: WPMTimePlugin): void {
 			
 			// Restore the selection after all async operations complete
 			// Use setTimeout to ensure it happens after the view operations
-			setTimeout(() => {
+			activeWindow.setTimeout(() => {
 				editor.setSelection(selectionStart, selectionEnd);
 				// Also ensure the editor view is focused
 				view.editor.focus();

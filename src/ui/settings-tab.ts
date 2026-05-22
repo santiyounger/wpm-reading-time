@@ -70,9 +70,11 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		speedTrigger.addEventListener('click', () => {
 			const input = containerEl.querySelector(
 				'#reading-time-settings-primary-speed-input'
-			) as HTMLInputElement | null;
-			input?.focus();
-			input?.select();
+			);
+			if (input instanceof HTMLInputElement) {
+				input.focus();
+				input.select();
+			}
 		});
 		calculatorIntro.createSpan({
 			text: '. Click it to select the speed field and change it. To find out your\n('
@@ -109,7 +111,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			const starIconContainer = defaultHeaderTitle.createSpan();
 			setIcon(starIconContainer, 'star');
 			defaultHeaderTitle.createSpan({ text: 'Default' });
-			defaultHeader.createEl('div', {
+			defaultHeader.createDiv({
 				text: 'Pick your default',
 				cls: 'reading-time-header-default-subtitle'
 			});
@@ -121,7 +123,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const gaugeIconContainer = speedHeaderTitle.createSpan();
 		setIcon(gaugeIconContainer, 'gauge');
 		speedHeaderTitle.createSpan({ text: 'Speed' });
-		speedHeader.createEl('div', {
+		speedHeader.createDiv({
 			text: 'Reading speed.\nUse the calculator link above to find the right number for you.',
 			cls: 'reading-time-header-speed-subtitle'
 		});
@@ -132,12 +134,12 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const fileIconContainer = nameHeaderTitle.createSpan();
 		setIcon(fileIconContainer, 'file-text');
 		nameHeaderTitle.createSpan({ text: 'Title' });
-		nameHeader.createEl('div', {
+		nameHeader.createDiv({
 			text: 'Optional title.\nFor example: my speaking speed.',
 			cls: 'reading-time-header-name-subtitle'
 		});
 		if (hasMultiplePresets) {
-			headerRow.createEl('div', { text: '', cls: 'reading-time-header-delete' });
+			headerRow.createDiv({ text: '', cls: 'reading-time-header-delete' });
 		}
 
 		// Display all presets
@@ -165,7 +167,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 				this.display();
 			});
 		});
-		presetListContainer.createEl('div', {
+		presetListContainer.createDiv({
 			cls: 'reading-time-add-preset-note',
 			text: 'You can optionally add more presets. When you use the plugin in your notes, they appear in a dropdown so you can pick different speeds, for example, reading speed versus speaking out loud speed.'
 		});
@@ -181,7 +183,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		const briefcaseIconContainer = learnMoreText.createSpan();
 		setIcon(briefcaseIconContainer, 'briefcase');
 
-		learnMoreText.createEl('span', { text: 'Check out my work at:' });
+		learnMoreText.createSpan({ text: 'Check out my work at:' });
 
 		// External link icon
 		const learnMoreLink = learnMoreInner.createEl('a', {
@@ -190,7 +192,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		});
 		const externalIconContainer = learnMoreLink.createSpan();
 		setIcon(externalIconContainer, 'external-link');
-		learnMoreLink.createEl('span', { text: 'santiyounger.com' });
+		learnMoreLink.createSpan({ text: 'santiyounger.com' });
 	}
 
 	private renderPresetSetting(containerEl: HTMLElement, preset: WPMTimePreset): void {
@@ -252,7 +254,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 			type: 'text',
 			attr: {
 				spellcheck: 'false',
-				placeholder: 'Enter WPM',
+				placeholder: 'Enter words per minute',
 				'data-preset-id': preset.id
 			},
 			cls: 'reading-time-speed-input'
@@ -260,7 +262,7 @@ export class WPMTimeSettingTab extends PluginSettingTab {
 		// Only show speed if it's a valid positive number
 		speedInput.value = (preset.speed && preset.speed > 0) ? preset.speed.toString() : '';
 
-		speedWrapper.createEl('span', { text: 'WPM', cls: 'reading-time-speed-label' });
+		speedWrapper.createSpan({ text: 'WPM', cls: 'reading-time-speed-label' });
 		// Only allow numbers in speed input
 		speedInput.addEventListener('input', (e) => {
 			void (async () => {

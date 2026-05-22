@@ -28,6 +28,8 @@ export default tseslint.config(
 				// Browser globals for Obsidian plugins
 				window: "readonly",
 				document: "readonly",
+				activeWindow: "readonly",
+				activeDocument: "readonly",
 				setTimeout: "readonly",
 				clearInterval: "readonly",
 				setInterval: "readonly",
