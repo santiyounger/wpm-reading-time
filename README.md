@@ -4,7 +4,7 @@
 
 ![Screenshot of WPM Reading Time plugin](https://santiyounger.b-cdn.net/obsidian-plugins/2025-11-04%2010-30-12.png)
 
-Stop guessing reading times. This Obsidian plugin calculates accurate estimates for any selected text using your personalized reading speed. Perfect for podcast scripts, YouTube content, presentations, and any writing where timing matters. Get real-time feedback as you write to better estimate how long your text will take to read aloud or silently.
+Stop guessing reading times. WPM Reading Time calculates accurate estimates for any selected text (or an entire note) using your personalized reading speed. Perfect for podcast scripts, YouTube content, presentations, and any writing where timing matters. Run the command whenever you need an estimate for how long your text will take to read aloud or silently.
 
 ## Who is this for?
 
@@ -31,8 +31,8 @@ Switch between presets via dropdown menu whenever you need different speeds for 
 ### Clear Results
 View reading time, word count, and current speed in a clean, easy-to-read format. All the information you need at a glance.
 
-### Desktop Only
-Currently optimized for desktop use. Mobile support coming soon.
+### Desktop only
+Available on desktop. Not supported on mobile.
 
 ### Native Design
 Matches Obsidian's design language. Feels like a built-in feature.
