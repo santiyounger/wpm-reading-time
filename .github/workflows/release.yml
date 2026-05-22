@@ -155,13 +155,13 @@ jobs:
             main.js
             styles.css
 
-      - name: Create GitHub release and upload assets
+      - name: Create GitHub release and upload assets (draft)
         if: steps.vercmp.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.version }}
           name: WPM Reading Time ${{ steps.ver.outputs.version }}
-          draft: false
+          draft: true
           prerelease: false
           body: ${{ steps.notes.outputs.result }}
           files: |

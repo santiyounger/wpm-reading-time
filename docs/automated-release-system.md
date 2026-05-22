@@ -17,14 +17,14 @@ This guide explains how to implement an automated GitHub Actions workflow that r
      - Creates a git tag with the version number
      - Builds the plugin (`npm ci` → `npm run build`)
      - Generates release notes from recent commits
-     - Creates a GitHub release with the built files attached
+     - Creates a **draft** GitHub release with the built files attached (you publish it manually when ready)
 
 ### Key Benefits
 
 - **No manual tagging**: The workflow creates tags automatically
 - **Version-driven**: The single source of truth is `manifest.json`
 - **Automatic release notes**: Generated from commit history
-- **Non-draft releases**: Published immediately (not drafts)
+- **Draft releases**: Built and uploaded automatically; you publish when ready
 - **Safe**: Only releases when the manifest version is newer than the latest release
 
 ---
@@ -189,13 +189,13 @@ jobs:
           # styles.css is optional
           if [ -f styles.css ]; then echo "has_css=true" >> $GITHUB_OUTPUT; else echo "has_css=false" >> $GITHUB_OUTPUT; fi
 
-      - name: Create GitHub release and upload assets
+      - name: Create GitHub release and upload assets (draft)
         if: steps.vercmp.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.version }}
           name: YourPluginName ${{ steps.ver.outputs.version }}
-          draft: false
+          draft: true
           prerelease: false
           body: ${{ steps.notes.outputs.result }}
           files: |
@@ -343,7 +343,7 @@ Sets up Node.js, installs dependencies with `npm ci`, and builds the plugin usin
 - name: Create GitHub release and upload assets
   uses: softprops/action-gh-release@v2
 ```
-Creates a published (non-draft) release and uploads `main.js`, `manifest.json`, and optionally `styles.css`.
+Creates a draft release and uploads `main.js`, `manifest.json`, and optionally `styles.css`. Publish the release on GitHub when you are ready for users to install it.
 
 ---
 
@@ -358,7 +358,8 @@ Creates a published (non-draft) release and uploads `main.js`, `manifest.json`, 
 ### This Automated Approach
 1. Update `manifest.json` only
 2. Push to master
-3. Everything else happens automatically
+3. The workflow tags, builds, and uploads a draft release
+4. Review the draft on GitHub and publish it when ready
 
 ---
 
@@ -441,12 +442,9 @@ files: |
   README.md  # Add additional files
 ```
 
-### Changing to Draft Releases
+### Changing to Published Releases Immediately
 
-Change line 156:
-```yaml
-draft: true  # Change from false to true
-```
+To publish without a manual step, set `draft: false` in the release workflow step.
 
 ---
 
